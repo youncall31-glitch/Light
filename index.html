@@ -769,7 +769,7 @@ function newRun(ch=CH,excl=null,kept=false,watch=null){
 }
 const DIFF=[{n:'보통',hp:1,g:1,sh:1,d:'이야기를 따라가기 좋은 난이도'},{n:'어려움',hp:1.45,g:.92,sh:1.5,d:'그림자 체력 ×1.45 · 등유 −8% · 결정 보상 ×1.5'},{n:'악몽',hp:2.1,g:.85,sh:2.2,d:'그림자 체력 ×2.1 · 등유 −15% · 결정 보상 ×2.2 · 유품을 품은 그림자 더 자주'}];
 const DF=()=>DIFF[meta.diff||0];
-const hpMul=w=>(1+(w-1)*.2+(w-1)*(w-1)*.024)*CHM[CH]*DF().hp*1.75;
+const hpMul=w=>(1+(w-1)*.2+(w-1)*(w-1)*.024)*CHM[CH]*DF().hp*1.75*(1+.015*(w-1));
 let NIGHT=0,nightWon=false;const NL=[12,15,18],NOFF=[0,12,27],NTOT=45,NN=['첫째 밤','둘째 밤','셋째 밤'];
 let carryOn=false,runPicks=[];const NLEN=()=>NL[NIGHT],EW=w=>w+(carryOn?NIGHT*10:0);
 const DAWN=['첫 새벽이 왔다. 안개가 잠시 물러났지만, 해가 지면 다시 올 것이다. 무리들은 지친 몸으로 집에 돌아갔다.','두 번째 새벽. 그림자들이 길의 끝을 점점 더 잘 안다. 내일 밤엔 이 장의 주인이 온다.'];
