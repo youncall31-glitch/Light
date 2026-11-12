@@ -1,8 +1,11 @@
 <title>마지막 등대</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
+html,body{touch-action:manipulation;-webkit-text-size-adjust:100%;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+button,canvas,#game{touch-action:manipulation}
 /* Layout: one letterboxed portrait stage (400x760 world units). Canvas paints the night world; a DOM HUD floats above it. */
 :root{
   --ink:#060912; --panel:#0e1221; --panel2:#151a2c; --line:rgba(236,229,212,.14);
@@ -75,8 +78,9 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--f-ui);ov
 #banner.boss span{color:#ff8a96}
 #story{position:absolute;left:4%;right:4%;bottom:6.2em;text-align:center;font-family:var(--f-disp);font-size:.84em;line-height:1.55;color:#e9e2cf;padding:.55em .9em;border-radius:.8em;background:linear-gradient(180deg,rgba(6,8,18,.5),rgba(6,8,18,.78));border:1px solid rgba(255,196,107,.16);opacity:0;transition:opacity 1s;text-wrap:balance}
 #story.on{opacity:1}
-#feed{position:absolute;right:.65em;top:6.2em;width:min(60%,17em);display:flex;flex-direction:column;align-items:flex-end;gap:.25em;pointer-events:none;z-index:4}
-.fl{font-size:.7em;line-height:1.42;padding:.3em .62em;border-radius:.45em;background:rgba(6,8,16,.66);border-left:2px solid rgba(255,255,255,.35);color:#e9e2cf;text-align:left;max-width:100%;animation:flIn .25s ease-out;transition:opacity .6s,transform .6s;text-shadow:0 1px 2px #000}
+#feed{position:absolute;right:.65em;top:6.2em;width:min(62%,17.5em);display:flex;flex-direction:column;gap:.15em;pointer-events:none;z-index:4;padding:.4em .45em;border-radius:.7em;background:linear-gradient(180deg,rgba(9,11,22,.94),rgba(6,8,16,.92));border:1px solid rgba(236,229,212,.16);box-shadow:0 .4em 1.2em rgba(0,0,0,.55);transition:opacity .4s}
+#feed:empty{opacity:0;padding:0;border:0}
+.fl{font-size:.7em;line-height:1.42;padding:.22em .5em;border-radius:.35em;background:transparent;border-left:2px solid rgba(255,255,255,.35);color:#e9e2cf;text-align:left;max-width:100%;animation:flIn .25s ease-out;transition:opacity .6s,transform .6s;text-shadow:0 1px 2px #000}
 .fl.gold{border-left-color:#ffc46b;color:#ffe2ac}.fl.syn{border-left-color:#c3a8ff;color:#e6dcff}.fl.who{border-left-color:#8fe6ff;font-family:var(--f-disp);color:#eaf6ff}.fl.out{opacity:0;transform:translateX(.4em)}
 @keyframes flIn{from{opacity:0;transform:translateX(.8em)}}
 #toast.low{top:auto;bottom:max(1.2em,env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:30}
@@ -796,9 +800,9 @@ function nightClear(){snapCarry();
 
 /* ---------- waves ---------- */
 function genWave(w){
- const wk=waveKind(w),e=EW(w),q=[],n=Math.round(12+e*1.15+CH*3);const pool=[['shade',Math.max(3,16-e*.9)]];
+ const wk=waveKind(w),e=EW(w),q=[],n=Math.round((12+e*1.15+CH*3)*2);const pool=[['shade',Math.max(3,16-e*.9)]];
  if(e>=2||CH>0)pool.push(['runner',2+e*.35+CH]);if(e>=4)pool.push(['weeper',Math.min(6,(e-3)*.5)]);if(e>=6||(CH>1&&e>=3))pool.push(['brute',Math.min(7,(e-4)*.45+(CH===2?2:CH*.4))]);if(e>=8)pool.push(['caller',Math.min(3.5,.6+(e-8)*.25+CH*.25)]);
- const tot=pool.reduce((s,p)=>s+p[1],0);const gap=Math.max(.3,1-e*.03-CH*.05);
+ const tot=pool.reduce((s,p)=>s+p[1],0);const gap=Math.max(.18,(1-e*.03-CH*.05)*.55);
  for(let i=0;i<n;i++){let r=Math.random()*tot,t='shade';for(const p of pool){r-=p[1];if(r<=0){t=p[0];break}}q.push({t,d:t==='runner'?gap*.45:t==='brute'?gap*1.4:gap})}
  if(w>=2&&!wk&&w%3===2&&nextClue())q.splice(Math.floor(n*.6),0,{t:'memory',d:gap});
  {const pr=e<3?0:Math.min(.85,(.18+e*.03)*(meta.diff===2?1.5:1));let k=Math.random()<pr?1:0;if(e>=6&&w%6===0)k+=1+Math.floor(e/10);for(let j=0;j<k;j++)q.splice(Math.floor(Math.random()*q.length),0,{t:'relicE',d:gap})}
@@ -869,7 +873,7 @@ function damage(e,a,src,show){
 function kill(e){
  e.alive=false;const B=ET[e.t];kills++;
  if(B.split)for(const o of[-8,8]){const n2=spawn('tear',Math.max(0,(e.alt?e.alt.join:e.dist)+o));n2.x=e.x+o*.6;n2.y=e.y}
- const g=Math.round(B.gold*(1+wave*.03)*(1+CH*.4)*mods.gold*DF().g);gold+=g;
+ const g=Math.max(1,Math.round(B.gold*.6*(1+wave*.03)*(1+CH*.4)*mods.gold*DF().g));gold+=g;
  if((B.boss&&!B.elite)||B.elite||(B.rare&&Math.random()<.35)){chests++;setTimeout(()=>toast(`바다의 상자를 건졌다 (${chests}) · 밤이 끝나면 한꺼번에 연다`,'gold'),400)}
  if(B.rare){meta.tickets++;save();toast(`유품 표식 +1 (보유 ${meta.tickets}) · 갯바닥에서 유품을 주울 수 있다`,'gold');for(let i=0;i<24;i++){const a=rnd(0,TAU),v=rnd(30,120);part(e.x,e.y,Math.cos(a)*v,Math.sin(a)*v-40,rnd(.6,1.2),rnd(2.5,5),STAR,.95)}}
  num(e.x,e.y-8,'+'+g,'g');
@@ -1270,6 +1274,7 @@ function showOnly(id){OVS.forEach(o=>$('#'+o).hidden=o!==id);$('#toast').classLi
 let bTimer,sTimer;
 function banner(main,sub,boss){const b=$('#banner');b.querySelector('b').textContent=main;b.querySelector('span').textContent=sub||'';b.className=boss?'on boss':'on';clearTimeout(bTimer);bTimer=setTimeout(()=>b.className=boss?'boss':'',1800)}
 function showStory(txt){toast(txt,'who',Math.min(8,Math.max(5,2+txt.length*.09)))}
+document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});['gesturestart','gesturechange'].forEach(k=>document.addEventListener(k,e=>e.preventDefault(),{passive:false}));{let lt=0;document.addEventListener('touchend',e=>{const n=Date.now();if(n-lt<320&&!e.target.closest('input,textarea'))e.preventDefault();lt=n},{passive:false})}
 function toast(txt,cls='',dur){const ovOpen=OVS.some(o=>!$('#'+o).hidden);if(!ovOpen&&['wave','prep','cards','victory'].includes(state)){const d=dur||Math.min(7,Math.max(3.6,2+txt.length*.07));const f=document.createElement('div');f.className='fl '+cls;f.textContent=txt;const box=$('#feed');box.appendChild(f);while(box.children.length>4)box.firstChild.remove();setTimeout(()=>f.classList.add('out'),(d-.6)*1000);setTimeout(()=>f.remove(),d*1000);return}
 const d=dur||Math.min(7,Math.max(3.2,1.8+txt.length*.07));const t=document.createElement('div');t.className='t '+cls;t.textContent=txt;t.style.animation=`tin .35s ease-out,tout .7s ease-in forwards ${d-.7}s`;const box=$('#toast');box.appendChild(t);while(box.children.length>2)box.firstChild.remove();setTimeout(()=>t.remove(),d*1000)}
 let hudKey='';
