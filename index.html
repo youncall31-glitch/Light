@@ -206,6 +206,7 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--f-ui);ov
 .chp .no{grid-row:span 2;width:2.6em;height:2.6em;border-radius:50%;display:grid;place-items:center;font-family:var(--f-disp);font-weight:700;color:#0b0d16;background:radial-gradient(circle at 40% 35%,#fff,var(--cc) 60%);box-shadow:0 0 1em color-mix(in srgb,var(--cc) 60%,transparent)}
 .chp b{font-family:var(--f-disp);font-size:1.02em}
 .chp .sub{font-size:.76em;color:#c9c3b3;grid-column:2}
+.diff{display:flex;gap:.4em}.diff button{padding:.45em 1em;border-radius:2em;border:1px solid rgba(255,255,255,.18);background:rgba(10,12,22,.7);color:var(--mute);font-weight:600}.diff button.on{color:#1b1105;background:linear-gradient(180deg,#ffd58c,#e79b3b);border-color:transparent}.diff button[data-d="2"].on{background:linear-gradient(180deg,#d6b8ff,#8a5cd6);color:#120a22}.dnote{font-size:.76em;color:var(--mute);margin-top:-.3em}
 .chp .nts{grid-column:1/-1;display:flex;gap:.35em;margin-top:.45em}.chp .nts i{flex:1;font-style:normal;font-size:.72em;padding:.35em 0;border-radius:.5em;text-align:center;border:1px solid rgba(255,255,255,.14);color:var(--mute)}.chp .nts i.ok{border-color:rgba(255,196,107,.55);color:#ffe2ac;background:rgba(255,196,107,.08)}.chp .nts i.ok::before{content:'✓ '}.chp .nts i.cur{border-color:var(--cc);color:#fff;box-shadow:0 0 .8em color-mix(in srgb,var(--cc) 50%,transparent)}.chp .nts i.lk{opacity:.45}
 .chp .st{grid-row:1/span 2;grid-column:3;font-size:.72em;color:var(--lamp);text-align:right;font-variant-numeric:tabular-nums;line-height:1.5;white-space:nowrap}
 .chp.lock{filter:grayscale(.85) brightness(.6)}
@@ -353,6 +354,8 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--f-ui);ov
       <div class="ov" id="chap" hidden>
         <div class="eyebrow">등대 일지</div>
         <h2>어느 밤을 지킬까</h2>
+        <div class="diff" id="diffRow"><button data-d="0">보통</button><button data-d="1">어려움</button><button data-d="2">악몽</button></div>
+        <div class="dnote" id="diffNote"></div>
         <div class="panel" id="chList"></div>
       </div>
 
@@ -642,7 +645,7 @@ const CASES=[
 function gi(c,ch,b,t){return`<div class="gi" style="--c:${c}"><i>${ch}</i><div><b>${b}</b><span>${t}</span></div></div>`}
 const GUIDE=[
  {t:'등대를 지켜라',h:`<p>바다에 잠긴 이의 목소리를 들려주는 안개가 봉인에서 풀려났다. 안개를 마신 사람들은 그림자가 되어, 안개를 막는 마지막 빛인 등대를 끄러 온다. 빛으로 정화해 되찾아라. 다섯 개의 장, 각 장마다 10번째 파도까지 등대를 지키면 다음 장이 열린다.</p>`+gi('#ffc46b','등','등불','등대의 생명이자 빛줄기의 세기. 그림자가 등대에 닿으면 줄고, 0이 되면 패배한다.')+gi('#ff9a4a','유','등유','그림자를 정화하면 얻는다. 마을 사람을 세우고 강화하는 데 쓴다.')+gi('#8fe6ff','파','파도','5번째 파도엔 정예 그림자, 10번째 파도엔 그 장의 주인이 나타난다. 장이 깊어질수록 안개도 짙어진다.')},
- {t:'마을 사람 세우기',h:`<p>빛나는 받침돌을 누르면 정화된 마을 사람을 세울 수 있다.</p>`+gi('#9fd4ff','작','작살 · 하람의 어부들','하람이 이끄는 어부 무리. 빠르게 한 마리씩 꿰뚫는다.')+gi('#ff8a4a','화','화염 · 돌쇠의 대장간 일꾼들','돌쇠가 이끄는 대장간 일꾼들. 터지는 불덩이, 맞은 적은 한동안 불탄다.')+gi('#5cc8ff','물','밀물 · 물결의 해녀들','물결이 이끄는 해녀들. 주변 적을 느리게 하고 젖게 만든다.')+gi('#c3a8ff','번','번개 · 반디의 반딧불 아이들','반디에게 배운 아이들. 여러 적에게 튀는 번개, 젖은 적에게 특히 강하다.')+gi('#ffc46b','★','강화','세운 사람을 다시 눌러 등유로 최고 8단계까지 강화한다. 단계마다 모습이 바뀌고, 4단계는 각성, 5단계부터는 푸른 별이 주위를 돈다.')+gi('#fff0b8','✦','정련','8단계가 되면 정련할 수 있다. 성공하면 피해 +10%, 성공 확률은 단계마다 줄고 비용은 늘어난다. 실패하면 등유만 사라지지만 그 타워에 축복이 쌓여 다음 확률이 오른다. 높이 오를수록 성공의 빛이 거룩해진다.')+gi('#fff1c2','신','신형 무기','장을 지켜내면 설계도 조각 9개를 맞춰 새 무기를 만든다. 한 번 만든 무기는 모든 장에서 영구히 쓸 수 있다.')},
+ {t:'마을 사람 세우기',h:`<p>빛나는 받침돌을 누르면 정화된 마을 사람을 세울 수 있다.</p>`+gi('#9fd4ff','작','작살 · 하람의 어부들','하람이 이끄는 어부 무리. 빠르게 한 마리씩 꿰뚫는다.')+gi('#ff8a4a','화','화염 · 돌쇠의 대장간 일꾼들','돌쇠가 이끄는 대장간 일꾼들. 터지는 불덩이, 맞은 적은 한동안 불탄다.')+gi('#5cc8ff','물','밀물 · 물결의 해녀들','물결이 이끄는 해녀들. 주변 적을 느리게 하고 젖게 만든다.')+gi('#c3a8ff','번','번개 · 반디의 반딧불 아이들','반디에게 배운 아이들. 여러 적에게 튀는 번개, 젖은 적에게 특히 강하다.')+gi('#ffc46b','★','강화','세운 사람을 다시 눌러 등유로 최고 8단계까지 강화한다. 단계마다 모습이 바뀌고, 4단계는 각성, 5단계부터는 푸른 별이 주위를 돈다.')+gi('#9fe6c8','밤','이어지는 밤','한 장의 세 밤은 이어진다. 새벽이 오면 무리, 갈래, 정련, 선물이 그대로, 남은 등유는 절반이 다음 밤으로 넘어가고, 그림자도 그만큼 강해진다. 다시 하는 밤은 그 밤이 시작된 새벽에서 이어진다.')+gi('#fff0b8','✦','정련','8단계가 되면 정련할 수 있다. 성공하면 피해 +10%, 성공 확률은 단계마다 줄고 비용은 늘어난다. 실패하면 등유만 사라지지만 그 타워에 축복이 쌓여 다음 확률이 오른다. 높이 오를수록 성공의 빛이 거룩해진다.')+gi('#fff1c2','신','신형 무기','장을 지켜내면 설계도 조각 9개를 맞춰 새 무기를 만든다. 한 번 만든 무기는 모든 장에서 영구히 쓸 수 있다.')},
  {t:'내 손으로 지키기',h:gi('#c8f2ff','거','거울 빛','거울 버튼을 누른 뒤 원하는 곳을 누르면 등대 빛이 8초 동안 그곳에 모인다. 빛 안의 그림자는 느려지고 40% 더 다치며, 빛 안의 타워는 빨라지고 강해진다. 목소리에 붙잡힌 동료도 깨운다.')+gi('#ffc46b','빛','등대 빛줄기','등대는 스스로 빛을 돌린다. 안개는 빛을 삼키러 오고, 빛에 닿은 그림자는 정화된다. 등불이 약하면 빛줄기도 짧아진다.')+gi('#ffe2a0','섬','섬광','오른쪽 아래 버튼. 등대 주변 그림자를 모두 기절시키고 큰 피해를 준다.')+gi('#ff9a4a','▶','파도 부르기','준비 시간에 일찍 부르면 남은 시간만큼 등유를 더 받는다.')+gi('#ece5d4','×','속도와 정지','왼쪽 아래에서 속도를 1·2·3배로 바꾸거나 잠시 멈출 수 있다.')},
  {t:'단서와 추리',h:`<p>안개는 저절로 생긴 게 아니다. 누군가 무언가를 저질렀다. 증거를 모아 범인을 밝혀라.</p>`+gi('#ffd56b','단','기억을 품은 그림자','금빛으로 빛나는 그림자. 등대에 닿기 전에 정화하면 단서를 남긴다. 놓치면 그 밤엔 사라진다.')+gi('#8fe6ff','?','추리','한 사건의 증거 4개가 모이면 추리할 수 있다. 결정적인 증거 2개와 답 하나를 함께 제출해야 한다. 답이 맞아도 증거가 틀리면 실패. 틀리면 그 밤엔 다시 추리할 수 없다.')+gi('#ffc46b','◆','설계도 퍼즐','파도를 막을 때마다 설계도 조각이 모인다. 장을 지켜내면 9조각을 자리와 방향에 맞게 맞춰 신형 무기를 얻는다.')+gi('#c3a8ff','속','바다의 목소리','가끔 마을 사람이 목소리에 붙잡혀 싸우지 못한다. 보라색 안개 줄기와 말풍선이 보이면 거울 빛을 비춰 깨워라.')+gi('#cf9a3e','등','위령등','정예와 보스는 바다에서 잃은 이의 이름을 부르며 온다. 정화하면 그 이름을 등에 적는다.')+gi('#ff9aa8','회','등대 회의','2장부터 장을 시작할 때마다 회의가 열린다. 각자의 변론을 듣고 그 밤 한 사람을 몰래 지켜볼 수 있다. 타워는 그대로 쓴다. 지켜본 밤에 무엇이 달라지는지 보라.')+gi('#ffd890','일','스승의 일지 · 인물 기억','정예와 보스를 쓰러뜨리면 스승의 일지가, 네 사람의 타워를 키울수록 그들의 기억이 열린다. 진실은 그 사이에 숨어 있다.')+gi('#c3a8ff','책','등대지기 수첩','모은 단서와 기억 조각은 수첩에서 언제든 다시 읽을 수 있다. 게임 중에도 열 수 있다.')},
  {t:'선물과 성장',h:gi('#ece5d4','선','빛이 남긴 선물','파도를 막을 때마다 카드 3장 중 하나를 고른다. 일반·희귀·전설 등급이 있다.')+gi('#c3a8ff','합','시너지','젖은 적 + 번개처럼, 조합을 찾을수록 강해진다.')+gi('#8fe6ff','결','빛의 결정','밤이 끝나면 결정을 얻는다. 등대 작업실에서 영구 강화에 쓴다.')+gi('#ffd56b','장','다섯 개의 장','장을 지켜내면 다음 장이 열린다. 마지막 장 「안개의 심장」은 사건 1~4의 진실을 모두 밝혀야 열린다.')},
@@ -662,7 +665,7 @@ const META=[
 const KEY='last-lighthouse-v3';
 function load(){try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){return null}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(meta))}catch(e){}}
-const meta=Object.assign({shards:0,best:0,runs:0,lore:[],muted:false,seen:[],clues:[],solved:[],cleared:[],bestCh:{},nights:{},relic:{},tickets:0,pityR:0,weapons:[],hint:{},obs:{},memo:[],jr:[],lan:[]},load()||{});
+const meta=Object.assign({shards:0,best:0,runs:0,lore:[],muted:false,seen:[],clues:[],solved:[],cleared:[],bestCh:{},nights:{},diff:0,carry:{},relic:{},tickets:0,pityR:0,weapons:[],hint:{},obs:{},memo:[],jr:[],lan:[]},load()||{});
 meta.up=Object.assign({gold:0,hp:0,dmg:0,reroll:0,flash:0,hero:0},meta.up||{});
 
 /* ---------- audio ---------- */
@@ -713,25 +716,34 @@ function newRun(ch=CH,excl=null,kept=false,watch=null){
  setMap(ch);nightWon=false;drawBG();resetWorld();mods=freshMods();mergeFrom=-1;betrayed=false;
  runExcl=excl;haramKept=kept;runWatch=watch;zone=null;mirrorArm=false;mirrorCd=0;$('#mirror').classList.remove('arm');buildAlts();temptT=26;ember=null;lanternPos=null;if(kept)mods.harpoon*=1.5;heroes=makeHeroes();selHero=0;dimT=0;sabCount=0;quietShown=false;$('#bossbar').hidden=true;
  gold=120+CH*60+NIGHT*60+meta.up.gold*30+(mods.startGold||0);maxHp=20+meta.up.hp*4+(mods.hpBonus||0);hp=maxHp;wave=0;spawnT=0;prepT=18;flashCd=0;flashT=0;shake=0;combo=0;comboT=0;bossKills=0;kills=0;
- aiming=false;beamA=-Math.PI/2;runLocked=new Set();rerolls=1+meta.up.reroll;taken=new Set();won=false;runSeen=new Set();bossRef=null;built=new Set();
+ aiming=false;beamA=-Math.PI/2;runLocked=new Set();rerolls=1+meta.up.reroll;taken=new Set();runPicks=[];carryOn=false;won=false;runSeen=new Set();bossRef=null;built=new Set();
  state='prep';paused=false;speed=1;$('#bSpeed').textContent='1×';
  showOnly(null);$('#hud').hidden=false;$('#bar').hidden=false;$('#hint').hidden=meta.runs>0;
- banner(`${CH+1}장 · ${NN[NIGHT]}`,`${MAPS[CH].name} · ${NLEN()}번의 파도`);if(NIGHT===0)showStory(CH_IN[CH]);
+ banner(`${CH+1}장 · ${NN[NIGHT]}`,`${MAPS[CH].name} · ${NLEN()}번의 파도${meta.diff?' · '+DF().n:''}`);if(NIGHT===0)showStory(CH_IN[CH]);
  if(!meta.seen.includes('heroInfo')){meta.seen.push('heroInfo');save();setTimeout(()=>toast('거울 빛 · 아래 거울 버튼을 누르고 원하는 곳을 누르면 8초 동안 등대 빛이 모인다','gold'),2200)}
  if(runWatch){const r=RES.find(x=>x.k===runWatch);setTimeout(()=>toast(`오늘 밤 ${josa(r.n,'을','를')} 몰래 지켜본다`,'syn'),900)}
  if(runExcl){const r=RES.find(x=>x.k===runExcl);setTimeout(()=>toast(`이번 장은 ${josa(r.n,'이','가')} 빠진다 · ${TT[runExcl].name} 타워를 세울 수 없다`,'syn'),900)}
+ restoreCarry();
 }
-const hpMul=w=>(1+(w-1)*.2+(w-1)*(w-1)*.024)*CHM[CH];
+const DIFF=[{n:'보통',hp:1,g:1,sh:1,d:'이야기를 따라가기 좋은 난이도'},{n:'어려움',hp:1.45,g:.92,sh:1.5,d:'그림자 체력 ×1.45 · 등유 −8% · 결정 보상 ×1.5'},{n:'악몽',hp:2.1,g:.85,sh:2.2,d:'그림자 체력 ×2.1 · 등유 −15% · 결정 보상 ×2.2 · 유품을 품은 그림자 더 자주'}];
+const DF=()=>DIFF[meta.diff||0];
+const hpMul=w=>(1+(w-1)*.2+(w-1)*(w-1)*.024)*CHM[CH]*DF().hp;
 let NIGHT=0,nightWon=false;const NL=[12,15,18],NOFF=[0,12,27],NTOT=45,NN=['첫째 밤','둘째 밤','셋째 밤'];
-const NLEN=()=>NL[NIGHT],EW=w=>w;
+let carryOn=false,runPicks=[];const NLEN=()=>NL[NIGHT],EW=w=>w+(carryOn?NIGHT*10:0);
 const DAWN=['첫 새벽이 왔다. 안개가 잠시 물러났지만, 해가 지면 다시 올 것이다. 무리들은 지친 몸으로 집에 돌아갔다.','두 번째 새벽. 그림자들이 길의 끝을 점점 더 잘 안다. 내일 밤엔 이 장의 주인이 온다.'];
 function waveKind(w){const Ln=NLEN();if(w>Ln){const k=w-Ln;return k%10===0?'boss':k%5===0?'elite':''}if(w===Ln)return NIGHT===2?'boss':'elite';if(NIGHT>=1&&w===Math.round(Ln/2))return'elite';return''}
 function nextNight(i){return meta.cleared.includes(i)?0:Math.min(2,(meta.nights&&meta.nights[i])||0)}
-function nightClear(){
- won=true;nightWon=true;state='victory';sfx('win');closePop();const bonus=10+CH*6+NIGHT*6;meta.shards+=bonus;meta.nights[CH]=Math.max(meta.nights[CH]||0,NIGHT+1);save();
+function snapCarry(){meta.carry=meta.carry||{};meta.carry[CH+'-'+(NIGHT+1)]={towers:towers.filter(t=>!t.traitor).map(t=>({slot:t.slot,type:t.type,lvl:t.lvl,br:t.br||null,ref:t.ref||0,pity:t.pity||0,spent:t.spent})),picks:runPicks.slice(),gold,rerolls,maxHp};save()}
+function restoreCarry(){const sn=NIGHT>0&&meta.carry&&meta.carry[CH+'-'+NIGHT];if(!sn)return;carryOn=true;
+ for(const id of sn.picks){const c=CARDS.find(x=>x.id===id);if(!c||id==='oil'||id==='mend')continue;c.a();taken.add(id)}runPicks=sn.picks.slice();
+ maxHp=Math.max(maxHp,sn.maxHp||maxHp);hp=maxHp;gold=Math.round(sn.gold*.5)+60+meta.up.gold*10;rerolls=sn.rerolls;
+ for(const o of sn.towers){if(!SLOTS[o.slot]||slotT[o.slot]||o.type===runExcl)continue;const[x,y]=SLOTS[o.slot];const t={slot:o.slot,x,y,type:o.type,lvl:o.lvl,cd:.3,ang:-Math.PI/2,spent:o.spent,fl:0,br:o.br||undefined,ref:o.ref||0,pity:o.pity||0};towers.push(t);slotT[o.slot]=t}
+ setTimeout(()=>toast(`해가 지자 지난밤의 무리 ${sn.towers.length}곳이 다시 자리를 지킨다 · 선물 ${sn.picks.length}개도 그대로다`,'gold',5),1400)}
+function nightClear(){snapCarry();
+ won=true;nightWon=true;state='victory';sfx('win');closePop();const bonus=Math.round((10+CH*6+NIGHT*6)*DF().sh);meta.shards+=bonus;meta.nights[CH]=Math.max(meta.nights[CH]||0,NIGHT+1);save();
  $('#wObs').hidden=true;$('#wEy').textContent=`${CH+1}장 · ${MAPS[CH].name} · ${NN[NIGHT]}`;$('#wTitle').textContent=`${NN[NIGHT]}을 지켜냈다`;$('#wText').textContent=DAWN[NIGHT];
  $('#wGain').innerHTML=`밤 보상 · 빛의 결정 <span class="shard">+${bonus}</span>`;
- const nb=$('#bNextCh');nb.textContent=`${NN[NIGHT+1]}으로`;nb.hidden=false;$('#wNote').textContent=`${NN[NIGHT+1]}이 열렸다. 해가 지면 무리를 새로 세운다.`;
+ const nb=$('#bNextCh');nb.textContent=`${NN[NIGHT+1]}으로`;nb.hidden=false;$('#wNote').textContent=`${NN[NIGHT+1]}이 열렸다. 오늘 밤의 무리와 선물은 다음 밤에도 그대로 남고, 남은 등유는 절반이 이어진다. 대신 그림자도 더 강해진다.`;
  setTimeout(()=>showOnly('win'),900)}
 
 /* ---------- waves ---------- */
@@ -741,7 +753,7 @@ function genWave(w){
  const tot=pool.reduce((s,p)=>s+p[1],0);const gap=Math.max(.3,1-e*.03-CH*.05);
  for(let i=0;i<n;i++){let r=Math.random()*tot,t='shade';for(const p of pool){r-=p[1];if(r<=0){t=p[0];break}}q.push({t,d:t==='runner'?gap*.45:t==='brute'?gap*1.4:gap})}
  if(w>=2&&!wk&&w%3===2&&nextClue())q.splice(Math.floor(n*.6),0,{t:'memory',d:gap});
- {const pr=e<3?0:Math.min(.75,.18+e*.03);let k=Math.random()<pr?1:0;if(e>=6&&w%6===0)k+=1+Math.floor(e/10);for(let j=0;j<k;j++)q.splice(Math.floor(Math.random()*q.length),0,{t:'relicE',d:gap})}
+ {const pr=e<3?0:Math.min(.85,(.18+e*.03)*(meta.diff===2?1.5:1));let k=Math.random()<pr?1:0;if(e>=6&&w%6===0)k+=1+Math.floor(e/10);for(let j=0;j<k;j++)q.splice(Math.floor(Math.random()*q.length),0,{t:'relicE',d:gap})}
  if(wk==='elite')q.splice(Math.floor(n*.5),0,{t:'elite',d:2});
  if(wk==='boss')q.splice(Math.floor(n*.4),0,{t:'boss',d:2.5});
  return q;
@@ -776,7 +788,7 @@ function waveClear(){
  if(wave===NLEN()&&!won){if(NIGHT<2){nightClear();return}if(CH===4&&!ember){startEmber();return}chapterClear();return}
  afterWave();
 }
-function afterWave(){const ci=CASES.findIndex((_,i)=>caseReady(i));if(ci>=0){state='cards';closePop();openCase(ci,openCards)}else openCards()}
+function afterWave(){const gift=wave%2===0||!!waveKind(wave);const next=gift?openCards:()=>{showOnly(null);state='prep';prepT=12};const ci=CASES.findIndex((_,i)=>caseReady(i));if(ci>=0){state='cards';closePop();openCase(ci,next)}else next()}
 
 /* ---------- combat ---------- */
 const BR={
@@ -809,7 +821,7 @@ function damage(e,a,src,show){
 function kill(e){
  e.alive=false;const B=ET[e.t];kills++;
  if(B.split)for(const o of[-8,8]){const n2=spawn('tear',Math.max(0,(e.alt?e.alt.join:e.dist)+o));n2.x=e.x+o*.6;n2.y=e.y}
- const g=Math.round(B.gold*(1+wave*.03)*(1+CH*.4)*mods.gold);gold+=g;
+ const g=Math.round(B.gold*(1+wave*.03)*(1+CH*.4)*mods.gold*DF().g);gold+=g;
  if(B.rare){meta.tickets++;save();toast(`유품 표식 +1 (보유 ${meta.tickets}) · 갯바닥에서 유품을 주울 수 있다`,'gold');for(let i=0;i<24;i++){const a=rnd(0,TAU),v=rnd(30,120);part(e.x,e.y,Math.cos(a)*v,Math.sin(a)*v-40,rnd(.6,1.2),rnd(2.5,5),STAR,.95)}}
  num(e.x,e.y-8,'+'+g,'g');
  spirits.push({x:e.x,y:e.y,life:B.boss?2.6:1.5,max:B.boss?2.6:1.5,s:B.boss?2.6:B.r/11});
@@ -1269,7 +1281,7 @@ function rollCards(){
  $('#cList').innerHTML=out.map((c,i)=>{const[col,ch]=GL[c.g];return`<button class="card r${c.r}" data-c="${i}" style="--c:${col}"><span class="rr">${RR[c.r]}</span><span class="gl">${ch}</span><b>${c.n}</b><span>${c.d}</span></button>`}).join('');
  const rb=$('#bReroll');rb.textContent=`다시 뽑기 · ${rerolls}회 남음`;rb.disabled=rerolls<=0;rb.style.opacity=rerolls>0?1:.4;
 }
-$('#cList').addEventListener('click',ev=>{const b=ev.target.closest('[data-c]');if(!b)return;const c=curCards[+b.dataset.c];c.a();taken.add(c.id);sfx('card');if(c.r===2)toast('전설 · '+c.n,'gold');showOnly(null);state='prep';prepT=12});
+$('#cList').addEventListener('click',ev=>{const b=ev.target.closest('[data-c]');if(!b)return;const c=curCards[+b.dataset.c];c.a();taken.add(c.id);runPicks.push(c.id);sfx('card');if(c.r===2)toast('전설 · '+c.n,'gold');showOnly(null);state='prep';prepT=12});
 $('#bReroll').addEventListener('click',()=>{if(rerolls<=0)return;rerolls--;sfx('card');rollCards()});
 $('#next').addEventListener('click',()=>{if(state!=='prep')return;const b=Math.ceil(prepT)*2;gold+=b;if(b)num(LX,LY-30,'+'+b,'g');closePop();startWave()});
 $('#flash').addEventListener('click',useFlash);
@@ -1302,7 +1314,7 @@ function chUnlocked(i){return i===0||(meta.cleared.includes(i-1)&&(i<4||[0,1,2,3
 const endingReady=()=>meta.cleared.includes(4)&&meta.solved.includes(4);
 function winGain(bonus){const w=TT[WK[CH]];$('#wGain').innerHTML=`장 보상 · 빛의 결정 <span class="shard">+${bonus}</span>${meta.weapons.includes(CH)?`<br>신형 무기 · <b style="color:${w.css}">${w.name}</b>`:''}`}
 function chapterClear(){
- won=true;nightWon=false;state='victory';sfx('win');closePop();const bonus=25+CH*15;meta.shards+=bonus;meta.nights[CH]=3;if(!meta.cleared.includes(CH))meta.cleared.push(CH);save();
+ won=true;nightWon=false;state='victory';sfx('win');closePop();const bonus=Math.round((25+CH*15)*DF().sh);meta.shards+=bonus;meta.nights[CH]=3;if(!meta.cleared.includes(CH))meta.cleared.push(CH);save();
  {const ob=chapterObs();if(ob){meta.obs[CH]=ob;save()}$('#wObs').innerHTML=ob?`<b>관찰 기록</b>${ob}`:'';$('#wObs').hidden=!ob}
  $('#wEy').textContent=`${CH+1}장 · ${MAPS[CH].name}`;$('#wTitle').textContent=`「${MAPS[CH].sub}」을 지켜냈다`;$('#wText').textContent=CH_OUT[CH];winGain(bonus);
  const nb=$('#bNextCh');let note='';
@@ -1317,7 +1329,9 @@ function openEpi(cb){if(!meta.seen.includes('ending')){meta.seen.push('ending');
 let epiCb=null;
 $('#bEpiOk').addEventListener('click',()=>{const cb=epiCb;epiCb=null;cb?cb():toTitle()});
 $('#bNextCh').addEventListener('click',()=>{creditRun();if(nightWon){nightWon=false;startChapter(CH,NIGHT+1);return}if(CH>=4){openEpi(toTitle);return}startChapter(CH+1)});
-function openChapters(){refreshTitle();
+function syncDiff(){document.querySelectorAll('#diffRow [data-d]').forEach(b=>b.classList.toggle('on',+b.dataset.d===(meta.diff||0)));$('#diffNote').textContent=DF().d}
+$('#diffRow').addEventListener('click',ev=>{const b=ev.target.closest('[data-d]');if(!b)return;meta.diff=+b.dataset.d;save();syncDiff();sfx('card')});
+function openChapters(){refreshTitle();syncDiff();
  $('#chList').innerHTML=MAPS.map((M,i)=>{const un=chUnlocked(i),cl=meta.cleared.includes(i),b=meta.bestCh[i]||0,cs=haveCount(i),sv=meta.solved.includes(i);
   const st=!un?(i===4&&meta.cleared.includes(3)?'사건 1~4를 모두 풀어야 열린다':'앞 장을 지켜내면 열린다'):`${cl?'지켜냄 ★':'최고 파도 '+b+'/'+NTOT}<br>단서 ${cs}/4${sv?' · 해결':''}`;const nd=cl?3:(meta.nights[i]||0),nights=un?`<span class="nts">${NN.map((nm,n)=>`<i data-n="${n}" class="${n<nd?'ok':n===nd?'cur':'lk'}">${nm}</i>`).join('')}</span>`:'';
   return`<button class="chp${un?'':' lock'}" data-ch="${i}" style="--cc:${M.pal.css}" ${un?'':'aria-disabled="true"'}><span class="no">${i+1}</span><b>${M.name}</b><span class="sub">${M.sub}</span><span class="st">${st}</span>${nights}</button>`}).join('');
