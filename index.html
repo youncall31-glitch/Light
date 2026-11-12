@@ -561,7 +561,7 @@ const LX=200,LY=583;
 const TT={
   harpoon:{name:'작살',who:'하람의 어부들',role:'단일 · 빠름',glyph:'작',cost:50,range:95,dmg:15,rate:.75,css:'#9fd4ff',spr:'cyan',quote:'하람의 어부 · "하람 형님이 가르친 대로 던지지. 작살은 손에 익었어."'},
   fire:{name:'화염',who:'돌쇠의 대장간 일꾼들',role:'범위 · 화상',glyph:'화',cost:80,range:80,dmg:11,rate:1.25,splash:42,burn:5,css:'#ff8a4a',spr:'ember',quote:'돌쇠네 일꾼 · "불이라면 우리 대장간이 제일이지. 돌쇠 어른이 그랬어."'},
-  tide:{name:'밀물',who:'물결의 해녀들',role:'둔화 · 젖음',glyph:'물',cost:60,range:84,dmg:4,rate:1.6,slow:.17,css:'#5cc8ff',spr:'blue',quote:'물결네 해녀 · "물결 언니 말이 맞아. 바닷물에 젖으면 안개가 무거워져."'},
+  tide:{name:'밀물',who:'물결의 해녀들',role:'둔화 · 젖음',glyph:'물',cost:60,range:84,dmg:4,rate:1.6,slow:.1,css:'#5cc8ff',spr:'blue',quote:'물결네 해녀 · "물결 언니 말이 맞아. 바닷물에 젖으면 안개가 무거워져."'},
   bolt:{name:'번개',who:'반디의 반딧불 아이들',role:'연쇄 공격',glyph:'번',cost:100,range:92,dmg:20,rate:1.45,chain:3,css:'#c3a8ff',spr:'violet',quote:'반딧불 아이 · "반디 언니가 가르쳐 줬어! 번쩍! 젖은 녀석들은 훨씬 아파해!"'},
   lens:{name:'렌즈 포대',who:'1장 설계도로 만든 무기',role:'관통 광선',glyph:'렌',cost:140,range:110,dmg:36,rate:2.2,css:'#fff1c2',spr:'white',weapon:1,wi:0,quote:'렌즈 포대 · 한 줄로 늘어선 그림자를 한 번에 꿰뚫는다.'},
   bell:{name:'안개 종',who:'2장 설계도로 만든 무기',role:'기절 · 배신 봉인',glyph:'종',cost:120,range:88,dmg:8,rate:6,css:'#e8c27a',spr:'gold',weapon:1,wi:1,quote:'안개 종 · 종이 울리면 그림자가 멈춰 선다.'},
@@ -667,7 +667,7 @@ const CARDS=[
  {id:'mend',r:0,g:'lamp',n:'등대 수리',d:'등불 최대치 +4, 모두 회복',a:()=>{maxHp+=4;hp=maxHp}},
  {id:'harp',r:0,g:'harpoon',n:'날 세운 작살',d:'작살 피해 +35%',a:()=>{mods.harpoon*=1.35}},
  {id:'fire',r:0,g:'fire',n:'풀무질',d:'화염 피해 +30%, 폭발 범위 +20%',a:()=>{mods.fire*=1.3;mods.splash*=1.2}},
- {id:'tide',r:0,g:'tide',n:'사리 물때',d:'밀물 둔화 +6%, 젖음 +1초',a:()=>{mods.slow+=.06;mods.wetDur+=1}},
+ {id:'tide',r:0,g:'tide',n:'사리 물때',d:'밀물 둔화 +3%, 젖음 +1초',a:()=>{mods.slow+=.03;mods.wetDur+=1}},
  {id:'bolt',r:0,g:'bolt',n:'정전기',d:'번개 피해 +30%',a:()=>{mods.bolt*=1.3}},
  {id:'lens',r:0,g:'lamp',n:'렌즈 연마',d:'등대 빛줄기 피해 +50%',a:()=>{mods.beam*=1.5}},
  {id:'eye',r:1,g:'all',n:'파수꾼의 눈',d:'모든 타워 사거리 +12%',a:()=>{mods.range*=1.12}},
@@ -886,7 +886,7 @@ const BR={
           b:{n:'그물 작살',g:'그',d:'짧은 작살을 쉬지 않고 던진다. 떼로 몰려오는 작은 그림자에게 강하다.',e:'공격 속도 ×2 · 피해 −30%',m:{dmg:.7,rate:.5}}},
  fire:{a:{n:'용광로 무리',g:'용',d:'불덩이가 더 넓게 터지고 오래 탄다. 무리 지은 그림자를 태운다.',e:'폭발 범위 ×1.5 · 화상 ×1.6 · 피해 −10%',m:{splash:1.5,burn:1.6,dmg:.9}},
        b:{n:'풀무 창',g:'풀',d:'불을 한곳에 모아 창처럼 쏜다. 범위는 좁지만 아주 뜨겁다.',e:'피해 ×1.9 · 사거리 +15% · 폭발 범위 ×0.5',m:{dmg:1.9,splash:.5,range:1.15}}},
- tide:{a:{n:'소용돌이',g:'소',d:'더 넓고 깊게 휘감는다. 그림자들이 오래 머물러 다른 무리가 때릴 시간을 번다.',e:'둔화 +6% · 사거리 +15%',m:{slow:.06,range:1.15}},
+ tide:{a:{n:'소용돌이',g:'소',d:'더 넓고 깊게 휘감는다. 그림자들이 오래 머물러 다른 무리가 때릴 시간을 번다.',e:'둔화 +4% · 사거리 +15%',m:{slow:.04,range:1.15}},
        b:{n:'해일',g:'해',d:'물살이 그림자를 직접 때린다. 느리게 하는 힘은 약해진다.',e:'피해 ×3.5 · 둔화 −10%',m:{dmg:3.5,slow:-.1}}},
  bolt:{a:{n:'폭풍',g:'폭',d:'번개가 더 멀리, 더 많이 튄다. 길게 늘어선 그림자에게 강하다.',e:'연쇄 +3 · 피해 −15%',m:{chain:3,dmg:.85}},
        b:{n:'벼락',g:'벼',d:'하나에게 떨어지는 굵은 벼락. 정예와 보스를 노린다.',e:'피해 ×2.3 · 연쇄 −2 · 공격 속도 −10%',m:{dmg:2.3,chain:-2,rate:1.1}}}};
@@ -901,7 +901,7 @@ $('#icOk').addEventListener('click',()=>{icQ.shift();showOnly(null);paused=icWas
 $('#brCancel').addEventListener('click',()=>{brSlot=-1;showOnly(null);paused=brWasPaused});
 function drawBr(c,t){const B=BR[t.type][t.br];c.save();c.translate(15,12);c.fillStyle='rgba(8,10,20,.9)';c.strokeStyle=TT[t.type].css;c.lineWidth=1.2;c.beginPath();c.arc(0,0,6.5,0,TAU);c.fill();c.stroke();c.fillStyle='#fff';c.font='700 7.5px "Gowun Batang",serif';c.textAlign='center';c.textBaseline='middle';c.fillText(B.g,0,.5);c.restore()}
 function tstats(t){const b=TT[t.type],L=t.lvl-1,lb=towers?lanternBuff(t):0,zb=t.zone>0?1:0;
- const rf=t.ref||0;const o={dmg:b.dmg*(1+.7*L)*(L>=4?Math.pow(1.22,L-3):1)*mods[t.type]*(1+lb)*(1+.25*zb)*(1+.1*rf),range:b.range*(1+.08*Math.min(L,4)+.04*Math.max(0,L-4)+.012*rf)*mods.range,rate:b.rate/mods.aspd/(1+.06*L)/(1+lb*.5)/(1+.3*zb)/(actBell>0?1.4:1),splash:(b.splash||0)*mods.splash*(1+.08*L),chain:(b.chain||0)+mods.chain+(L>=2?1:0),slow:Math.min(.36,(b.slow||0)+mods.slow+L*.014),burn:(b.burn||0)*(1+.5*L)*mods.burnMul};return brApply(t,o)}
+ const rf=t.ref||0;const o={dmg:b.dmg*(1+.7*L)*(L>=4?Math.pow(1.22,L-3):1)*mods[t.type]*(1+lb)*(1+.25*zb)*(1+.1*rf),range:b.range*(1+.08*Math.min(L,4)+.04*Math.max(0,L-4)+.012*rf)*mods.range,rate:b.rate/mods.aspd/(1+.06*L)/(1+lb*.5)/(1+.3*zb)/(actBell>0?1.4:1),splash:(b.splash||0)*mods.splash*(1+.08*L),chain:(b.chain||0)+mods.chain+(L>=2?1:0),slow:Math.min(.22,(b.slow||0)+mods.slow+L*.01),burn:(b.burn||0)*(1+.5*L)*mods.burnMul};return brApply(t,o)}
 function findTarget(x,y,r){let best=null,bp=-1;const r2=r*r;for(const e of enemies){if(!e.alive)continue;const dx=e.x-x,dy=e.y-y;if(dx*dx+dy*dy<=r2&&e.prog>bp){bp=e.prog;best=e}}return best}
 function damage(e,a,src,show){
  if(!e.alive)return;a*=mods.dmgAll;if(ET[e.t].armor&&src!=='burn'&&src!=='beam')a*=1-ET[e.t].armor;
@@ -1003,7 +1003,7 @@ function update(dt){
   if(t.type==='harpoon'){const cr=Math.random()<mods.crit;projs.push({k:'harp',x:t.x,y:t.y,e:tg,tx:tg.x,ty:tg.y,dmg:st.dmg*(cr?3:1),cr});sfx('harp')}
   else if(t.type==='fire'){projs.push({k:'fire',x0:t.x,y0:t.y-8,x:t.x,y:t.y,tx:tg.x+tg.dx*ET[tg.t].spd*.3,ty:tg.y+tg.dy*ET[tg.t].spd*.3,t:0,dur:.45,dmg:st.dmg,sp:st.splash,burn:st.burn});sfx('fire')}
   else if(t.type==='tide'){fx.push({k:'ring',x:t.x,y:t.y,r0:8,r1:st.range,life:.55,max:.55,c:SP.blue,col:'120,210,255'});sfx('tide');
-   for(const e of enemies){if(!e.alive)continue;if((e.x-t.x)**2+(e.y-t.y)**2<=st.range*st.range){{const had=e.slow>0;e.slowAmt=had?Math.max(e.slowAmt,st.slow):st.slow;e.slow=Math.max(e.slow,1)};e.wet=2.6+mods.wetDur;if(mods.tideStun)e.stun=Math.max(e.stun,mods.tideStun);damage(e,st.dmg,'tide')}}}
+   let nS=0;const inR=enemies.filter(e=>e.alive&&(e.x-t.x)**2+(e.y-t.y)**2<=st.range*st.range).sort((a,b)=>b.prog-a.prog);for(const e of inR){if(nS++<4){const sa=ET[e.t].boss?st.slow*.5:st.slow;const had=e.slow>0;e.slowAmt=had?Math.max(e.slowAmt,sa):sa;e.slow=Math.max(e.slow,.6)}e.wet=2.6+mods.wetDur;if(mods.tideStun)e.stun=Math.max(e.stun,mods.tideStun);damage(e,st.dmg,'tide')}}
   else if(t.type==='bolt'){let cur=tg;const hit=[];const pts=[[t.x,t.y-14]];
    for(let i=0;i<st.chain&&cur;i++){hit.push(cur);pts.push([cur.x,cur.y]);let m=st.dmg*Math.pow(.85,i);let tag=false;
     if(cur.wet>0){m*=mods.wetMult;tag='w';discover('wetbolt',`젖음 + 번개 = ${mods.wetMult}배 피해!`)}
@@ -1811,7 +1811,7 @@ function drawTide(c){const low=tideLow(),k=state==='wave'?1:.6;c.save();const sh
 const RELICS=[
  {n:'칠성의 호루라기',w:'어부 칠성',t:0,need:4,d:'작살 무리 피해 +12%',ap:m=>{m.harpoon*=1.12},sy:'칠성이 불면 개 복실이가 갯바닥 끝에서도 달려왔다. 칠성이 돌아오지 않은 뒤로도, 복실이는 매일 저녁 선착장에 앉아 있었다.'},
  {n:'만석의 담뱃대',w:'만복의 형 만석',t:0,need:4,d:'시작 등유 +40',ap:m=>{m.startGold=(m.startGold||0)+40},sy:'"형은 늘 담배 한 대 피울 시간만 기다려 달라고 했어." 만복은 그 시간을 열 해째 기다린다.'},
- {n:'순례의 은비녀',w:'물결의 어머니 순례',t:1,need:6,d:'해녀 무리 둔화 +4%',ap:m=>{m.slow+=.04},sy:'물결은 어머니가 물에 들기 전 비녀를 바위에 꽂아 두던 걸 기억한다. 그날은 비녀가 없었다.'},
+ {n:'순례의 은비녀',w:'물결의 어머니 순례',t:1,need:6,d:'해녀 무리 둔화 +2%',ap:m=>{m.slow+=.02},sy:'물결은 어머니가 물에 들기 전 비녀를 바위에 꽂아 두던 걸 기억한다. 그날은 비녀가 없었다.'},
  {n:'덕보의 사당 열쇠',w:'사당지기 덕보',t:1,need:6,d:'섬광 재사용 −12%',ap:m=>{m.flashCd*=.88},sy:'사당의 열쇠는 둘이었다. 하나는 덕보와 함께 바다로 갔고, 하나는 누군가의 손에 남았다.'},
  {n:'갑수의 광부 등',w:'광부 갑수',t:0,need:4,d:'화염 무리 피해 +12%',ap:m=>{m.fire*=1.12},sy:'등의 심지는 다 타지 않았다. 갑수는 불이 꺼지기 전에 갱도를 나오지 못했다.'},
  {n:'열두 광부의 이름패',w:'갱도의 광부 열둘',t:1,need:6,d:'모든 사거리 +6%',ap:m=>{m.range*=1.06},sy:'열두 개의 나무패. 돌쇠는 하나하나 불에 그을려 이름을 새겼다.'},
