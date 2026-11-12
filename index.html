@@ -114,7 +114,8 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--f-ui);ov
 .row{display:flex;gap:.4em;margin-top:.15em}
 .row button{flex:1;padding:.55em .4em;border-radius:.6em;border:1px solid var(--line);background:var(--panel2);font-weight:700;font-size:.82em}
 .row .up.ref.bold{background:linear-gradient(180deg,#f3d0ff,#b46cf0 55%,#6a2fb0);color:#1a0626!important;box-shadow:0 0 1em rgba(200,130,255,.6)}
-.row .up.ref,#pop button.ref{background:linear-gradient(180deg,#fff6d8,#f2c868 60%,#c98a2c);color:#2a1a04!important;display:flex;flex-direction:column;align-items:center;line-height:1.2;box-shadow:0 0 1em rgba(255,226,150,.6)}#pop button.ref small{font-size:.72em;font-weight:600;opacity:.85}#pop button.ref:disabled{filter:grayscale(.6) brightness(.7);box-shadow:none}#pop .rf{color:#ffe9a8;text-shadow:0 0 .5em #ffd36b}
+.row .up.ref,#pop button.ref{background:linear-gradient(180deg,#fff6d8,#f2c868 60%,#c98a2c);color:#2a1a04!important;display:flex;flex-direction:column;align-items:center;line-height:1.2;box-shadow:0 0 1em rgba(255,226,150,.6)}#pop button.ref small{font-size:.72em;font-weight:600;opacity:.85}#pop button.ref:disabled{filter:grayscale(.6) brightness(.7);box-shadow:none}#pop .sl{grid-column:1/-1;display:block;font-size:.62em;color:#b8b2a2;line-height:1.3;margin-top:.1em}#pop .nx{margin-top:.35em;padding:.3em .45em;border-radius:.45em;background:rgba(255,255,255,.05);font-size:.92em;color:#cfc8b6;line-height:1.45}#pop .up2{color:#9ff0b0;font-weight:700}
+#pop .rf{color:#ffe9a8;text-shadow:0 0 .5em #ffd36b}
 .row .up{background:linear-gradient(180deg,#ffd58c,#e79b3b);color:#1b1105!important;border:none}
 .row .up:disabled{background:var(--panel2);color:var(--mute)!important;border:1px solid var(--line)}
 .stats{font-size:.74em;color:#c9c3b3;margin:0 .2em .55em;font-variant-numeric:tabular-nums;line-height:1.5}
@@ -837,7 +838,7 @@ function nightClear(){snapCarry();$('#bEndless').hidden=false;
 /* ---------- waves ---------- */
 function genWave(w){
  if(TUT){const q=[],sp=[[9,0],[12,2],[12,3],[10,2]][Math.min(3,w-1)];for(let k=0;k<sp[0];k++)q.push({t:'shade',d:.85});for(let k=0;k<sp[1];k++)q.splice(2+k*3,0,{t:'runner',d:.5});if(w===4)q.splice(5,0,{t:'elite',d:2});return q}
- const wk=waveKind(w),e=EW(w),q=[],n=Math.round((12+e*1.15+CH*3)*2);const pool=[['shade',Math.max(3,16-e*.9)]];
+ const wk=waveKind(w),e=EW(w),q=[],n=Math.round(14+e*2.6+CH*4);const pool=[['shade',Math.max(3,16-e*.9)]];
  if(e>=2||CH>0)pool.push(['runner',2+e*.35+CH]);if(e>=4)pool.push(['weeper',Math.min(6,(e-3)*.5)]);if(e>=6||(CH>1&&e>=3))pool.push(['brute',Math.min(7,(e-4)*.45+(CH===2?2:CH*.4))]);if(e>=8)pool.push(['caller',Math.min(3.5,.6+(e-8)*.25+CH*.25)]);
  const tot=pool.reduce((s,p)=>s+p[1],0);const gap=Math.max(.18,(1-e*.03-CH*.05)*.55);
  for(let i=0;i<n;i++){let r=Math.random()*tot,t='shade';for(const p of pool){r-=p[1];if(r<=0){t=p[0];break}}q.push({t,d:t==='runner'?gap*.45:t==='brute'?gap*1.4:gap})}
@@ -912,7 +913,7 @@ function damage(e,a,src,show){
 function kill(e){
  e.alive=false;const B=ET[e.t];kills++;
  if(B.split)for(const o of[-8,8]){const n2=spawn('tear',Math.max(0,(e.alt?e.alt.join:e.dist)+o));n2.x=e.x+o*.6;n2.y=e.y}
- const g=Math.max(1,Math.round(B.gold*.6*(1+wave*.03)*(1+CH*.4)*mods.gold*DF().g));gold+=g;
+ const g=Math.max(1,Math.round(B.gold*.7*(1+wave*.03)*(1+CH*.4)*mods.gold*DF().g));gold+=g;
  if((B.boss&&!B.elite)||B.elite||(B.rare&&Math.random()<.35)){chests++;0}
  if(B.rare){meta.tickets++;save();notice(`유품 표식 +1`,'gold',1.2);for(let i=0;i<24;i++){const a=rnd(0,TAU),v=rnd(30,120);part(e.x,e.y,Math.cos(a)*v,Math.sin(a)*v-40,rnd(.6,1.2),rnd(2.5,5),STAR,.95)}}
  num(e.x,e.y-8,'+'+g,'g');
@@ -972,7 +973,7 @@ function update(dt){
  for(const e of enemies){if(!e.alive)continue;const B=ET[e.t];
   if(e.hit>0)e.hit-=dt;if(e.lit>0)e.lit-=dt;if(e.mark>0)e.mark-=dt;if(e.callT>0)e.callT-=dt;if(B.call)for(const o of enemies)if(o!==e&&o.alive&&(o.x-e.x)**2+(o.y-e.y)**2<75*75)o.callT=.3;if(e.buffT>0){e.buffT-=dt;e.hp=Math.min(e.max,e.hp+e.max*.015*dt)}
   if(e.stun>0)e.stun-=dt;else{
-   let sp=B.spd*(e.slow>0?1-e.slowAmt:1)*(e.buffT>0?1.35:1)*(e.callT>0?1.3:1);if(e.slow>0)e.slow-=dt;
+   let sp=B.spd*(1+Math.min(.22,EW(wave)*.011))*(e.slow>0?1-e.slowAmt:1)*(e.buffT>0?1.35:1)*(e.callT>0?1.3:1);if(e.slow>0)e.slow-=dt;
    if(e.alt){e.ad+=sp*dt;const A=e.alt;if(e.ad>=A.len){e.dist=A.join;e.alt=null}const p=e.alt?altPos(A,e.ad):posAt(e.dist);e.x=p[0];e.y=p[1];e.dx+=(p[2]-e.dx)*Math.min(1,dt*8);e.dy+=(p[3]-e.dy)*Math.min(1,dt*8);e.prog=e.alt?A.join*e.ad/A.len:e.dist}
    else{e.dist+=sp*dt;e.prog=e.dist;if(e.dist>=PLEN){e.alive=false;if(e===bossRef){bossRef=null;$('#bossbar').hidden=true}if(B.clue)toast('단서가 안개 속으로 사라졌다','syn');hurtLighthouse(B.dmg);continue}const p=posAt(e.dist);e.x=p[0];e.y=p[1];e.dx+=(p[2]-e.dx)*Math.min(1,dt*8);e.dy+=(p[3]-e.dy)*Math.min(1,dt*8)}
   }
@@ -1340,13 +1341,15 @@ const pop=$('#pop');
 function closePop(){pop.hidden=true;selSlot=-1}
 function placePop(x,y){pop.hidden=false;pop.style.left='0px';pop.style.top='0px';const sw=stage.clientWidth,w=pop.offsetWidth,h=pop.offsetHeight;let left=clamp(x*S-w/2,6,sw-w-6);let top=y*S-h-26*S;if(top<48*S)top=y*S+26*S;top=clamp(top,44*S,stage.clientHeight-h-6);pop.style.left=left+'px';pop.style.top=top+'px'}
 function openBuild(i){selSlot=i;
- pop.innerHTML=`<div class="pt">누구를 세울까?<small>등유 ${gold}</small></div><div class="pg">${Object.entries(TT).filter(([k,b])=>!b.weapon||meta.weapons.includes(b.wi)).map(([k,b])=>`<button class="opt" data-b="${k}" style="--c:${b.css}"><i>${b.glyph}</i><b>${b.name}</b><span>${k===runExcl?'세우지 않기로 했다':k==='harpoon'&&betrayed?'등을 돌렸다':b.role}</span><em>${b.cost}</em></button>`).join('')}</div>`;
+ pop.innerHTML=`<div class="pt">누구를 세울까?<small>등유 ${gold}</small></div><div class="pg">${Object.entries(TT).filter(([k,b])=>!b.weapon||meta.weapons.includes(b.wi)).map(([k,b])=>`<button class="opt" data-b="${k}" style="--c:${b.css}"><i>${b.glyph}</i><b>${b.name}</b><span>${k===runExcl?'세우지 않기로 했다':k==='harpoon'&&betrayed?'등을 돌렸다':b.role}</span><small class="sl">${statLine(tstats({type:k,lvl:1,x:-999,y:-999}),k)}</small><em>${b.cost}</em></button>`).join('')}</div>`;
  placePop(...SLOTS[i]);refreshPop()}
+function statLine(st,type){const x=type==='fire'?` · 범위 ${Math.round(st.splash)}`:type==='tide'?` · 둔화 ${Math.round(st.slow*100)}%`:type==='bolt'?` · 연쇄 ${st.chain}`:'';return`피해 ${Math.round(st.dmg*mods.dmgAll)} · ${(1/st.rate).toFixed(1)}회/초 · 사거리 ${Math.round(st.range)}${x}`}
+function diffLine(a,b,type){const d=(n,x,y,f)=>{const X=f(x),Y=f(y);return X===Y?`${n} ${X}`:`${n} ${X}<b class="up2">→${Y}</b>`};const r=v=>Math.round(v*mods.dmgAll);const parts=[d('피해',a.dmg,b.dmg,r),d('',1/a.rate,1/b.rate,v=>v.toFixed(1))+'회/초',d('사거리',a.range,b.range,Math.round)];if(type==='fire')parts.push(d('범위',a.splash,b.splash,Math.round));if(type==='tide')parts.push(d('둔화',a.slow,b.slow,v=>Math.round(v*100)+'%'));if(type==='bolt')parts.push(d('연쇄',a.chain,b.chain,v=>v));return parts.join(' · ')}
 function upCost(t){return Math.round(TT[t.type].cost*(t.lvl<4?.75+.35*t.lvl:.6+.62*t.lvl))}
 function openTower(i){selSlot=i;const t=slotT[i],b=TT[t.type],st=tstats(t);
  if(t.traitor){const dc=40*t.lvl;pop.innerHTML=`<div class="pt" style="color:#d8a8ff">하람을 따른 어부<small>Lv.${t.lvl}</small></div><div class="stats">주변 120 안의 적이 빨라지고, 덜 다치고, 조금씩 회복한다.${t.supp>0?`<br><em>종소리에 묶여 있다 · ${Math.ceil(t.supp)}초</em>`:''}</div><div class="row"><button class="up" data-down ${gold<dc?'disabled':''}>끌어내리기 · 등유 ${dc}</button></div>`;placePop(t.x,t.y);return}
  const extra=t.type==='fire'?` · 범위 ${Math.round(st.splash)}`:t.type==='tide'?` · 둔화 ${Math.round(st.slow*100)}%`:t.type==='bolt'?` · 연쇄 ${st.chain}`:'';
- pop.innerHTML=`<div class="pt">${FORMS[t.type][t.lvl-1]}${t.ref?`<b class="rf"> +${t.ref}</b>`:''}<small style="color:var(--lamp);letter-spacing:.1em">${'★'.repeat(Math.min(4,t.lvl))}${'☆'.repeat(Math.max(0,4-t.lvl))}<span style="color:var(--spirit)">${'✦'.repeat(Math.max(0,t.lvl-4))}</span></small></div><div class="stats"><em>${b.who}${t.br?' · '+BR[t.type][t.br].n:''}</em><br>피해 ${Math.round(st.dmg*mods.dmgAll)} · 사거리 ${Math.round(st.range)} · ${(1/st.rate).toFixed(1)}회/초${extra}</div><div class="row">${t.lvl<MAXL?`<button class="up" data-up>▲ ${t.lvl===3&&BR[t.type]&&!t.br?'각성 · 갈래 고르기':FORMS[t.type][t.lvl]} · ${upCost(t)}</button>`:`<button class="up ref" data-ref="0">✦ 정련 +${(t.ref||0)+1} · ${refCost(t)}<small>성공 ${Math.round(refChance(t)*100)}%${t.pity?` · 축복 +${Math.round(t.pity*100)}%`:''}</small></button><button class="up ref bold" data-ref="1">⚡ 과감히 · ${refCost(t)}<small>성공 ${Math.round(Math.min(.97,refChance(t)+.12)*100)}% · 실패 시 ${t.ref?'45% 하락':'하락 없음'}</small></button></div><div class="row">`}<button data-sell>판매 +${Math.floor(t.spent*.7)}</button></div>`;
+ pop.innerHTML=`<div class="pt">${FORMS[t.type][t.lvl-1]}${t.ref?`<b class="rf"> +${t.ref}</b>`:''}<small style="color:var(--lamp);letter-spacing:.1em">${'★'.repeat(Math.min(4,t.lvl))}${'☆'.repeat(Math.max(0,4-t.lvl))}<span style="color:var(--spirit)">${'✦'.repeat(Math.max(0,t.lvl-4))}</span></small></div><div class="stats"><em>${b.who}${t.br?' · '+BR[t.type][t.br].n:''}</em><br>${statLine(st,t.type)}${t.lvl<MAXL?`<div class="nx">▲ 강화하면 · ${diffLine(st,tstats(Object.assign({},t,{lvl:t.lvl+1})),t.type)}${t.lvl===3&&BR[t.type]&&!t.br?'<br>4단계에서 갈래를 고른다':''}</div>`:`<div class="nx">✦ 정련하면 · 피해 ${Math.round(st.dmg*mods.dmgAll)}<b class="up2">→${Math.round(st.dmg*mods.dmgAll*(1+.1*((t.ref||0)+1))/(1+.1*(t.ref||0)))}</b> · 사거리 약간 증가</div>`}</div><div class="row">${t.lvl<MAXL?`<button class="up" data-up>▲ ${t.lvl===3&&BR[t.type]&&!t.br?'각성 · 갈래 고르기':FORMS[t.type][t.lvl]} · ${upCost(t)}</button>`:`<button class="up ref" data-ref="0">✦ 정련 +${(t.ref||0)+1} · ${refCost(t)}<small>성공 ${Math.round(refChance(t)*100)}%${t.pity?` · 축복 +${Math.round(t.pity*100)}%`:''}</small></button><button class="up ref bold" data-ref="1">⚡ 과감히 · ${refCost(t)}<small>성공 ${Math.round(Math.min(.97,refChance(t)+.12)*100)}% · 실패 시 ${t.ref?'45% 하락':'하락 없음'}</small></button></div><div class="row">`}<button data-sell>판매 +${Math.floor(t.spent*.7)}</button></div>`;
  placePop(t.x,t.y);refreshPop()}
 function refreshPop(){if(pop.hidden)return;pop.querySelectorAll('[data-b]').forEach(b=>b.disabled=gold<TT[b.dataset.b].cost||(b.dataset.b==='harpoon'&&betrayed)||b.dataset.b===runExcl);const u=pop.querySelector('[data-up]');if(u&&selSlot>=0&&slotT[selSlot])u.disabled=gold<upCost(slotT[selSlot]);if(selSlot>=0&&slotT[selSlot])pop.querySelectorAll('[data-ref]').forEach(rb=>rb.disabled=gold<refCost(slotT[selSlot]));const sm=pop.querySelector('.pt small');if(sm&&!slotT[selSlot])sm.textContent='등유 '+gold}
 pop.addEventListener('click',ev=>{
