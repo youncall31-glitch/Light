@@ -432,7 +432,7 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--f-ui);ov
       <div class="ov" id="chest" hidden>
         <div class="eyebrow">바다의 상자</div>
         <h2 id="chTitle">무엇이 들어 있을까</h2>
-        <p class="chp2" id="chSub">정예와 유품을 품은 그림자가 안고 있던 상자. 파도에 씻긴 것들이 뒤섞여 있다.</p>
+        <p class="chp2" id="chSub">정화된 그림자가 품고 있던 상자. 바다에 잠든 이들의 유품 조각이 섞여 있을지도 모른다.</p>
         <div id="chWin"><div id="chStrip"></div><div id="chMark"></div></div>
         <div id="chRes"></div>
         <button class="btn pri" id="chGo">상자 열기</button>
@@ -1231,7 +1231,7 @@ function render(){
 
 /* ---------- UI ---------- */
 const OVS=['chest','branch','relic','title','cards','over','win','shop','guide','book','caseOv','pause','chap','bp','epi','trial','tale'];
-function showOnly(id){OVS.forEach(o=>$('#'+o).hidden=o!==id);$('#toast').classList.toggle('low',!!id);$('#back').hidden=!['guide','book','caseOv','shop','pause','chap','bp','epi','trial','tale','relic','branch'].includes(id)&&id!=='chest'}
+function showOnly(id){OVS.forEach(o=>$('#'+o).hidden=o!==id);$('#toast').classList.toggle('low',!!id);$('#back').hidden=!['guide','book','caseOv','shop','pause','chap','bp','epi','trial','tale','relic','branch'].includes(id)}
 let bTimer,sTimer;
 function banner(main,sub,boss){const b=$('#banner');b.querySelector('b').textContent=main;b.querySelector('span').textContent=sub||'';b.className=boss?'on boss':'on';clearTimeout(bTimer);bTimer=setTimeout(()=>b.className=boss?'boss':'',1800)}
 function showStory(txt){toast(txt,'who',Math.min(8,Math.max(5,2+txt.length*.09)))}
@@ -1747,13 +1747,16 @@ $('#rlTen').addEventListener('click',()=>{if(meta.shards<180)return;meta.shards-
 
 /* ---------- sea chest roulette ---------- */
 let chests=0;
-const CHR=[{n:'등유 +80',ic:'🛢',c:'#c9a46a',w:34,a:()=>{gold+=80}},
- {n:'등유 +220',ic:'🛢',c:'#ffc46b',w:16,a:()=>{gold+=220}},
- {n:'유품 표식 +1',ic:'◈',c:'#8fe6ff',w:16,a:()=>{meta.tickets++;save()}},
- {n:'무리 하나 한 단계 위로',ic:'▲',c:'#9fe6c8',w:13,a:()=>{const c=towers.filter(t=>!t.traitor&&!TT[t.type].weapon&&t.lvl<MAXL&&!(t.lvl===3&&BR[t.type]&&!t.br));if(c.length){const t=c[Math.floor(Math.random()*c.length)];t.lvl++;fx.push({k:'pillar',x:t.x,y:t.y,life:1,max:1});return`${TT[t.type].who} · ${FORMS[t.type][t.lvl-1]}`}const r=towers.filter(t=>t.lvl>=MAXL&&!t.traitor);if(r.length){const t=r[Math.floor(Math.random()*r.length)];t.ref=(t.ref||0)+1;return`${TT[t.type].who} · 정련 +${t.ref}`}gold+=150;return'올릴 무리가 없어 등유 +150'}},
- {n:'빛의 결정 +15',ic:'✧',c:'#c3a8ff',w:11,a:()=>{meta.shards+=15;save()}},
- {n:'모든 무리 축복 +15%',ic:'✦',c:'#ffe9a8',w:6,a:()=>{for(const t of towers)t.pity=Math.min(.3,(t.pity||0)+.15)}},
- {n:'잭팟 · 전설 선물과 등유 +500',ic:'☀',c:'#ffd34d',w:4,jp:1,a:()=>{gold+=500;const L=CARDS.filter(c=>c.r===2&&!(c.once&&taken.has(c.id)));if(L.length){const c=L[Math.floor(Math.random()*L.length)];c.a();taken.add(c.id);runPicks.push(c.id);return`전설 선물 「${c.n}」 · ${c.d}`}}}];
+const fragTxt=x=>{if(x.k==='stone')return'조약돌뿐이다 · 결정 +2';const R0=RELICS[x.i];return x.star?`${R0.n} ★${x.star} 각성`:x.dup?`${R0.n} · ★ 조각 ${meta.rdup[x.i]}/${R0.need}`:`${R0.n} · 조각 ${Math.min(R0.need,meta.relic[x.i])}/${R0.need}${x.done?' · 온전해졌다':''}`};
+function legendFrag(){const L=RELICS.map((_,i)=>i).filter(i=>RELICS[i].t===2&&(!relicDone(i)||(meta.rstar[i]||0)<3));if(!L.length)return drawOne(true);const i=L[Math.floor(Math.random()*L.length)];
+ if(relicDone(i)){meta.rdup[i]=(meta.rdup[i]||0)+1;if(meta.rdup[i]>=RELICS[i].need){meta.rdup[i]=0;meta.rstar[i]=(meta.rstar[i]||0)+1;return{k:'frag',i,star:meta.rstar[i]}}return{k:'frag',i,dup:1}}
+ meta.relic[i]=(meta.relic[i]||0)+1;return{k:'frag',i,done:relicDone(i)}}
+const CHR=[{n:'조약돌',ic:'🪨',c:'#8a8f9c',w:28,a:()=>{meta.shards+=2;save();return'바다가 돌려준 건 조약돌뿐 · 결정 +2'}},
+ {n:'유품 조각',ic:'◈',c:'#8fe6ff',w:38,a:()=>{const x=drawOne(true);save();return fragTxt(x)}},
+ {n:'유품 조각 ×2',ic:'◈◈',c:'#c3a8ff',w:13,a:()=>{const a=drawOne(true),b=drawOne(true);save();return fragTxt(a)+' / '+fragTxt(b)}},
+ {n:'유품 표식 +1',ic:'≋',c:'#9fe6c8',w:11,a:()=>{meta.tickets++;save();return`갯바닥에서 한 번 더 주울 수 있다 (보유 ${meta.tickets})`}},
+ {n:'빛의 결정 +15',ic:'✧',c:'#ffe9a8',w:6,a:()=>{meta.shards+=15;save()}},
+ {n:'잭팟 · 전설 유품 조각 ×3',ic:'☀',c:'#ffd34d',w:4,jp:1,a:()=>{const r=[legendFrag(),legendFrag(),legendFrag()];save();return r.map(fragTxt).join(' / ')}}];
 function rollCh(){const tot=CHR.reduce((s,x)=>s+x.w,0);let r=Math.random()*tot;for(const x of CHR){r-=x.w;if(r<=0)return x}return CHR[0]}
 let chCb=null,chBusy=false;
 const cItem=x=>`<div class="cI${x.jp?' jp':''}" style="--c:${x.c}"><i>${x.ic}</i>${x.n}</div>`;
@@ -1768,7 +1771,7 @@ $('#chGo').addEventListener('click',()=>{if(chBusy)return;
  requestAnimationFrame(()=>{strip.style.transition='transform 3.4s cubic-bezier(.12,.62,.08,1)';strip.style.transform=`translateX(${-target}px)`});
  let ticks=0;const tk=setInterval(()=>{if(++ticks>26){clearInterval(tk);return}tone(700+ticks*12,.03,'triangle',.02)},60+ticks*4);
  setTimeout(()=>{chBusy=false;const extra=res.a();const msg=res.n+(typeof extra==='string'?` · ${extra}`:'');$('#chRes').textContent=msg;$('#chRes').className=res.jp?'jp':'';
-  if(res.jp){holySfx(10);flashT=.35;shake=Math.max(shake,10);banner('☀ 잭팟','바다가 가장 귀한 것을 돌려주었다',true)}else if(res.w<=13)holySfx(4);else sfx('card');
+  if(res.jp){holySfx(10);flashT=.35;shake=Math.max(shake,10);banner('☀ 잭팟','바다가 가장 귀한 유품을 돌려주었다',true)}else if(res.w<=13)holySfx(4);else sfx('card');
   $('#chGo').textContent='받기'},3500)});
 
 /* ---------- refining ---------- */
