@@ -209,6 +209,16 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--f-ui);ov
 .hintbox{display:block;margin-top:.6em;padding:.6em .8em;border-radius:.6em;background:rgba(143,230,255,.08);border:1px dashed rgba(143,230,255,.45);color:#d6f2ff;font-family:var(--f-disp);font-size:.92em;line-height:1.6;text-align:left}
 .hintbox b{display:block;font-family:var(--f-ui);font-size:.72em;letter-spacing:.16em;color:var(--spirit);margin-bottom:.15em}
 #trial{justify-content:flex-start;padding-top:3.8em}
+#tale{background:#100c08;justify-content:flex-start;padding-top:3.4em;gap:.7em;backdrop-filter:none;-webkit-backdrop-filter:none}
+#taCv{display:block;width:min(86%,21em);aspect-ratio:4/5;box-shadow:0 1em 3em rgba(0,0,0,.7);flex:none}
+#taCv.kb{animation:kb 24s ease-out both}
+@keyframes kb{from{transform:scale(1.05) translateY(.4em)}to{transform:none}}
+#taText{max-width:22em;font-family:var(--f-disp);color:#efe4cb;font-size:.95em;line-height:1.7;text-align:center}
+#taText p{margin:.2em 0;max-width:none;color:#efe4cb}
+.tl{opacity:0;transform:translateY(1.4em);animation:rise 1.2s ease-out forwards}
+#taText.all .tl{animation-delay:0s!important;animation-duration:.25s}
+@keyframes rise{to{opacity:1;transform:none}}
+.tg{display:flex;flex-wrap:wrap;gap:.4em}.tg .btn{min-width:0;padding:.5em .8em;font-size:.82em}
 #trial .bpc b small{font-family:var(--f-ui);font-size:.72em;color:var(--mute);font-weight:500;margin-left:.3em}
 #trial .bpc span{font-family:var(--f-disp);font-size:.84em;color:#e6dfcc}
 #trial .bpc.acc{border-color:rgba(255,120,140,.55);box-shadow:0 0 1em rgba(255,90,110,.18)}
@@ -292,6 +302,13 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--f-ui);ov
           <button class="btn" id="bEndless">끝없는 밤 계속하기</button>
           <button class="btn ghost" id="bRetire">여기서 마치기</button>
         </div>
+      </div>
+
+      <div class="ov" id="tale" hidden>
+        <div class="eyebrow" id="taEy"></div>
+        <canvas id="taCv"></canvas>
+        <div id="taText"></div>
+        <button class="btn pri" id="taNext">계속</button>
       </div>
 
       <div class="ov" id="trial" hidden>
@@ -467,7 +484,7 @@ const STORY=[
  '해녀 물결이 물속에서 올라오며 정화됐다. "사당… 사당 안을 봐."',
  '사당 유리함이 비어 있다. 받침대엔 등불 모양의 그을음만 남았다.',
  '갈대 사이에서 거대한 숨소리가 들린다.',
- '물결이 사당 기록을 읽었다. "바다에 잠긴 이와 말하게 하는 안개를 검은 등불에 가뒀다. 등대 빛이 닿는 한 봉인은 풀리지 않는다."',
+ '물결이 사당 기록을 읽었다. "검은 등불의 검은 불꽃은 바다에 잠긴 이의 목소리를 연기로 피운다. 등대 빛이 닿는 한 불꽃은 잠든다."',
  '안개는 빛 아래에선 퍼지지 못하고 어둠 속에서 번진다. 그림자들이 등대를 노리는 까닭이다.',
  '하람이 기록을 한참 들여다보다가 말없이 덮었다.',
  '돌쇠가 말했다. "열 해 전 폭풍 다음 날, 스승님이 나한테 쇠로 된 함을 짜 달라고 했지. 봉인할 거라고."',
@@ -509,11 +526,11 @@ const JOURNAL=[
  '하람이 조수로 들어왔다. 렌즈를 다루는 손이 섬세하다. 아들 해랑이 매일 등대 계단을 뛰어오른다.',
  '폭풍이 온다. 해랑이 아버지 배를 몰래 타고 나갔다는 소식이 들렸다.',
  '불을 두고 나갔다. 아이를 찾아야 했다. 돌아왔을 때 등대는 꺼져 있었고, 은방울호가 암초에 걸려 있었다.',
- '빛이 꺼진 사이 봉인이 새었다. 그 밤 나도 목소리를 들었다. 오래전 바다에서 잃은 동생의 목소리였다.',
+ '빛이 꺼진 사이 봉인 틈으로 안개가 조금 새었다. 바다에서 해랑을 찾던 나는 그 안개를 마셨다. 오래전 잃은 동생 영길의 목소리가 들렸다.',
  '목소리는 말했다. 불을 끄면 다 채워 주겠다고. 만질 수 없는 목소리는 갈증만 키웠다. 거짓이었다.',
- '돌쇠에게 쇠 함을 짜 달라 했다. 등불을 다시 봉인했다. 하람에게는 끝내 말하지 못했다.',
+ '돌쇠에게 쇠 함을 짜 달라 했다. 등불을 다시 봉인했다. 하지만 이건 덮어 두는 것일 뿐, 불꽃은 잠들었을 뿐이다. 하람에게는 끝내 말하지 못했다.',
  '하람이 등대를 떠났다. 배 모는 법을 배우겠다고 한다. 바다를 다 뒤져서라도 아이를 찾겠다고.',
- '나도 이 마을을 떠난다. 제자에게 불을 맡긴다. 불을 지키는 일은, 남은 사람을 지키는 일이다.',
+ '나도 이 마을을 떠난다. 제자에게 불을 맡긴다. 언젠가 저 검은 불꽃을 끝내야 한다면, 그건 가둬서가 아니라 이 불을 건네서일 것이다. 불을 지키는 일은, 남은 사람을 지키는 일이다.',
 ];
 const MEMO={
  harpoon:['작살은 열 해 전에 처음 잡았어. 그 전엔 렌즈를 닦던 손이었지.','등대 일은 좋았어. 해랑이가 계단 오르는 소리가 매일 들렸거든.','그 밤 해랑이가 내 배를 몰래 탔어. 내가 배를 묶어 두는 걸 깜빡했지.','배 모는 법을 배웠어. 바다 끝까지 가면 그 애가 있을 것 같아서.','가끔 바다에서 목소리가 들려. …아니야, 그냥 바람 소리겠지.'],
@@ -522,7 +539,7 @@ const MEMO={
  bolt:['번개는 하늘에서 내려오는 빛이야! 등대랑 친구지?','난 해랑이 오빠를 몰라. 내가 태어나기 전 일이래.','언니가 등대 지키는 걸 보면서 나도 빛을 다루고 싶었어.','하람 아저씨가 밤에 등대 위에 올라가는 걸 봤어. 렌즈 앞에 오래 서 있었어.','어른들은 왜 다 바다만 봐? 등대는 뒤에 있는데.'],
 };
 const CH_IN=['안개가 마을을 덮쳤다. 그림자가 된 사람들이 마지막 빛, 이 등대로 몰려온다.','바닷바람을 거슬러 늪으로. 등대 빛이 닿던 사당의 문이 열려 있다.','안개가 폐광까지 번졌다. 봉인이 풀린 시각을 맞춰야 한다.','썰물이다. 등대 빛이 닿지 않는 유일한 곳, 난파선 무덤으로 가는 길이 열렸다.','검은 등불이 타는 곳, 안개의 심장. 그리고 그가 있다.'];
-const CH_OUT=['만복 씨가 돌아왔다. 안개가 어디서 왔는지 이제 짐작이 간다.','사당의 검은 등불이 사라졌다. 누군가 봉인을 열었다.','물때표와 일지가 봉인이 풀린 시각을 가리킨다.','장화 자국은 은방울호 앞에서 멈췄다. 그리고 등대 쪽으로 되돌아왔다.','하람의 손에서 검은 등불이 떨어졌다. 안개가 걷힌다.'];
+const CH_OUT=['만복 씨가 돌아왔다. 안개가 어디서 왔는지 이제 짐작이 간다.','사당의 검은 등불이 사라졌다. 누군가 봉인을 열었다.','물때표와 일지가 봉인이 풀린 시각을 가리킨다.','장화 자국은 은방울호 앞에서 멈췄다. 그리고 등대 쪽으로 되돌아왔다.','하람의 손이 풀렸다. 등대의 불씨가 검은 등불로 옮겨 붙었다.'];
 const GL={harpoon:['#9fd4ff','작'],fire:['#ff8a4a','화'],tide:['#5cc8ff','물'],bolt:['#c3a8ff','번'],lamp:['#ffc46b','빛'],gold:['#ffd56b','유'],all:['#ece5d4','온']};
 const CARDS=[
  {id:'oil',r:0,g:'gold',n:'등유 보급',d:'즉시 등유 +100',a:()=>{gold+=100}},
@@ -573,8 +590,8 @@ function gi(c,ch,b,t){return`<div class="gi" style="--c:${c}"><i>${ch}</i><div><
 const GUIDE=[
  {t:'등대를 지켜라',h:`<p>바다에 잠긴 이의 목소리를 들려주는 안개가 봉인에서 풀려났다. 안개를 마신 사람들은 그림자가 되어, 안개를 막는 마지막 빛인 등대를 끄러 온다. 빛으로 정화해 되찾아라. 다섯 개의 장, 각 장마다 10번째 파도까지 등대를 지키면 다음 장이 열린다.</p>`+gi('#ffc46b','등','등불','등대의 생명이자 빛줄기의 세기. 그림자가 등대에 닿으면 줄고, 0이 되면 패배한다.')+gi('#ff9a4a','유','등유','그림자를 정화하면 얻는다. 마을 사람을 세우고 강화하는 데 쓴다.')+gi('#8fe6ff','파','파도','5번째 파도엔 정예 그림자, 10번째 파도엔 그 장의 주인이 나타난다. 장이 깊어질수록 안개도 짙어진다.')},
  {t:'마을 사람 세우기',h:`<p>빛나는 받침돌을 누르면 정화된 마을 사람을 세울 수 있다.</p>`+gi('#9fd4ff','작','작살 · 어부 하람','빠르게 한 마리씩 꿰뚫는다.')+gi('#ff8a4a','화','화염 · 대장장이 돌쇠','터지는 불덩이. 맞은 적은 한동안 불탄다.')+gi('#5cc8ff','물','밀물 · 해녀 물결','주변 적을 느리게 하고 젖게 만든다.')+gi('#c3a8ff','번','번개 · 꼬마 마법사 반디','여러 적에게 튀는 번개. 젖은 적에게 특히 강하다.')+gi('#ffc46b','★','강화','세운 사람을 다시 눌러 등유로 4단계까지 강화한다. 단계마다 모습이 바뀌고 별이 늘어난다.')+gi('#fff1c2','신','신형 무기','장을 지켜내면 설계도 조각 9개를 맞춰 새 무기를 만든다. 한 번 만든 무기는 모든 장에서 영구히 쓸 수 있다.')+gi('#8fe6ff','✦','합치기','같은 종류의 4단계 이상 둘을 합치면 높은 쪽이 한 단계 오른다. 최고 8단계. 5단계부터는 푸른 별이 주위를 돈다.')},
- {t:'내 손으로 지키기',h:gi('#ffd890','나','등대지기','빈 곳을 누르면 그곳으로 걸어간다. 주변 그림자를 태우고 느리게 하며, 적에게 걸린 강화도 지운다.')+gi('#e8d6b0','복','복실이','캐릭터를 눌러 고른 뒤 빈 곳을 누르면 이동한다. 재빠르게 달려가 그림자를 물고 뒤로 밀친다. 둘 다 쓰러지면 8초 뒤 일어난다.')+gi('#ffc46b','빛','등대 빛줄기','등대는 스스로 빛을 돌린다. 안개는 빛을 삼키러 오고, 빛에 닿은 그림자는 정화된다. 등불이 약하면 빛줄기도 짧아진다.')+gi('#ffe2a0','섬','섬광','오른쪽 아래 버튼. 등대 주변 그림자를 모두 기절시키고 큰 피해를 준다.')+gi('#ff9a4a','▶','파도 부르기','준비 시간에 일찍 부르면 남은 시간만큼 등유를 더 받는다.')+gi('#ece5d4','×','속도와 정지','왼쪽 아래에서 속도를 1·2·3배로 바꾸거나 잠시 멈출 수 있다.')},
- {t:'단서와 추리',h:`<p>안개는 저절로 생긴 게 아니다. 누군가 무언가를 저질렀다. 증거를 모아 범인을 밝혀라.</p>`+gi('#ffd56b','단','기억을 품은 그림자','금빛으로 빛나는 그림자. 등대에 닿기 전에 정화하면 단서를 남긴다. 놓치면 그 밤엔 사라진다.')+gi('#8fe6ff','?','추리','한 사건의 증거 4개가 모이면 추리할 수 있다. 결정적인 증거 2개와 답 하나를 함께 제출해야 한다. 답이 맞아도 증거가 틀리면 실패. 틀리면 그 밤엔 다시 추리할 수 없다.')+gi('#ffc46b','◆','설계도 퍼즐','파도를 막을 때마다 설계도 조각이 모인다. 장을 지켜내면 9조각을 자리와 방향에 맞게 맞춰 신형 무기를 얻는다.')+gi('#ff9aa8','회','등대 회의','2장부터 장을 시작할 때마다 회의가 열린다. 각자의 변론을 듣고, 수상한 사람을 그 장에서 뺄 수 있다. 뺀 밤에 무엇이 달라지는지 지켜보라.')+gi('#ffd890','일','스승의 일지 · 인물 기억','정예와 보스를 쓰러뜨리면 스승의 일지가, 네 사람의 타워를 키울수록 그들의 기억이 열린다. 진실은 그 사이에 숨어 있다.')+gi('#c3a8ff','책','등대지기 수첩','모은 단서와 기억 조각은 수첩에서 언제든 다시 읽을 수 있다. 게임 중에도 열 수 있다.')},
+ {t:'내 손으로 지키기',h:gi('#ffd890','나','등대지기','빈 곳을 누르면 그곳으로 걸어간다. 주변 그림자를 태우고 느리게 하며, 적에게 걸린 강화도 지운다.')+gi('#e8d6b0','복','복실이','캐릭터를 눌러 고른 뒤 빈 곳을 누르면 이동한다. 재빠르게 달려가 그림자를 물고 뒤로 밀친다. 둘 다 쓰러지면 8초 뒤 일어난다.')+gi('#ffc46b','빛','등대 빛줄기','등대는 스스로 빛을 돌린다. 안개는 빛을 삼키러 오고, 빛에 닿은 그림자는 정화된다. 등불이 약하면 빛줄기도 짧아진다.')+gi('#ffe2a0','섬','섬광','오른쪽 아래 버튼. 등대 주변 그림자를 모두 기절시키고 큰 피해를 준다.')+gi('#ff9a4a','▶','파도 부르기','준비 시간에 일찍 부르면 남은 시간만큼 등유를 더 받는다.')+gi('#8fb0d8','물','물때','파도마다 썰물과 밀물이 바뀐다. 썰물엔 경계가 열려 그림자가 강해지고, 밀물엔 약해진다.')+gi('#ece5d4','×','속도와 정지','왼쪽 아래에서 속도를 1·2·3배로 바꾸거나 잠시 멈출 수 있다.')},
+ {t:'단서와 추리',h:`<p>안개는 저절로 생긴 게 아니다. 누군가 무언가를 저질렀다. 증거를 모아 범인을 밝혀라.</p>`+gi('#ffd56b','단','기억을 품은 그림자','금빛으로 빛나는 그림자. 등대에 닿기 전에 정화하면 단서를 남긴다. 놓치면 그 밤엔 사라진다.')+gi('#8fe6ff','?','추리','한 사건의 증거 4개가 모이면 추리할 수 있다. 결정적인 증거 2개와 답 하나를 함께 제출해야 한다. 답이 맞아도 증거가 틀리면 실패. 틀리면 그 밤엔 다시 추리할 수 없다.')+gi('#ffc46b','◆','설계도 퍼즐','파도를 막을 때마다 설계도 조각이 모인다. 장을 지켜내면 9조각을 자리와 방향에 맞게 맞춰 신형 무기를 얻는다.')+gi('#c3a8ff','속','바다의 목소리','가끔 마을 사람이 목소리에 붙잡혀 싸우지 못한다. 등대지기가 곁에 가면 깨어난다.')+gi('#cf9a3e','등','위령등','정예와 보스는 바다에서 잃은 이의 이름을 부르며 온다. 정화하면 그 이름을 등에 적는다.')+gi('#ff9aa8','회','등대 회의','2장부터 장을 시작할 때마다 회의가 열린다. 각자의 변론을 듣고, 수상한 사람을 그 장에서 뺄 수 있다. 뺀 밤에 무엇이 달라지는지 지켜보라.')+gi('#ffd890','일','스승의 일지 · 인물 기억','정예와 보스를 쓰러뜨리면 스승의 일지가, 네 사람의 타워를 키울수록 그들의 기억이 열린다. 진실은 그 사이에 숨어 있다.')+gi('#c3a8ff','책','등대지기 수첩','모은 단서와 기억 조각은 수첩에서 언제든 다시 읽을 수 있다. 게임 중에도 열 수 있다.')},
  {t:'선물과 성장',h:gi('#ece5d4','선','빛이 남긴 선물','파도를 막을 때마다 카드 3장 중 하나를 고른다. 일반·희귀·전설 등급이 있다.')+gi('#c3a8ff','합','시너지','젖은 적 + 번개처럼, 조합을 찾을수록 강해진다.')+gi('#8fe6ff','결','빛의 결정','밤이 끝나면 결정을 얻는다. 등대 작업실에서 영구 강화에 쓴다.')+gi('#ffd56b','장','다섯 개의 장','장을 지켜내면 다음 장이 열린다. 마지막 장 「안개의 심장」은 사건 1~4의 진실을 모두 밝혀야 열린다.')},
 ];
 const META=[
@@ -590,7 +607,7 @@ const META=[
 const KEY='last-lighthouse-v3';
 function load(){try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){return null}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(meta))}catch(e){}}
-const meta=Object.assign({shards:0,best:0,runs:0,lore:[],muted:false,seen:[],clues:[],solved:[],cleared:[],bestCh:{},weapons:[],hint:{},obs:{},memo:[],jr:[]},load()||{});
+const meta=Object.assign({shards:0,best:0,runs:0,lore:[],muted:false,seen:[],clues:[],solved:[],cleared:[],bestCh:{},weapons:[],hint:{},obs:{},memo:[],jr:[],lan:[]},load()||{});
 meta.up=Object.assign({gold:0,hp:0,dmg:0,reroll:0,flash:0,hero:0},meta.up||{});
 
 /* ---------- audio ---------- */
@@ -639,7 +656,7 @@ resetWorld();
 let mergeFrom=-1;
 function newRun(ch=CH,excl=null,kept=false){
  setMap(ch);drawBG();resetWorld();mods=freshMods();mergeFrom=-1;betrayed=false;
- runExcl=excl;haramKept=kept;if(kept)mods.harpoon*=1.5;heroes=makeHeroes();selHero=0;dimT=0;sabCount=0;quietShown=false;$('#bossbar').hidden=true;
+ runExcl=excl;haramKept=kept;temptT=26;ember=null;lanternPos=null;if(kept)mods.harpoon*=1.5;heroes=makeHeroes();selHero=0;dimT=0;sabCount=0;quietShown=false;$('#bossbar').hidden=true;
  gold=130+CH*70+meta.up.gold*30;maxHp=20+meta.up.hp*4;hp=maxHp;wave=0;spawnT=0;prepT=18;flashCd=0;flashT=0;shake=0;combo=0;comboT=0;bossKills=0;kills=0;
  aiming=false;beamA=-Math.PI/2;runLocked=new Set();rerolls=1+meta.up.reroll;taken=new Set();won=false;runSeen=new Set();bossRef=null;built=new Set();
  state='prep';paused=false;speed=1;$('#bSpeed').textContent='1×';
@@ -665,13 +682,14 @@ function startWave(){
  const echo=wave>10?'의 메아리':'';
  if(wave%10===0){banner(CHB[CH].boss+echo,'파도 '+wave+' · 이 장의 주인',true);sfx('boss')}
  else if(wave%10===5){banner(CHB[CH].elite+echo,'파도 '+wave+' · 정예 그림자',true);sfx('boss')}
- else{banner(`${CH+1}장 · 파도 ${wave}`,wave>10?'끝없는 밤':MAPS[CH].name);sfx('wave')}
+ else{banner(`${CH+1}장 · 파도 ${wave}`,tideLow()?'썰물 · 경계가 열린다':'밀물 · 안개가 약해진다');sfx('wave')}
+ if(wave===1)setTimeout(()=>discover('tide','물때 · 썰물엔 바다와 뭍의 경계가 열려 그림자가 강해지고, 밀물엔 약해진다'),3200);
  if(wave<=10){const li=CH*10+wave-1;showStory(STORY[li]);if(!meta.lore.includes(li)){meta.lore.push(li);save()}}
  if(CH===4&&wave===5&&!betrayed)setTimeout(betray,1800);
  if(CH<4&&wave<=10&&(CH===0?[7]:[3,6,8]).includes(wave)){if(runExcl!=='harpoon')sabotage();else if(!quietShown){quietShown=true;setTimeout(()=>toast('이상하다. 오늘 밤은 등대 빛이 흐려지지 않는다','syn'),2600)}}
 }
 function spawn(t,dist=0){
- const B=ET[t];const m=hpMul(wave)*(B.boss&&wave>10?1+(wave-10)*.12:1);
+ const B=ET[t];const m=hpMul(wave)*(B.boss&&wave>10?1+(wave-10)*.12:1)*(tideLow()?1.15:.92);
  const e={t,hp:B.hp*m,max:B.hp*m,x:0,y:0,dx:0,dy:1,dist,prog:dist,slow:0,slowAmt:0,wet:0,burn:0,burnDps:0,stun:0,hit:0,lit:0,alive:true,ph:Math.random()*TAU,sum:3.5};
  if(B.fly){e.sx=rnd(40,360);e.sy=-20;const ty=600;e.flen=Math.hypot(LX-e.sx,ty-e.sy);e.fd=0;e.dx=(LX-e.sx)/e.flen;e.dy=(ty-e.sy)/e.flen;e.x=e.sx;e.y=e.sy}
  else{const p=posAt(dist);e.x=p[0];e.y=p[1];e.dx=p[2];e.dy=p[3]}
@@ -684,7 +702,7 @@ function waveClear(){
  if(mods.interest){int=Math.floor(gold*.1*mods.interest);gold+=int}
  toast(`파도 ${wave} 막아냄 · 등유 +${bonus}${int?` · 이자 +${int}`:''}`,'gold');if(wave<10&&!meta.weapons.includes(CH))setTimeout(()=>toast(`${CH+1}장 설계도 조각 ${wave}/9`),700);
  if(wave>(meta.bestCh[CH]||0)){meta.bestCh[CH]=wave;save()}
- if(wave===10&&!won){chapterClear();return}
+ if(wave===10&&!won){if(CH===4&&!ember){startEmber();return}chapterClear();return}
  afterWave();
 }
 function afterWave(){const ci=CASES.findIndex((_,i)=>caseReady(i));if(ci>=0){state='cards';closePop();openCase(ci,openCards)}else openCards()}
@@ -709,7 +727,8 @@ function kill(e){
  if(combo>=10&&combo%10===0){const b=combo;gold+=b;toast(`연속 정화 ×${combo} · 보너스 등유 +${b}`,'gold')}
  if(e.burn>0&&mods.burnBoom){explode(e.x,e.y,48,e.max*.35+10,false);discover('boom','시너지 · 정화의 불꽃 폭발!')}
  if(B.clue||B.boss)gainClue(e.x,e.y);
- if(B.boss&&wave<=10)unlockJournal(CH*2+(B.elite?0:1));
+ if(B.boss&&wave<=10){unlockJournal(CH*2+(B.elite?0:1));unlockLantern(CH*2+(B.elite?0:1))}
+ if(CH===4&&B.boss&&!B.elite&&wave===10)lanternPos={x:e.x,y:e.y};
  if(B.boss){bossKills++;shake=Math.max(shake,14);flashT=.35;bossRef=null;$('#bossbar').hidden=true;
   toast(`${e.name} 정화 완료`,'who');sfx('win')} else sfx('kill');
 }
@@ -758,7 +777,7 @@ function update(dt){
  for(const e of enemies){if(!e.alive)continue;const B=ET[e.t];
   if(e.hit>0)e.hit-=dt;if(e.lit>0)e.lit-=dt;if(e.buffT>0){e.buffT-=dt;e.hp=Math.min(e.max,e.hp+e.max*.015*dt)}
   if(e.stun>0)e.stun-=dt;else{
-   let sp=B.spd*(e.slow>0?1-e.slowAmt:1)*(e.buffT>0?1.35:1);if(e.slow>0)e.slow-=dt;
+   let sp=B.spd*(e.slow>0?1-e.slowAmt:1)*(e.buffT>0?1.35:1)*(tideLow()?1.12:.95);if(e.slow>0)e.slow-=dt;
    if(B.fly){e.fd+=sp*dt;e.x=e.sx+e.dx*e.fd;e.y=e.sy+e.dy*e.fd;e.prog=e.fd/e.flen*PLEN;if(e.fd>=e.flen){e.alive=false;hurtLighthouse(B.dmg);continue}}
    else{e.dist+=sp*dt;e.prog=e.dist;if(e.dist>=PLEN){e.alive=false;if(e===bossRef){bossRef=null;$('#bossbar').hidden=true}if(B.clue)toast('단서가 안개 속으로 사라졌다','syn');hurtLighthouse(B.dmg);continue}const p=posAt(e.dist);e.x=p[0];e.y=p[1];e.dx+=(p[2]-e.dx)*Math.min(1,dt*8);e.dy+=(p[3]-e.dy)*Math.min(1,dt*8)}
   }
@@ -767,13 +786,15 @@ function update(dt){
   if(e.burn>0){e.burn-=dt;damage(e,e.burnDps*dt,'burn');if(Math.random()<dt*14)part(e.x+rnd(-6,6),e.y+rnd(-4,4),rnd(-8,8),rnd(-50,-25),rnd(.3,.6),rnd(2,4),SP.ember,.95,-10)}
   if(B.boss&&e.alive){e.sum-=dt;if(e.sum<=0){e.sum=B.elite?6:4.2;for(let i=0;i<2;i++)spawn('shade',Math.max(0,e.dist-14-i*12))}}
  }
- updateHeroes(dt);
+ updateHeroes(dt);updateEmber(dt);
+ if(state==='wave'&&CH>=1&&!ember){temptT-=dt;if(temptT<=0){temptT=rnd(24,34);tempt()}}
  // beams
  if(state==='wave'){const dps=9*(1+.13*(wave-1))*(1+CH*.5)*mods.beam*(dimT>0?.35:1);
   for(const a of beamAngles()){for(const e of enemies){if(!e.alive)continue;const dx=e.x-LX,dy=e.y-LY,d=Math.hypot(dx,dy);if(d>BL()||d<8)continue;let df=Math.atan2(dy,dx)-a;df=Math.atan2(Math.sin(df),Math.cos(df));if(Math.abs(df)<BH()+ET[e.t].r/d){e.lit=.12;damage(e,dps*dt,'beam')}}}}
  // towers
  for(const t of towers){const st=tstats(t);t.cd-=dt;if(t.fl>0)t.fl-=dt;if(t.sw)t.sw=Math.max(0,t.sw-dt*.7);if(t.sab>0)t.sab-=dt;
   if(t.traitor){if(t.supp>0)t.supp-=dt;else if(state==='wave')for(const e of enemies){if(e.alive&&(e.x-t.x)**2+(e.y-t.y)**2<120*120)e.buffT=.3}continue}
+  if(t.tempt>0){t.tempt-=dt;const me=heroes[0];if(me&&!(me.ko>0)&&Math.hypot(me.x-t.x,me.y-t.y)<46){t.tempt=0;toast(`${TT[t.type].who} · 정신을 차렸다`);fx.push({k:'ring',x:t.x,y:t.y,r0:32,r1:4,life:.5,max:.5,col:'255,220,160'})}continue}
   if(t.type==='lantern')continue;
   if(t.type==='mirror'){t.mt=null;t.lit=false;if(state!=='wave')continue;let best=null,bd=st.range*st.range;for(const e of enemies){if(!e.alive)continue;const d=(e.x-t.x)**2+(e.y-t.y)**2;if(d<bd){bd=d;best=e}}
    for(const a of beamAngles()){const dx=t.x-LX,dy=t.y-LY,d=Math.hypot(dx,dy);let df=Math.atan2(dy,dx)-a;df=Math.atan2(Math.sin(df),Math.cos(df));if(d<BL()&&Math.abs(df)<BH()+.1)t.lit=true}
@@ -814,7 +835,7 @@ function update(dt){
  spirits=spirits.filter(s=>s.life>0);
  for(const n of nums){n.life-=dt;n.y-=dt*28}nums=nums.filter(n=>n.life>0);
  updateParts(dt);
- if(state==='wave'&&!queue.length&&!enemies.length&&hp>0)waveClear();
+ if(state==='wave'&&!queue.length&&!enemies.length&&hp>0&&!ember)waveClear();
 }
 function updateParts(dt){for(const p of parts){p.life-=dt;p.vx*=Math.pow(p.drag,dt*60);p.vy=p.vy*Math.pow(p.drag,dt*60)+p.g*dt;p.x+=p.vx*dt;p.y+=p.vy*dt}parts=parts.filter(p=>p.life>0)}
 
@@ -868,6 +889,7 @@ function drawLighthouse(c){
  c.strokeStyle='#1c1d26';c.lineWidth=1.4;c.strokeRect(bx-10,top-26,20,21);c.beginPath();c.moveTo(bx,top-26);c.lineTo(bx,top-5);c.stroke();
  c.fillStyle='#1a1b24';c.beginPath();c.moveTo(bx-14,top-26);c.lineTo(bx,top-40);c.lineTo(bx+14,top-26);c.closePath();c.fill();
  c.fillStyle='#ffc46b';c.beginPath();c.arc(bx,top-41,1.6,0,TAU);c.fill();
+ if(dimT>0){c.fillStyle='rgba(38,28,44,.92)';c.beginPath();c.moveTo(bx-12,top-27);c.lineTo(bx+12,top-27);for(let i=6;i>=0;i--)c.lineTo(bx-12+i*4,top-8+(i%2?3:-1)+Math.sin(tm*4+i)*1.5);c.closePath();c.fill()}
 }
 function drawSlots(c){
  for(let i=0;i<SLOTS.length;i++){const[x,y]=SLOTS[i];
@@ -984,12 +1006,14 @@ function render(){
  const c=ctx;c.setTransform(1,0,0,1,0,0);c.globalAlpha=1;c.globalCompositeOperation='source-over';c.drawImage(bgcv,0,0);
  const sx=shake?(Math.random()-.5)*shake:0,sy=shake?(Math.random()-.5)*shake:0;
  c.setTransform(K,0,0,K,sx*K,sy*K);
+ if(state!=='title')drawTide(c);
  drawSlots(c);
  if(selSlot>=0&&slotT[selSlot]){const t=slotT[selSlot],st=tstats(t);c.fillStyle='rgba(255,196,107,.06)';c.strokeStyle='rgba(255,196,107,.5)';c.lineWidth=1.2;c.beginPath();c.arc(t.x,t.y,st.range,0,TAU);c.fill();c.stroke()}
  for(const t of towers)drawTower(c,t);
  drawLighthouse(c);
  for(const e of enemies)drawEnemy(c,e);
  for(let i=0;i<heroes.length;i++)drawHero(c,heroes[i],i===selHero&&state!=='title');
+ drawEmberWorld(c);
  c.globalAlpha=1;
  const fogBoost=state==='wave'?1.25:1;
  for(const f of fogs)spr(c,SP.fog,f.x,f.y,f.r,.2*f.a*fogBoost);
@@ -1000,6 +1024,7 @@ function render(){
  l.setTransform(K,0,0,K,sx*K,sy*K);l.globalCompositeOperation='destination-out';
  spr(l,LIGHT,LX,LY+20,80+55*hpR(),.85);
  for(const h of heroes)if(h.k==='me'&&!(h.ko>0))spr(l,LIGHT,h.x,h.y,h.aura+30,.8);
+ if(ember)spr(l,LIGHT,ember.x,ember.y,64,.85);
  for(const t of towers)spr(l,LIGHT,t.x,t.y,58+t.lvl*7,.7+(t.fl>0?.2:0));
  for(const a of beamAngles()){const g=l.createRadialGradient(LX,LY,0,LX,LY,BL()+40);g.addColorStop(0,'rgba(0,0,0,1)');g.addColorStop(.7,'rgba(0,0,0,.75)');g.addColorStop(1,'rgba(0,0,0,0)');l.globalAlpha=1;l.fillStyle=g;cone(l,a,BL()+40,BH()*1.6);l.fill()}
  for(const f of fx){const k=f.life/f.max;if(f.k==='boom')spr(l,LIGHT,f.x,f.y,f.r*2,k);else if(f.k==='bolt')for(let i=0;i<f.pts.length;i+=3)spr(l,LIGHT,f.pts[i][0],f.pts[i][1],40,k*.8);else if(f.k==='ring'){const r=f.r0+(f.r1-f.r0)*(1-k);spr(l,LIGHT,f.x,f.y,r,k*.5)}else if(f.k==='pillar')spr(l,LIGHT,f.x,f.y-30,85,k);else if(f.k==='page')spr(l,LIGHT,f.x,f.y-(1-k)*60,60,k)}
@@ -1024,6 +1049,7 @@ function render(){
   if(t.type==='lantern'){const r=TT.lantern.range*mods.range*(1+.08*Math.min(t.lvl-1,4));spr(c,SP.amber,t.x,t.y,r,.1);c.globalAlpha=.25;c.strokeStyle='rgba(255,190,120,1)';c.setLineDash([3,6]);c.lineWidth=1;c.beginPath();c.arc(t.x,t.y,r,0,TAU);c.stroke();c.setLineDash([])}
   if(t.traitor){const on=!(t.supp>0);c.globalAlpha=on?.5:.15;c.strokeStyle='rgba(200,120,255,1)';c.lineWidth=1.4;c.setLineDash([4,6]);c.lineDashOffset=tm*12;c.beginPath();c.arc(t.x,t.y,120,0,TAU);c.stroke();c.setLineDash([]);spr(c,SP.violet,t.x,t.y,60,on?.35:.1);spr(c,SP.red,t.x-3,t.y-5,5,on?.95:.3);spr(c,SP.red,t.x+3,t.y-5,5,on?.95:.3);if(!on)spr(c,SP.gold,t.x,t.y,24,.4);continue}
   if(t.sab>0)spr(c,SP.violet,t.x,t.y-4,34,Math.min(1,t.sab)*.7);
+  if(t.tempt>0){spr(c,SP.violet,t.x,t.y-6,36,.45+Math.sin(tm*6)*.2);spr(c,SP.violet,t.x,t.y-28,9,.85);spr(c,SP.white,t.x,t.y-28,3,.9)}
   const b=TT[t.type],L=t.lvl;const yy=t.type==='bolt'?t.y-7+Math.sin(tm*2.2+t.x)*2:t.y-2;spr(c,SP[b.spr],t.x,yy,20+L*6,.38+L*.08+(t.fl>0?.4:0));
   if(L>=5){const g=c.createLinearGradient(0,t.y-130,0,t.y);g.addColorStop(0,`rgba(${TRGB[t.type]},0)`);g.addColorStop(1,`rgba(${TRGB[t.type]},${.22+(L-5)*.05})`);c.globalAlpha=1;c.fillStyle=g;c.fillRect(t.x-9,t.y-130,18,130);spr(c,SP[b.spr],t.x,t.y,50+(L-5)*6,.3);for(let i=0;i<L-4;i++){const a=tm*1.4+i*TAU/(L-4);spr(c,STAR2,t.x+Math.cos(a)*28,t.y+Math.sin(a)*13-4,7.5,.95)}}
   if(L>=4){spr(c,SP.gold,t.x,t.y,42,.22+Math.sin(tm*2+t.x)*.06);const g=c.createLinearGradient(0,t.y-80,0,t.y);g.addColorStop(0,'rgba(255,220,150,0)');g.addColorStop(1,`rgba(255,220,150,${.2+Math.sin(tm*2+t.x)*.06})`);c.globalAlpha=1;c.fillStyle=g;c.fillRect(t.x-7,t.y-80,14,80)}
@@ -1034,6 +1060,7 @@ function render(){
  }
  for(const e of enemies)enemyGlow(c,e);
  for(let i=0;i<heroes.length;i++)heroGlow(c,heroes[i],i===selHero);
+ drawEmberGlow(c);
  for(const p of projs){if(p.k==='harp'){c.globalAlpha=1;c.strokeStyle=p.cr?'rgba(255,220,140,.95)':'rgba(220,240,255,.95)';c.lineWidth=2;c.beginPath();c.moveTo(p.x-p.vx*14,p.y-p.vy*14);c.lineTo(p.x,p.y);c.stroke();spr(c,p.cr?SP.gold:SP.cyan,p.x,p.y,9,.8)}else{spr(c,SP.ember,p.x,p.y,15,.9);spr(c,SP.white,p.x,p.y,5,.9)}}
  for(const f of fx){const k=f.life/f.max;
   if(f.k==='boom'){spr(c,SP.ember,f.x,f.y,f.r*(1.6-k*.5),k*.9);spr(c,SP.white,f.x,f.y,f.r*.5,k*.7)}
@@ -1060,8 +1087,8 @@ function render(){
 }
 
 /* ---------- UI ---------- */
-const OVS=['title','cards','over','win','shop','guide','book','caseOv','pause','chap','bp','epi','trial'];
-function showOnly(id){OVS.forEach(o=>$('#'+o).hidden=o!==id);$('#back').hidden=!['guide','book','caseOv','shop','pause','chap','bp','epi','trial'].includes(id)}
+const OVS=['title','cards','over','win','shop','guide','book','caseOv','pause','chap','bp','epi','trial','tale'];
+function showOnly(id){OVS.forEach(o=>$('#'+o).hidden=o!==id);$('#back').hidden=!['guide','book','caseOv','shop','pause','chap','bp','epi','trial','tale'].includes(id)}
 let bTimer,sTimer;
 function banner(main,sub,boss){const b=$('#banner');b.querySelector('b').textContent=main;b.querySelector('span').textContent=sub||'';b.className=boss?'on boss':'on';clearTimeout(bTimer);bTimer=setTimeout(()=>b.className=boss?'boss':'',1800)}
 function showStory(txt){const s=$('#story');s.textContent=txt;s.classList.add('on');clearTimeout(sTimer);sTimer=setTimeout(()=>s.classList.remove('on'),6500)}
@@ -1070,7 +1097,7 @@ let hudKey='';
 function hud(){
  if(state==='title')return;
  const key=`${Math.ceil(hp)}|${gold}|${wave}|${state}|${selSlot}`;
- if(key!==hudKey){hudKey=key;$('#vHp').textContent=Math.max(0,Math.ceil(hp))+'/'+maxHp;$('#vGold').textContent=gold;$('#vWave').textContent=wave>10?wave:wave+' / 10';$('#wLbl').textContent=`${CH+1}장 파도`;refreshPop()}
+ if(key!==hudKey){hudKey=key;$('#vHp').textContent=Math.max(0,Math.ceil(hp))+'/'+maxHp;$('#vGold').textContent=gold;$('#vWave').textContent=wave>10?wave:wave+' / 10';$('#wLbl').textContent=`${CH+1}장 · ${state==='prep'?(wave%2===0?'다음 썰물':'다음 밀물'):tideLow()?'썰물':'밀물'}`;refreshPop()}
  const fl=$('#flash');const ready=flashCd<=0&&state==='wave';fl.style.setProperty('--p',flashCd>0?1-flashCd/(22*mods.flashCd):1);fl.disabled=!ready;fl.classList.toggle('ready',ready);$('#flashTxt').textContent=flashCd>0?Math.ceil(flashCd)+'초':state==='wave'?'준비':'대기';
  const nx=$('#next');if(state==='prep'){nx.hidden=false;const b=Math.ceil(prepT)*2;nx.innerHTML=`파도 ${wave+1} 부르기<small>지금 부르면 등유 +${b} · ${Math.ceil(prepT)}초</small>`}else nx.hidden=true;
  const cb=$('#combo');if(combo>=5){cb.textContent='정화 ×'+combo;cb.classList.add('on')}else cb.classList.remove('on');
@@ -1174,9 +1201,10 @@ function chapterClear(){
  else if(endingReady()){note='모든 진실이 맞춰졌다.';nb.textContent='에필로그 보기';nb.hidden=false}
  else{note='안개가 아직 다 걷히지 않았다. 마지막 사건 「하람의 이유」를 풀어야 끝난다.';nb.hidden=true}
  $('#wNote').textContent=note;
- setTimeout(()=>{if(!meta.weapons.includes(CH))openBlueprint(CH,()=>{winGain(bonus);showOnly('win')});else showOnly('win')},900);
+ const after=()=>{if(!meta.weapons.includes(CH))openBlueprint(CH,()=>{winGain(bonus);showOnly('win')});else showOnly('win')};
+ setTimeout(()=>{if(CH<4&&!meta.seen.includes('tale_out'+CH))playTale('out'+CH,after);else after()},900);
 }
-function openEpi(cb){if(!meta.seen.includes('ending')){meta.seen.push('ending');save()}epiCb=cb;sfx('win');showOnly('epi')}
+function openEpi(cb){if(!meta.seen.includes('ending')){meta.seen.push('ending');save()}playTale('end',cb)}
 let epiCb=null;
 $('#bEpiOk').addEventListener('click',()=>{const cb=epiCb;epiCb=null;cb?cb():toTitle()});
 $('#bNextCh').addEventListener('click',()=>{creditRun();if(CH>=4){openEpi(toTitle);return}startChapter(CH+1)});
@@ -1245,11 +1273,11 @@ function openBook(fromGame){
   return`<div class="bpc${has?' on':''}" style="--c:${w.css}"><i>${has?w.glyph:'?'}</i><div><b>${has?w.name:i+1+'장 설계도'}</b><span>${has?WSP[i]:can?'설계도 조각이 모두 모였다. 맞추면 무기를 얻는다.':`${i+1}장을 지켜내면 설계도 조각 9개를 얻는다.`}</span>${can?`<button class="btn pri" data-bp="${i}">설계도 맞추기</button>`:''}</div></div>`}).join('');
  $('#bList').innerHTML=`<div class="sec">신형 무기 설계도 · ${meta.weapons.length}/5</div>${bp}<div class="sec">사건 보드 · 해결 ${meta.solved.length}/5</div>`+CASES.map((C,ci)=>{const n=haveCount(ci),sv=meta.solved.includes(ci),rd=caseReady(ci);
   return`<div class="case${sv?' solved':rd?' ready':''}"><h3>${ci+1}. ${C.t}<small>${sv?'해결 ★':n+'/4'}</small></h3><div class="q">${C.q}</div>${clueList(ci)}${rd||sv?`<button class="btn${rd?' pri':''}" data-case="${ci}">${sv?'결론 다시 보기':'추리하기'}</button>`:''}</div>`}).join('')
-  +`<div class="sec">스승의 일지 · ${meta.jr.length}/10</div>`+JOURNAL.map((t,i)=>meta.jr.includes(i)?`<div class="lore"><small>${i+1}쪽</small>${t}</div>`:`<div class="lore lock">· · ·</div>`).join('')+`<div class="sec">인물 기억 · ${meta.memo.length}/20</div>`+RES.map(r=>MEMO[r.k].map((t,i)=>meta.memo.includes(r.k+'.'+i)?`<div class="lore"><small>${r.n} · ${i+1}</small>${t}</div>`:`<div class="lore lock" style="letter-spacing:.04em">${r.n} · ${i+1}단계에서 열린다</div>`).join('')).join('')+(Object.keys(meta.obs).length?'<div class="sec">관찰 기록</div>'+Object.keys(meta.obs).sort().map(k=>`<div class="lore">${meta.obs[k]}</div>`).join(''):'')+(meta.seen.includes('ending')?'<button class="btn" data-epi="1" style="min-width:0;align-self:center">에필로그 다시 읽기</button>':'')
+  +`<div class="sec">그림 이야기</div><div class="tg">${TALE_ORDER.filter(k=>meta.seen.includes('tale_'+k)).map(k=>`<button class="btn" data-tale="${k}">${TALES[k].t}</button>`).join('')||'<span class="pzcap">장을 시작하고 마칠 때 그림이 열린다</span>'}</div><div class="sec">위령등 · ${meta.lan.length}/10</div>`+LOST.flat().map((n,i)=>meta.lan.includes(i)?`<div class="lore"><small>위령등</small>${n}</div>`:`<div class="lore lock">· · ·</div>`).join('')+`<div class="sec">스승의 일지 · ${meta.jr.length}/10</div>`+JOURNAL.map((t,i)=>meta.jr.includes(i)?`<div class="lore"><small>${i+1}쪽</small>${t}</div>`:`<div class="lore lock">· · ·</div>`).join('')+`<div class="sec">인물 기억 · ${meta.memo.length}/20</div>`+RES.map(r=>MEMO[r.k].map((t,i)=>meta.memo.includes(r.k+'.'+i)?`<div class="lore"><small>${r.n} · ${i+1}</small>${t}</div>`:`<div class="lore lock" style="letter-spacing:.04em">${r.n} · ${i+1}단계에서 열린다</div>`).join('')).join('')+(Object.keys(meta.obs).length?'<div class="sec">관찰 기록</div>'+Object.keys(meta.obs).sort().map(k=>`<div class="lore">${meta.obs[k]}</div>`).join(''):'')+(meta.seen.includes('ending')?'<button class="btn" data-epi="1" style="min-width:0;align-self:center">에필로그 다시 읽기</button>':'')
   +MAPS.map((M,c)=>`<div class="sec">${c+1}장 ${M.name} · 기억 조각</div>`+STORY.slice(c*10,c*10+10).map((t,k)=>meta.lore.includes(c*10+k)?`<div class="lore"><small>파도 ${k+1}</small>${t}</div>`:`<div class="lore lock">· · ·</div>`).join('')).join('');
  showOnly('book');$('#book').scrollTop=0;
 }
-$('#bList').addEventListener('click',ev=>{const p=ev.target.closest('[data-bp]');if(p){openBlueprint(+p.dataset.bp,()=>openBook(bookFromGame));return}if(ev.target.closest('[data-epi]')){openEpi(()=>openBook(bookFromGame));return}const b=ev.target.closest('[data-case]');if(b)openCase(+b.dataset.case,()=>openBook(bookFromGame))});
+$('#bList').addEventListener('click',ev=>{const tl=ev.target.closest('[data-tale]');if(tl){playTale(tl.dataset.tale,()=>openBook(bookFromGame));return}const p=ev.target.closest('[data-bp]');if(p){openBlueprint(+p.dataset.bp,()=>openBook(bookFromGame));return}if(ev.target.closest('[data-epi]')){openEpi(()=>openBook(bookFromGame));return}const b=ev.target.closest('[data-case]');if(b)openCase(+b.dataset.case,()=>openBook(bookFromGame))});
 $('#bBookClose').addEventListener('click',()=>{if(bookFromGame){paused=false;showOnly(null)}else{refreshTitle();showOnly('title')}});
 $('#bLore').addEventListener('click',()=>openBook(false));
 $('#bBook').addEventListener('click',()=>{if(state!=='wave'&&state!=='prep')return;paused=true;closePop();openBook(true)});
@@ -1268,7 +1296,8 @@ $('#gNext').addEventListener('click',()=>{if(gIdx<GUIDE.length-1)goGuide(gIdx+1)
 $('#bGuide').addEventListener('click',()=>openGuide(false));
 $('#back').addEventListener('click',()=>{
  const vis=id=>!$('#'+id).hidden;
- if(vis('trial'))openChapters();
+ if(vis('tale'))$('#taNext').click();
+ else if(vis('trial'))openChapters();
  else if(vis('bp'))closeBp();
  else if(vis('epi'))$('#bEpiOk').click();
  else if(vis('chap')){refreshTitle();showOnly('title')}
@@ -1298,7 +1327,7 @@ const LAST=['날 의심해? …좋아, 빠져 줄게. 대신 후회하지나 마
 let trialCh=-1;
 function unlockMemo(k,l){if(!MEMO[k])return;const r=RES.find(x=>x.k===k);let last=-1;for(let i=0;i<Math.min(l,5);i++){const id=k+'.'+i;if(!meta.memo.includes(id)){meta.memo.push(id);last=i}}if(last>=0){save();setTimeout(()=>toast(`${r.n}의 기억 · "${MEMO[k][last]}"`,'who'),1300)}}
 function unlockJournal(i){if(i<0||i>=JOURNAL.length||meta.jr.includes(i))return;meta.jr.push(i);save();setTimeout(()=>toast(`스승의 일지 ${meta.jr.length}/10 · "${JOURNAL[i]}"`,'gold'),1600)}
-function startChapter(i){if(TRIALS[i])openTrial(i);else newRun(i)}
+function startChapter(i){const go=()=>{if(TRIALS[i])openTrial(i);else newRun(i)};const seq=[];if(i===0&&!meta.seen.includes('tale_pro'))seq.push('pro');if(!meta.seen.includes('tale_in'+i))seq.push('in'+i);playTales(seq,go)}
 function openTrial(i){trialCh=i;const T=TRIALS[i];$('#trEy').textContent=`${i+1}장 「${MAPS[i].name}」 앞에서`;$('#trTitle').textContent=T.final?'최후 진술':'등대 회의';$('#trSit').textContent=T.sit;
  $('#trList').innerHTML=RES.map((r,k)=>`<div class="bpc on${!T.final&&k===T.acc?' acc':''}" style="--c:${r.c}"><i>${r.g}</i><div><b>${r.n} <small>${r.j}${!T.final&&k===T.acc?' · 하람이 지목함':''}</small></b><span>"${T.st[k]}"</span></div></div>`).join('');
  trChoices();showOnly('trial');$('#trial').scrollTop=0}
@@ -1309,7 +1338,7 @@ $('#trCh').addEventListener('click',ev=>{const b=ev.target.closest('[data-tr]');
  if(v.startsWith('go')){newRun(i,RES[+v.slice(2)].k,false);return}if(v==='back'){trChoices();return}
  const k=+v,r=RES[k];$('#trQ').innerHTML=`<span class="hintbox"><b>${r.n}의 최후 진술</b>"${LAST[k]}"</span>`;$('#trCh').innerHTML=`<button data-tr="go${k}">그래도 ${josa(r.n,'을','를')} 뺀다</button><button data-tr="back">다시 생각한다</button>`});
 /* sabotage: while 하람 fights with us, the lighthouse dims now and then */
-function sabotage(){dimT=9;sabCount++;for(const t of towers)if(t.type==='harpoon')t.sab=1.6;setTimeout(()=>{if(state==='wave')toast('등대 빛이 흐려졌다 · 누군가 렌즈에 손을 댔다','syn')},1800)}
+function sabotage(){dimT=9;sabCount++;for(const t of towers)if(t.type==='harpoon')t.sab=1.6;setTimeout(()=>{if(state==='wave')toast('누군가 렌즈를 천으로 덮었다 · 어둠 속에서만 들리는 목소리가 있다','syn')},1800)}
 function chapterObs(){const r=RES.find(x=>x.k===runExcl),T=TRIALS[CH];
  if(CH>=4)return'';
  if(!runExcl)return sabCount?`${CH+1}장 · 등대 빛이 ${sabCount}번 흐려졌다. 렌즈에 손이 닿는 사람은 우리뿐이다.`:'';
@@ -1357,6 +1386,135 @@ function drawHero(c,h,sel){const x=h.x,y=h.y,ko=h.ko>0,f=h.face||1,bob=Math.sin(
 function heroGlow(c,h,sel){if(h.ko>0)return;if(h.k==='me'){spr(c,SP.amber,h.x+7*(h.face||1),h.y+4,16,.85);spr(c,SP.amber,h.x,h.y,h.aura*1.15,.16);c.globalAlpha=.3;c.strokeStyle='rgba(255,210,140,1)';c.lineWidth=1;c.setLineDash([2,5]);c.lineDashOffset=tm*8;c.beginPath();c.arc(h.x,h.y,h.aura,0,TAU);c.stroke();c.setLineDash([])}
  if(sel)spr(c,SP.gold,h.x,h.y+6,14,.35)}
 
+/* ---------- woodcut tales (procedural relief-print illustrations) ---------- */
+const INK='#18130e',PAPER='#e9ddc2',OCH='#cf9a3e',VERM='#a63f28';
+const cPts=(x,y,r,n=28)=>Array.from({length:n},(_,i)=>[x+Math.cos(i*TAU/n)*r,y+Math.sin(i*TAU/n)*r]);
+function wRough(pts,R,amp=2.4,step=7){const out=[],n=pts.length;for(let i=0;i<n;i++){const a=pts[i],b=pts[(i+1)%n];const d=Math.hypot(b[0]-a[0],b[1]-a[1]),m=Math.max(1,Math.round(d/step));for(let k=0;k<m;k++){const t=k/m;out.push([a[0]+(b[0]-a[0])*t+(R()-.5)*amp,a[1]+(b[1]-a[1])*t+(R()-.5)*amp])}}return out}
+function wPath(c,pts){c.beginPath();pts.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.closePath()}
+function wFill(c,pts,R,col=INK,amp=2.4){wPath(c,wRough(pts,R,amp));c.fillStyle=col;c.fill()}
+function wCut(c,x0,y0,x1,y1,w,col=PAPER){const dx=x1-x0,dy=y1-y0,L=Math.hypot(dx,dy)||1,nx=-dy/L,ny=dx/L,mx=(x0+x1)/2,my=(y0+y1)/2;c.fillStyle=col;c.beginPath();c.moveTo(x0,y0);c.quadraticCurveTo(mx+nx*w,my+ny*w,x1,y1);c.quadraticCurveTo(mx-nx*w*.25,my-ny*w*.25,x0,y0);c.fill()}
+function wHatch(c,R,x,y,w,h,o={}){const gap=o.gap||7,l0=o.l0||14,l1=o.l1||50,t0=o.t0||.8,t1=o.t1||2.2,col=o.col||PAPER,dens=o.dens||(()=>1);c.save();c.beginPath();c.rect(x,y,w,h);c.clip();
+ for(let yy=y+3;yy<y+h;yy+=gap){let xx=x-10+R()*18;const d=dens((yy-y)/h);while(xx<x+w){const l=l0+R()*(l1-l0);if(R()<d)wCut(c,xx,yy+(R()-.5)*1.5,xx+l,yy+(R()-.5)*2,t0+R()*(t1-t0),col);xx+=l+3+R()*14}}c.restore()}
+function wPaper(c,R){c.fillStyle=PAPER;c.fillRect(0,0,480,600);for(let i=0;i<3200;i++){c.fillStyle=`rgba(80,60,30,${R()*.07})`;c.fillRect(R()*480,R()*600,1+R()*2,1)}}
+function wGrain(c,R){for(let i=0;i<900;i++){c.fillStyle=R()<.5?'rgba(233,221,194,.18)':'rgba(24,19,14,.12)';c.fillRect(R()*480,R()*600,1+R()*1.5,1+R()*1.5)}}
+function wFrame(c,R){c.fillStyle=INK;const e=15;c.fillRect(0,0,480,e);c.fillRect(0,600-e,480,e);c.fillRect(0,0,e,600);c.fillRect(480-e,0,e,600);for(let i=0;i<480;i+=5){c.fillRect(i,e-1,5,R()*3.5);c.fillRect(i,600-e-R()*3.5+1,5,4)}for(let i=0;i<600;i+=5){c.fillRect(e-1,i,R()*3.5,5);c.fillRect(480-e-R()*3.5+1,i,4,5)}c.strokeStyle=INK;c.lineWidth=1.2;c.strokeRect(e+7,e+7,480-2*e-14,600-2*e-14)}
+function wNight(c,R,y1){c.fillStyle=INK;c.fillRect(0,0,480,y1);wHatch(c,R,0,0,480,y1,{gap:6,dens:v=>.15+.75*v})}
+function wDay(c,R,y1){c.save();c.beginPath();c.rect(0,0,480,y1);c.clip();for(let y=8;y<y1;y+=7){let x=R()*20;while(x<480){const l=10+R()*50;if(R()<.65*(1-y/y1))wCut(c,x,y,x+l,y+R()*2,1+R()*1.2,INK);x+=l+6+R()*20}}c.restore()}
+function wMoon(c,R,x,y,r){wFill(c,cPts(x,y,r),R,PAPER,1.5);c.save();wPath(c,cPts(x,y,r));c.clip();for(let i=0;i<7;i++)wCut(c,x-r,y-r+6+i*r/3.2+R()*3,x+r*(.2+R()*.6),y-r+6+i*r/3.2+R()*3,1.1,INK);c.restore()}
+function wSea(c,R,y0,y1,ink=true){c.fillStyle=ink?INK:PAPER;c.fillRect(0,y0,480,y1-y0);c.strokeStyle=ink?PAPER:INK;c.lineCap='round';for(let y=y0+6;y<y1;y+=6+(y-y0)*.035){c.lineWidth=.7+(y-y0)/(y1-y0)*2.2;let x=-10+R()*10;while(x<490){const l=18+R()*60;c.beginPath();for(let k=0;k<=l;k+=4){const yy=y+Math.sin((x+k)*.07+y)*2.4;k?c.lineTo(x+k,yy):c.moveTo(x+k,yy)}c.stroke();x+=l+8+R()*22}}}
+function wHill(c,R,y,amp,col,seed){const pts=[[-10,620]];for(let x=-10;x<=490;x+=20)pts.push([x,y-Math.sin(x*.01+seed)*amp-Math.sin(x*.027+seed*2)*amp*.4]);pts.push([490,620]);wFill(c,pts,R,col,2)}
+function wTower(c,R,x,base,h,lit){const w=h*.12,tw=w*.6,top=base-h;const body=[[x-w,base],[x-tw,top],[x+tw,top],[x+w,base]];wFill(c,body,R,PAPER,1.6);c.strokeStyle=INK;c.lineWidth=2.2;wPath(c,wRough(body,R,1.6));c.stroke();
+ c.save();wPath(c,[[x+tw*.15,base],[x+tw*.15,top],[x+tw,top],[x+w,base]]);c.clip();for(let yy=top;yy<base;yy+=3.6)wCut(c,x,yy,x+w,yy+R()*2,1,INK);c.restore();
+ for(let k=1;k<4;k++){const y=top+h*k/4.3,hw=tw+(w-tw)*(k/4.3);wFill(c,[[x-hw,y],[x+hw,y],[x+hw*1.03,y+h*.06],[x-hw*1.03,y+h*.06]],R,VERM,1)}
+ const lw=tw*.95,lh=tw*1.25,ly=top-5-lh;c.fillStyle=INK;c.fillRect(x-tw-8,top-6,(tw+8)*2,7);for(let i=-tw-7;i<=tw+7;i+=5)c.fillRect(x+i,top-14,1.4,9);
+ wFill(c,[[x-lw,ly],[x+lw,ly],[x+lw,ly+lh],[x-lw,ly+lh]],R,lit?OCH:INK,1);c.lineWidth=2;c.strokeRect(x-lw,ly,lw*2,lh);c.beginPath();c.moveTo(x,ly);c.lineTo(x,ly+lh);c.stroke();wFill(c,[[x-lw-5,ly],[x,ly-lh*.85],[x+lw+5,ly]],R,INK,1);return{x,y:ly+lh/2}}
+function wBeam(c,R,x,y,a,len,sp){const P=[[x,y],[x+Math.cos(a-sp)*len,y+Math.sin(a-sp)*len],[x+Math.cos(a+sp)*len,y+Math.sin(a+sp)*len]];c.save();wPath(c,P);c.fillStyle=PAPER;c.fill();c.clip();for(let i=0;i<16;i++){const aa=a+(R()*2-1)*sp,l=len*(.4+R()*.6);wCut(c,x,y,x+Math.cos(aa)*l,y+Math.sin(aa)*l,1+R()*1.6,OCH)}c.restore()}
+function wShade(c,R,x,y,s,eyes=true){wFill(c,[[x,y-30*s],[x+9*s,y-22*s],[x+12*s,y],[x+4*s,y-3*s],[x,y+1*s],[x-5*s,y-3*s],[x-12*s,y],[x-9*s,y-22*s]],R,INK,1.4*s);if(eyes){c.fillStyle=PAPER;c.beginPath();c.arc(x-3*s,y-21*s,1.5*s,0,TAU);c.arc(x+3*s,y-21*s,1.5*s,0,TAU);c.fill()}}
+function wMan(c,R,x,y,s,col=INK){c.fillStyle=col;c.beginPath();c.arc(x,y-28*s,4.6*s,0,TAU);c.fill();wFill(c,[[x-5*s,y-23*s],[x+5*s,y-23*s],[x+8*s,y],[x-8*s,y]],R,col,1.2*s)}
+function wHouse(c,R,x,y,s,lit){wFill(c,[[x-14*s,y],[x-14*s,y-14*s],[x,y-26*s],[x+14*s,y-14*s],[x+14*s,y]],R,INK,1.4);if(lit){c.fillStyle=OCH;c.fillRect(x-8*s,y-11*s,5*s,5*s);c.fillRect(x+3*s,y-11*s,5*s,5*s)}}
+function wReeds(c,R,x,y,n,h,spread=40,col=INK){c.strokeStyle=col;c.lineCap='round';for(let i=0;i<n;i++){const ox=x+(R()-.5)*spread,hh=h*(.6+R()*.5);c.lineWidth=1.4+R()*1.4;c.beginPath();c.moveTo(ox,y);c.quadraticCurveTo(ox+(R()-.5)*8,y-hh*.6,ox+(R()-.5)*14,y-hh);c.stroke();if(R()<.5){c.fillStyle=col;c.beginPath();c.ellipse(ox+(R()-.5)*8,y-hh+5,2.2,7,0,0,TAU);c.fill()}}}
+function wShrine(c,R,x,y,s,open){const body=[[x-30*s,y],[x-30*s,y-30*s],[x+30*s,y-30*s],[x+30*s,y]];wFill(c,body,R,PAPER,1.5);c.strokeStyle=INK;c.lineWidth=2;wPath(c,wRough(body,R,1.5));c.stroke();for(let yy=y-28*s;yy<y;yy+=4*s)wCut(c,x+12*s,yy,x+30*s,yy+R()*2,.8,INK);wFill(c,[[x-42*s,y-28*s],[x,y-52*s],[x+42*s,y-28*s]],R,INK,1.5);wFill(c,[[x-9*s,y],[x-9*s,y-21*s],[x+9*s,y-21*s],[x+9*s,y]],R,INK,1);if(open){wFill(c,[[x+9*s,y+1],[x+9*s,y-21*s],[x+17*s,y-24*s],[x+17*s,y+3*s]],R,PAPER,1);c.lineWidth=1.6;c.strokeRect(x+9*s,y-22*s,8*s,24*s)}}
+function wLantern(c,R,x,y,s,flame){c.strokeStyle=INK;c.lineWidth=3*s;c.beginPath();c.arc(x,y-30*s,8*s,Math.PI,0);c.stroke();wFill(c,[[x-18*s,y-26*s],[x+18*s,y-26*s],[x+14*s,y-20*s],[x-14*s,y-20*s]],R,INK,1);
+ wFill(c,[[x-14*s,y-20*s],[x+14*s,y-20*s],[x+14*s,y+14*s],[x-14*s,y+14*s]],R,flame==='soot'?INK:PAPER,1);c.lineWidth=2.4*s;c.strokeRect(x-14*s,y-20*s,28*s,34*s);c.beginPath();c.moveTo(x,y-20*s);c.lineTo(x,y+14*s);c.stroke();wFill(c,[[x-18*s,y+14*s],[x+18*s,y+14*s],[x+18*s,y+20*s],[x-18*s,y+20*s]],R,INK,1);
+ const f=[[x,y-15*s],[x+7*s,y-1*s],[x+5*s,y+10*s],[x-5*s,y+10*s],[x-7*s,y-1*s]];if(flame==='black'){wFill(c,f,R,INK,2);c.strokeStyle=VERM;c.lineWidth=1.8;wPath(c,wRough(f,R,2));c.stroke()}else if(flame==='gold')wFill(c,f,R,OCH,2)}
+function wCurls(c,R,x,y,w,h,n,col=PAPER){c.strokeStyle=col;c.lineCap='round';for(let i=0;i<n;i++){const cx=x+R()*w,cy=y+R()*h,r=8+R()*24;c.lineWidth=1+R()*2;c.beginPath();for(let a=0;a<TAU*1.4;a+=.2){const rr=r*(1-a/(TAU*1.6));const px=cx+Math.cos(a)*rr,py=cy+Math.sin(a)*rr*.6;a?c.lineTo(px,py):c.moveTo(px,py)}c.stroke()}}
+function wBoots(c,pts){pts.forEach(([x,y,a],i)=>{c.save();c.translate(x+(i%2?4:-4),y);c.rotate(a);c.fillStyle=INK;c.beginPath();c.ellipse(0,0,3.4,7,0,0,TAU);c.fill();c.fillStyle=PAPER;for(let k=-4.5;k<=4.5;k+=2.4)c.fillRect(-2.2,k,4.4,.8);c.restore()})}
+function trail(x0,y0,x1,y1,n){const a=Math.atan2(y1-y0,x1-x0)+Math.PI/2;return Array.from({length:n},(_,i)=>[x0+(x1-x0)*i/(n-1),y0+(y1-y0)*i/(n-1),a])}
+function wWreck(c,R,x,y,s){c.strokeStyle=INK;c.lineCap='round';for(let i=0;i<7;i++){const ox=x+(i-3)*12*s;c.lineWidth=(4.4-Math.abs(i-3)*.5)*s;c.beginPath();c.moveTo(ox,y);c.quadraticCurveTo(ox+(i-3)*4*s,y-40*s,ox+(i-3)*8*s,y-(62-Math.abs(i-3)*9)*s);c.stroke()}c.lineWidth=5*s;c.beginPath();c.moveTo(x-48*s,y);c.lineTo(x+48*s,y+4*s);c.stroke()}
+function wMine(c,R,x,y,s){wFill(c,[[x-50*s,y],[x-50*s,y-50*s],[x-30*s,y-72*s],[x+30*s,y-72*s],[x+50*s,y-50*s],[x+50*s,y]],R,INK,2);c.strokeStyle=PAPER;c.lineWidth=5*s;c.beginPath();c.moveTo(x-36*s,y);c.lineTo(x-36*s,y-58*s);c.lineTo(x+36*s,y-58*s);c.lineTo(x+36*s,y);c.stroke();c.lineWidth=1.4;for(let k=0;k<5;k++){c.beginPath();c.moveTo(x-36*s,y-10*s-k*10*s);c.lineTo(x-30*s,y-10*s-k*10*s);c.stroke()}}
+function wFloat(c,R,x,y,s,name){wFill(c,[[x-7*s,y],[x+7*s,y],[x+5.5*s,y-13*s],[x-5.5*s,y-13*s]],R,OCH,1);c.strokeStyle=INK;c.lineWidth=1.2;c.strokeRect(x-6*s,y-13*s,12*s,13*s);c.fillStyle=INK;c.fillRect(x-8.5*s,y,17*s,2.2*s);for(let k=1;k<4;k++)wCut(c,x-14*s,y+3*s+k*3,x+14*s,y+3*s+k*3+R()*2,.8,OCH);if(name){c.font=`700 ${5*s}px "Gowun Batang",serif`;c.textAlign='center';c.fillStyle=INK;c.fillText(name,x,y-4*s)}}
+function wSun(c,R,x,y,r){for(let i=0;i<24;i++){const a=i*TAU/24;wCut(c,x+Math.cos(a)*r*1.25,y+Math.sin(a)*r*1.25,x+Math.cos(a)*r*(2.2+R()*.8),y+Math.sin(a)*r*(2.2+R()*.8),2.2,OCH)}wFill(c,cPts(x,y,r,30),R,OCH,1.5)}
+function wStone(c,R,x,y,w,h){wFill(c,[[x,y],[x+w,y+4],[x+w-4,y+h],[x+4,y+h-3]],R,PAPER,3);c.strokeStyle=INK;c.lineWidth=2.4;wPath(c,wRough([[x,y],[x+w,y+4],[x+w-4,y+h],[x+4,y+h-3]],R,3));c.stroke()}
+const PLATES={
+ pro(c,R){wNight(c,R,380);wMoon(c,R,92,92,26);wBeam(c,R,388,150,Math.atan2(395-150,92-388),330,.085);
+  wHill(c,R,440,16,INK,1);[[150,446,1,1],[196,452,.9,1],[244,446,1,0],[112,456,.8,1],[284,456,.8,1]].forEach(h=>wHouse(c,R,...h));
+  wShrine(c,R,86,420,.8,false);c.fillStyle=VERM;c.beginPath();c.arc(86,412,2.2,0,TAU);c.fill();wReeds(c,R,86,436,12,30,70);
+  wSea(c,R,486,600);wFill(c,[[330,500],[350,474],[420,470],[452,500]],R,INK,3);wTower(c,R,390,490,320,true);wFrame(c,R)},
+ in0(c,R){wNight(c,R,600);wCurls(c,R,20,20,440,200,16);c.strokeStyle=PAPER;c.lineWidth=34;c.lineCap='round';c.lineJoin='round';c.beginPath();c.moveTo(40,180);c.bezierCurveTo(200,240,60,360,220,420);c.bezierCurveTo(330,460,300,540,380,570);c.stroke();
+  wHatch(c,R,0,150,480,450,{col:INK,gap:9,dens:()=>.35});
+  [[70,214,1],[120,262,1.1],[118,326,1.15],[176,392,1.2],[252,436,1.3],[300,476,1.35],[330,528,1.4]].forEach(p=>wShade(c,R,...p));
+  wBeam(c,R,400,430,-2.4,300,.09);wTower(c,R,400,600,190,true);wFrame(c,R)},
+ out0(c,R){wDay(c,R,380);wSun(c,R,380,120,24);wSea(c,R,470,600);
+  c.fillStyle=INK;c.beginPath();c.arc(230,330,15,0,TAU);c.fill();wFill(c,[[210,345],[252,345],[272,410],[300,452],[188,452],[196,402]],R,INK,2);wFill(c,[[256,360],[290,392],[282,400],[250,376]],R,INK,1.5);
+  for(let i=0;i<10;i++){const a=-2.4+i*.06;wCut(c,380,120,380+Math.cos(a)*300,120+Math.sin(a)*300,1.4,OCH)}
+  wFloat(c,R,330,520,2.2,'만석');wFrame(c,R)},
+ in1(c,R){wNight(c,R,340);wSea(c,R,340,600);wFill(c,cPts(240,358,90,30).map(([x,y])=>[x,358+(y-358)*.28]),R,PAPER,3);wHatch(c,R,150,330,180,50,{col:INK,gap:6,dens:()=>.5});
+  wBeam(c,R,470,30,Math.atan2(320-30,240-470),300,.07);wShrine(c,R,240,350,1.6,true);wReeds(c,R,60,600,22,160,110,PAPER);wReeds(c,R,420,600,22,170,110,PAPER);wFrame(c,R)},
+ out1(c,R){c.fillStyle=INK;c.fillRect(0,0,480,600);for(let x=20;x<480;x+=36)wHatch(c,R,x,0,4,600,{gap:3,l0:30,l1:120,col:'#3a2e22'});
+  wFill(c,[[150,420],[330,420],[340,560],[140,560]],R,PAPER,2);c.strokeStyle=INK;c.lineWidth=2;for(let y=440;y<560;y+=10)wCut(c,150,y,330,y+R()*2,.8,INK);
+  c.strokeStyle=PAPER;c.lineWidth=2.4;c.strokeRect(170,200,140,220);c.lineWidth=1;c.beginPath();c.moveTo(178,206);c.lineTo(196,240);c.stroke();
+  c.globalAlpha=.85;wLantern(c,R,240,350,2.4,'soot');c.globalAlpha=1;wCurls(c,R,180,240,120,80,5,'#5a4a3a');
+  c.fillStyle=OCH;c.beginPath();c.arc(404,200,3,0,TAU);c.fill();c.strokeStyle=OCH;c.lineWidth=4;c.beginPath();c.arc(404,226,12,0,TAU);c.stroke();c.lineWidth=4;c.beginPath();c.moveTo(404,238);c.lineTo(404,290);c.lineTo(414,290);c.moveTo(404,276);c.lineTo(414,276);c.stroke();wFrame(c,R)},
+ in2(c,R){wNight(c,R,600);wFill(c,[[-10,600],[-10,330],[140,150],[260,240],[340,120],[490,320],[490,600]],R,'#2a2118',3);wHatch(c,R,0,120,480,480,{col:PAPER,gap:8,dens:v=>.2+v*.3,t1:1.4});
+  wMine(c,R,220,560,1.9);wCurls(c,R,140,380,160,140,12);wStone(c,R,340,440,96,120);for(let k=0;k<6;k++){c.fillStyle=INK;c.fillRect(352,458+k*16,70-(k%3)*12,3)}wFrame(c,R)},
+ out2(c,R){c.fillStyle=INK;c.fillRect(0,0,480,600);wHatch(c,R,0,0,480,600,{col:'#3a2e22',gap:5,dens:()=>.6});wStone(c,R,70,90,340,420);
+  const rows=[['○','초저녁','밀물'],['◐','자정','썰물 시작'],['◑','새벽 한 시','물이 빠짐'],['◑','새벽 두 시','갯바닥 드러남'],['◐','새벽 세 시','물이 참'],['●','새벽 네 시','밀물']];
+  c.fillStyle=INK;c.font='700 26px "Gowun Batang",serif';c.textAlign='center';c.fillText('물 때 표',240,148);c.font='600 17px "Gowun Batang",serif';
+  rows.forEach((r,i)=>{const y=200+i*48;c.textAlign='left';c.fillText(r[0],104,y);c.fillText(r[1],140,y);c.textAlign='right';c.fillText(r[2],376,y);wCut(c,100,y+14,380,y+15+R()*2,.9,INK)});wFrame(c,R)},
+ in3(c,R){wNight(c,R,260);wFill(c,[[-10,250],[490,240],[490,610],[-10,610]],R,PAPER,3);for(let i=0;i<500;i++){c.fillStyle=`rgba(24,19,14,${.2+R()*.4})`;c.fillRect(R()*480,250+R()*350,1+R()*2,1)}
+  wTower(c,R,62,250,120,true);wBeam(c,R,62,128,-.05,160,.07);wWreck(c,R,300,340,1.7);wWreck(c,R,160,300,1.1);wWreck(c,R,410,290,.9);
+  wBoots(c,trail(70,585,290,360,14));wFrame(c,R)},
+ out3(c,R){wNight(c,R,250);wFill(c,[[-10,240],[490,236],[490,610],[-10,610]],R,PAPER,3);for(let i=0;i<500;i++){c.fillStyle=`rgba(24,19,14,${.2+R()*.4})`;c.fillRect(R()*480,240+R()*360,1+R()*2,1)}
+  wTower(c,R,58,244,110,true);c.fillStyle=INK;c.beginPath();c.ellipse(260,360,44,18,0,0,TAU);c.fill();c.fillStyle=PAPER;c.beginPath();c.ellipse(260,360,26,9,0,0,TAU);c.fill();for(let i=0;i<14;i++){const a=i*TAU/14;wCut(c,260+Math.cos(a)*44,360+Math.sin(a)*18,260+Math.cos(a)*(70+R()*20),360+Math.sin(a)*(30+R()*10),1.2,INK)}
+  wBoots(c,trail(110,590,232,382,11));wBoots(c,trail(240,340,90,262,10));wCurls(c,R,180,270,200,70,6,INK);wFrame(c,R)},
+ in4(c,R){c.fillStyle=INK;c.fillRect(0,0,480,600);wCurls(c,R,10,10,460,580,46);wLantern(c,R,250,290,5.2,'black');
+  wMan(c,R,110,570,3,PAPER);wHatch(c,R,80,470,60,100,{col:INK,gap:5,l0:8,l1:20,dens:()=>.45});c.strokeStyle=PAPER;c.lineWidth=7;c.lineCap='round';c.beginPath();c.moveTo(122,500);c.lineTo(176,420);c.stroke();
+  c.save();c.globalAlpha=.9;wMan(c,R,380,560,1.6,PAPER);c.restore();wHatch(c,R,350,470,60,90,{col:INK,gap:4,l0:6,l1:16,dens:()=>.7});wFrame(c,R)},
+ end(c,R){wDay(c,R,340);wSun(c,R,300,320,30);wSea(c,R,340,600);
+  [[120,400,1.4,'해랑'],[180,430,1.2,''],[250,410,1.3,'만석'],[320,450,1.5,''],[390,420,1.2,''],[150,480,1.6,''],[230,500,1.4,'순례'],[300,520,1.7,''],[380,500,1.3,''],[440,470,1.1,'']].forEach(f=>wFloat(c,R,...f));
+  wFill(c,[[-10,556],[170,538],[260,610],[-10,610]],R,PAPER,3);wHatch(c,R,0,560,250,50,{col:INK,gap:6,dens:()=>.35});[[30,566,1.3],[60,562,1.2],[90,560,1.35],[118,558,.8],[146,556,1.2]].forEach(p=>wMan(c,R,...p));
+  wTower(c,R,60,380,230,true);wFrame(c,R)},
+};
+const TALES={
+ pro:{t:'프롤로그',lines:['바다는 잃은 것을 데려가고, 뭍은 남은 것을 품는다.','이 바닷가 마을 깊은 사당에는 검은 등불이 잠들어 있었다.','그 검은 불꽃의 연기는 안개가 되어, 바다에 잠긴 이의 목소리를 들려준다.','들리기만 하고 닿지 않는 목소리. 사람들은 그것을 "가장 다정한 독"이라 불렀다.','등대의 빛이 매일 밤 사당을 비추는 동안, 검은 불꽃은 잠들어 있었다.','사흘 전 새벽, 누군가 그 등불을 열었다.','안개를 마신 사람들은 그림자가 되어 마지막 빛을 끄러 온다.','나는 스승의 마지막 제자. 열 해째 이 등대의 불을 지키고 있다.']},
+ in0:{t:'1장 · 해안 마을',lines:['안개가 마을을 덮친 지 사흘째.','그림자가 된 사람들은 바다에 잠긴 가족의 목소리를 듣는다. 하지만 닿을 수 없어 목이 탄다.','안개가 속삭인다. "빛만 사라지면 다 채워 주겠다."','그래서 그들은 이 등대로 몰려온다.','빛에 닿으면 그들은 깨어난다. 나는 그들을 되찾아야 한다.']},
+ out0:{t:'1장을 마치며',lines:['방앗간 주인 만복 씨가 깨어났다. 그는 바다에서 잃은 형 만석의 이름을 오래 불렀다.','나는 그 이름을 작은 등에 적어 두었다. 언젠가 바다로 보내 주기 위해.','"안개는 바다 쪽에서 불어왔어." 시작점은 바다다.']},
+ in1:{t:'2장 · 갈대 늪',lines:['바닷바람을 거슬러 늪으로 간다.','등대 빛이 매일 밤 닿던 곳, 사당의 문이 열려 있다.','스승은 말했었다. 등대가 서 있는 진짜 이유는 저 사당이라고.']},
+ out1:{t:'2장을 마치며',lines:['사당의 유리함은 비어 있었다. 등불 모양의 그을음만 남았다.','검은 등불. 빛 아래서는 잠들고, 어둠 속에서 깨어나는 불꽃.','누군가 그것을 꺼내 갔다. 열쇠가 걸린 자리는 마을 사람이면 다 안다.']},
+ in2:{t:'3장 · 폐광',lines:['안개가 산 쪽 폐광까지 번졌다.','봉인은 아무 때나 열리지 않는다. 빛이 닿지 않는 어둠, 물이 빠진 갯바닥. 바다와 뭍이 맞닿는 경계에서만 열린다.','광부들이 남긴 물때표가 그 밤의 시각을 알고 있다.']},
+ out2:{t:'3장을 마치며',lines:['물때표는 그날 밤의 썰물을 기억하고 있었다.','자정부터 새벽 세 시까지, 바다는 경계를 내어 주었다.','봉인을 연 사람은 그 사이 어딘가에서 갯바닥에 섰다.']},
+ in3:{t:'4장 · 난파선 무덤',lines:['썰물이다. 부서진 배들에 가려 등대 빛이 닿지 않는 유일한 갯바닥.','그곳으로 장화 자국이 이어져 있다.','은방울호의 종이 안개 속에서 운다.']},
+ out3:{t:'4장을 마치며',lines:['장화 자국은 그을린 둥근 자리에서 멈췄다. 그리고 등대 쪽으로 되돌아왔다.','그 장화는 배를 모는 사람만 신는다.','우리 곁에서 함께 싸우던 누군가의 것이다.']},
+ in4:{t:'5장 · 안개의 심장',lines:['검은 등불을 다시 가두는 것으로는 끝나지 않는다. 덮어 둔 슬픔은 언젠가 다시 열린다.','진짜 끝은 다른 데 있다. 열 해 동안 꺼지지 않은 등대의 불씨를 검은 등불 안에 옮겨 붙이는 것.','진짜 불이 함께 타면, 검은 불꽃은 더는 검게 탈 수 없다.','불씨는 멀리서 비출 수 없다. 곁에 가서 건네야 한다.']},
+ end:{t:'에필로그',lines:['불씨가 옮겨 붙자 검은 불꽃은 따뜻한 불이 되었다. 안개는 새벽빛에 흩어졌다.','하람은 그 등을 바다에 띄웠다. "해랑아, 이제 가렴." 처음으로 아들에게 작별을 말했다.','마을 사람들도 저마다 잃은 이의 이름을 적은 위령등을 띄웠다.','바다로 보낼 것은 보내고, 우리는 뭍으로 돌아왔다.','스승의 일지 마지막 줄을 다시 읽는다. "불을 지키는 일은, 남은 사람을 지키는 일이다."','오늘 밤에도 나는 등대에 불을 붙인다.']},
+};
+const TALE_ORDER=['pro','in0','out0','in1','out1','in2','out2','in3','out3','in4','end'];
+let taleCb=null;
+function playTale(key,cb){const T=TALES[key];taleCb=cb;if(!meta.seen.includes('tale_'+key)){meta.seen.push('tale_'+key);save()}
+ $('#taEy').textContent=T.t;const cv2=$('#taCv');showOnly('tale');$('#tale').scrollTop=0;
+ const d=Math.min(2,window.devicePixelRatio||1),w=cv2.clientWidth||320;cv2.width=Math.round(w*d);cv2.height=Math.round(w*1.25*d);const c=cv2.getContext('2d');c.setTransform(cv2.width/480,0,0,cv2.height/600,0,0);
+ const R=mulberry(77+TALE_ORDER.indexOf(key)*31);wPaper(c,R);PLATES[key](c,R);wGrain(c,R);
+ cv2.classList.remove('kb');void cv2.offsetWidth;cv2.classList.add('kb');
+ $('#taText').innerHTML=T.lines.map((l,i)=>`<p class="tl" style="animation-delay:${.6+i*1.9}s">${l}</p>`).join('');$('#taText').classList.remove('all');
+ $('#taNext').textContent=key==='end'?'처음으로':'계속';sfx('wave')}
+function playTales(list,cb){if(!list.length){cb();return}playTale(list[0],()=>playTales(list.slice(1),cb))}
+$('#tale').addEventListener('click',ev=>{if(ev.target.closest('#taNext,#back'))return;$('#taText').classList.add('all')});
+$('#taNext').addEventListener('click',()=>{const cb=taleCb;taleCb=null;cb?cb():toTitle()});
+/* ---------- symbolic mechanics ---------- */
+const tideLow=()=>wave%2===1;
+const LOST=[['어부 칠성','만복의 형 만석'],['물결의 어머니 순례','사당지기 덕보'],['광부 갑수','갱도의 광부 열둘'],['은방울호 선원들','은방울호 선장 윤도'],['스승의 동생 영길','해랑']];
+function unlockLantern(i){const n=LOST[Math.floor(i/2)][i%2];if(meta.lan.includes(i))return;meta.lan.push(i);save();setTimeout(()=>toast(`위령등 ${meta.lan.length}/10 · 「${n}」의 이름을 등에 적었다`,'gold'),2600)}
+let temptT=26,ember=null,lanternPos=null;
+function tempt(){const pool=towers.filter(t=>['harpoon','fire','tide','bolt'].includes(t.type)&&!t.traitor&&!(t.tempt>0));if(!pool.length)return;const t=pool[Math.floor(Math.random()*pool.length)];t.tempt=12;
+ toast(`${TT[t.type].who}에게 바다의 목소리가 들린다 · 등대지기를 곁으로 보내 깨워라`,'syn');discover('tempt','유혹 · 목소리에 붙잡힌 사람은 싸우지 못한다. 등대지기가 곁에 서면 깨어난다')}
+function startEmber(){const p=lanternPos||{x:200,y:300};ember={st:'pick',x:LX,y:LY+34,lx:p.x,ly:p.y,sp:1.2};selHero=0;
+ banner('불씨를 옮겨라','등대에서 불씨를 받아 검은 등불까지 걸어가라',false);sfx('clue');setTimeout(()=>toast('등대지기를 등대 아래로 보내 불씨를 받고, 쓰러진 하람 곁의 검은 등불로 걸어가라','syn'),1200)}
+function updateEmber(dt){if(!ember||state!=='wave')return;ember.sp-=dt;if(ember.sp<=0){ember.sp=1.25;spawn(Math.random()<.35?'runner':'shade')}
+ const me=heroes[0];if(!me)return;const up=!(me.ko>0);
+ if(ember.st!=='carry'){if(up&&Math.hypot(me.x-ember.x,me.y-ember.y)<30){ember.st='carry';sfx('clue');toast('불씨를 받았다 · 검은 등불로')}}
+ else{ember.x=me.x;ember.y=me.y-18;if(!up){ember.st='drop';ember.x=me.x;ember.y=me.y;toast('불씨를 떨어뜨렸다 · 다시 주워라','syn')}else if(Math.hypot(me.x-ember.lx,me.y-ember.ly)<26)finishEmber()}}
+function finishEmber(){const p={x:ember.lx,y:ember.ly};ember=null;flashT=1.4;shake=16;sfx('win');fx.push({k:'ring',x:p.x,y:p.y,r0:10,r1:520,life:1.2,max:1.2,col:'255,220,150'});
+ for(const e of enemies.slice())if(e.alive)kill(e);banner('검은 불꽃이 따뜻한 불이 되었다','안개가 걷힌다',false);setTimeout(chapterClear,1800)}
+function drawEmberWorld(c){if(!ember&&!(lanternPos&&CH===4&&wave>=10))return;const p=ember?{x:ember.lx,y:ember.ly}:lanternPos;c.save();c.translate(p.x,p.y);c.scale(.7,.7);
+ c.fillStyle='#120a18';c.fillRect(-9,-14,18,22);c.beginPath();c.moveTo(-12,-14);c.lineTo(0,-24);c.lineTo(12,-14);c.fill();c.strokeStyle='#120a18';c.lineWidth=2;c.beginPath();c.arc(0,-26,5,Math.PI,0);c.stroke();c.fillStyle='#000';c.beginPath();c.moveTo(0,-10);c.lineTo(5,0);c.lineTo(0,6);c.lineTo(-5,0);c.fill();c.restore()}
+function drawEmberGlow(c){if(!ember)return;const k=.8+Math.sin(tm*9)*.15;spr(c,SP.violet,ember.lx,ember.ly-8,40,.55);
+ spr(c,SP.amber,ember.x,ember.y,22*k,.95);spr(c,SP.white,ember.x,ember.y,7,1);
+ const tx=ember.st==='carry'?ember.lx:ember.x,ty=ember.st==='carry'?ember.ly-6:ember.y;c.globalAlpha=.7;c.strokeStyle='rgba(255,220,150,1)';c.lineWidth=2;c.beginPath();c.arc(tx,ty,20+Math.sin(tm*5)*4,0,TAU);c.stroke();
+ const me=heroes[0];if(me){c.globalAlpha=.35;c.setLineDash([4,6]);c.lineDashOffset=-tm*20;c.beginPath();c.moveTo(me.x,me.y);c.lineTo(tx,ty);c.stroke();c.setLineDash([])}}
+
+function drawTide(c){const low=tideLow(),k=state==='wave'?1:.6;c.save();const sh=x=>{const isl=Math.exp(-(((x-200)/70)**2));return 652+Math.sin(x/37)*7+isl*40};
+ if(low){c.globalAlpha=.6*k;const g=c.createLinearGradient(0,640,0,700);g.addColorStop(0,'rgba(96,80,56,.95)');g.addColorStop(1,'rgba(60,50,38,.15)');c.fillStyle=g;c.beginPath();for(let x=0;x<=W;x+=10){const y=sh(x);x?c.lineTo(x,y):c.moveTo(x,y)}for(let x=W;x>=0;x-=10)c.lineTo(x,sh(x)+20+Math.sin(tm+x*.05)*2);c.closePath();c.fill()}
+ else{c.globalAlpha=.5*k;c.fillStyle='rgba(24,66,110,1)';c.beginPath();for(let x=0;x<=W;x+=10){const y=sh(x)-13+Math.sin(tm*1.5+x*.04)*2;x?c.lineTo(x,y):c.moveTo(x,y)}for(let x=W;x>=0;x-=10)c.lineTo(x,sh(x)+2);c.closePath();c.fill()}c.restore()}
 /* ---------- weapons, blueprint puzzle, betrayal ---------- */
 const lerp=(a,b,k)=>a+(b-a)*k;
 function lanternBuff(t){if(t.type==='lantern'||t.traitor)return 0;let b=0;for(const o of towers){if(o.type!=='lantern')continue;const r=TT.lantern.range*mods.range*(1+.08*Math.min(o.lvl-1,4));if((o.x-t.x)**2+(o.y-t.y)**2<=r*r)b=Math.max(b,.3+.06*(o.lvl-1))}return b}
