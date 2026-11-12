@@ -91,6 +91,7 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--f-ui);ov
 .opt:disabled{opacity:.4}
 .row{display:flex;gap:.4em;margin-top:.15em}
 .row button{flex:1;padding:.55em .4em;border-radius:.6em;border:1px solid var(--line);background:var(--panel2);font-weight:700;font-size:.82em}
+.row .up.ref,#pop button.ref{background:linear-gradient(180deg,#fff6d8,#f2c868 60%,#c98a2c);color:#2a1a04!important;display:flex;flex-direction:column;align-items:center;line-height:1.2;box-shadow:0 0 1em rgba(255,226,150,.6)}#pop button.ref small{font-size:.72em;font-weight:600;opacity:.85}#pop button.ref:disabled{filter:grayscale(.6) brightness(.7);box-shadow:none}#pop .rf{color:#ffe9a8;text-shadow:0 0 .5em #ffd36b}
 .row .up{background:linear-gradient(180deg,#ffd58c,#e79b3b);color:#1b1105!important;border:none}
 .row .up:disabled{background:var(--panel2);color:var(--mute)!important;border:1px solid var(--line)}
 .stats{font-size:.74em;color:#c9c3b3;margin:0 .2em .55em;font-variant-numeric:tabular-nums;line-height:1.5}
@@ -182,6 +183,7 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--f-ui);ov
 .chp .no{grid-row:span 2;width:2.6em;height:2.6em;border-radius:50%;display:grid;place-items:center;font-family:var(--f-disp);font-weight:700;color:#0b0d16;background:radial-gradient(circle at 40% 35%,#fff,var(--cc) 60%);box-shadow:0 0 1em color-mix(in srgb,var(--cc) 60%,transparent)}
 .chp b{font-family:var(--f-disp);font-size:1.02em}
 .chp .sub{font-size:.76em;color:#c9c3b3;grid-column:2}
+.chp .nts{grid-column:1/-1;display:flex;gap:.35em;margin-top:.45em}.chp .nts i{flex:1;font-style:normal;font-size:.72em;padding:.35em 0;border-radius:.5em;text-align:center;border:1px solid rgba(255,255,255,.14);color:var(--mute)}.chp .nts i.ok{border-color:rgba(255,196,107,.55);color:#ffe2ac;background:rgba(255,196,107,.08)}.chp .nts i.ok::before{content:'✓ '}.chp .nts i.cur{border-color:var(--cc);color:#fff;box-shadow:0 0 .8em color-mix(in srgb,var(--cc) 50%,transparent)}.chp .nts i.lk{opacity:.45}
 .chp .st{grid-row:1/span 2;grid-column:3;font-size:.72em;color:var(--lamp);text-align:right;font-variant-numeric:tabular-nums;line-height:1.5;white-space:nowrap}
 .chp.lock{filter:grayscale(.85) brightness(.6)}
 .chp.lock .st{color:var(--mute);white-space:normal;max-width:7.5em}
@@ -447,10 +449,10 @@ setMap(0);
 const LX=200,LY=583;
 
 const TT={
-  harpoon:{name:'작살',who:'어부 하람',role:'단일 · 빠름',glyph:'작',cost:50,range:95,dmg:15,rate:.75,css:'#9fd4ff',spr:'cyan',quote:'어부 하람 · "정신이 드네. 작살은 아직 손에 익어."'},
-  fire:{name:'화염',who:'대장장이 돌쇠',role:'범위 · 화상',glyph:'화',cost:80,range:80,dmg:11,rate:1.25,splash:42,burn:5,css:'#ff8a4a',spr:'ember',quote:'대장장이 돌쇠 · "불이라면 내가 제일 잘 알지."'},
-  tide:{name:'밀물',who:'해녀 물결',role:'둔화 · 젖음',glyph:'물',cost:60,range:84,dmg:4,rate:1.6,slow:.4,css:'#5cc8ff',spr:'blue',quote:'해녀 물결 · "바닷물에 젖으면 안개가 무거워져."'},
-  bolt:{name:'번개',who:'꼬마 마법사 반디',role:'연쇄 공격',glyph:'번',cost:100,range:92,dmg:20,rate:1.45,chain:3,css:'#c3a8ff',spr:'violet',quote:'꼬마 마법사 반디 · "번쩍! 젖은 녀석들은 훨씬 아파해!"'},
+  harpoon:{name:'작살',who:'하람의 어부들',role:'단일 · 빠름',glyph:'작',cost:50,range:95,dmg:15,rate:.75,css:'#9fd4ff',spr:'cyan',quote:'하람의 어부 · "하람 형님이 가르친 대로 던지지. 작살은 손에 익었어."'},
+  fire:{name:'화염',who:'돌쇠의 대장간 일꾼들',role:'범위 · 화상',glyph:'화',cost:80,range:80,dmg:11,rate:1.25,splash:42,burn:5,css:'#ff8a4a',spr:'ember',quote:'돌쇠네 일꾼 · "불이라면 우리 대장간이 제일이지. 돌쇠 어른이 그랬어."'},
+  tide:{name:'밀물',who:'물결의 해녀들',role:'둔화 · 젖음',glyph:'물',cost:60,range:84,dmg:4,rate:1.6,slow:.4,css:'#5cc8ff',spr:'blue',quote:'물결네 해녀 · "물결 언니 말이 맞아. 바닷물에 젖으면 안개가 무거워져."'},
+  bolt:{name:'번개',who:'반디의 반딧불 아이들',role:'연쇄 공격',glyph:'번',cost:100,range:92,dmg:20,rate:1.45,chain:3,css:'#c3a8ff',spr:'violet',quote:'반딧불 아이 · "반디 언니가 가르쳐 줬어! 번쩍! 젖은 녀석들은 훨씬 아파해!"'},
   lens:{name:'렌즈 포대',who:'1장 설계도로 만든 무기',role:'관통 광선',glyph:'렌',cost:140,range:110,dmg:36,rate:2.2,css:'#fff1c2',spr:'white',weapon:1,wi:0,quote:'렌즈 포대 · 한 줄로 늘어선 그림자를 한 번에 꿰뚫는다.'},
   bell:{name:'안개 종',who:'2장 설계도로 만든 무기',role:'기절 · 배신 봉인',glyph:'종',cost:120,range:88,dmg:8,rate:6,css:'#e8c27a',spr:'gold',weapon:1,wi:1,quote:'안개 종 · 종이 울리면 그림자가 멈춰 선다.'},
   lantern:{name:'축복 등롱',who:'3장 설계도로 만든 무기',role:'주변 강화',glyph:'롱',cost:130,range:95,dmg:0,rate:1,css:'#ffb070',spr:'amber',weapon:1,wi:2,quote:'축복 등롱 · 곁에 선 사람들의 손에 힘이 실린다.'},
@@ -596,8 +598,9 @@ const CASES=[
 ];
 function gi(c,ch,b,t){return`<div class="gi" style="--c:${c}"><i>${ch}</i><div><b>${b}</b><span>${t}</span></div></div>`}
 const GUIDE=[
+ {t:'네 무리',b:gi('#ffc46b','무','이름 있는 네 사람은 무리의 우두머리','타워 하나하나는 그 사람을 따르는 마을 사람이다. 작살대는 하람의 어부들, 화로는 돌쇠의 일꾼들, 우물은 물결의 해녀들, 번개는 반디의 반딧불 아이들. 그래서 같은 타워를 여러 개 세울 수 있다. 우두머리가 흔들리면 무리도 함께 흔들린다.')},
  {t:'등대를 지켜라',h:`<p>바다에 잠긴 이의 목소리를 들려주는 안개가 봉인에서 풀려났다. 안개를 마신 사람들은 그림자가 되어, 안개를 막는 마지막 빛인 등대를 끄러 온다. 빛으로 정화해 되찾아라. 다섯 개의 장, 각 장마다 10번째 파도까지 등대를 지키면 다음 장이 열린다.</p>`+gi('#ffc46b','등','등불','등대의 생명이자 빛줄기의 세기. 그림자가 등대에 닿으면 줄고, 0이 되면 패배한다.')+gi('#ff9a4a','유','등유','그림자를 정화하면 얻는다. 마을 사람을 세우고 강화하는 데 쓴다.')+gi('#8fe6ff','파','파도','5번째 파도엔 정예 그림자, 10번째 파도엔 그 장의 주인이 나타난다. 장이 깊어질수록 안개도 짙어진다.')},
- {t:'마을 사람 세우기',h:`<p>빛나는 받침돌을 누르면 정화된 마을 사람을 세울 수 있다.</p>`+gi('#9fd4ff','작','작살 · 어부 하람','빠르게 한 마리씩 꿰뚫는다.')+gi('#ff8a4a','화','화염 · 대장장이 돌쇠','터지는 불덩이. 맞은 적은 한동안 불탄다.')+gi('#5cc8ff','물','밀물 · 해녀 물결','주변 적을 느리게 하고 젖게 만든다.')+gi('#c3a8ff','번','번개 · 꼬마 마법사 반디','여러 적에게 튀는 번개. 젖은 적에게 특히 강하다.')+gi('#ffc46b','★','강화','세운 사람을 다시 눌러 등유로 최고 8단계까지 강화한다. 단계마다 모습이 바뀌고, 4단계는 각성, 5단계부터는 푸른 별이 주위를 돈다.')+gi('#fff1c2','신','신형 무기','장을 지켜내면 설계도 조각 9개를 맞춰 새 무기를 만든다. 한 번 만든 무기는 모든 장에서 영구히 쓸 수 있다.')},
+ {t:'마을 사람 세우기',h:`<p>빛나는 받침돌을 누르면 정화된 마을 사람을 세울 수 있다.</p>`+gi('#9fd4ff','작','작살 · 하람의 어부들','하람이 이끄는 어부 무리. 빠르게 한 마리씩 꿰뚫는다.')+gi('#ff8a4a','화','화염 · 돌쇠의 대장간 일꾼들','돌쇠가 이끄는 대장간 일꾼들. 터지는 불덩이, 맞은 적은 한동안 불탄다.')+gi('#5cc8ff','물','밀물 · 물결의 해녀들','물결이 이끄는 해녀들. 주변 적을 느리게 하고 젖게 만든다.')+gi('#c3a8ff','번','번개 · 반디의 반딧불 아이들','반디에게 배운 아이들. 여러 적에게 튀는 번개, 젖은 적에게 특히 강하다.')+gi('#ffc46b','★','강화','세운 사람을 다시 눌러 등유로 최고 8단계까지 강화한다. 단계마다 모습이 바뀌고, 4단계는 각성, 5단계부터는 푸른 별이 주위를 돈다.')+gi('#fff0b8','✦','정련','8단계가 되면 정련할 수 있다. 성공하면 피해 +10%, 성공 확률은 단계마다 줄고 비용은 늘어난다. 실패하면 등유만 사라지지만 그 타워에 축복이 쌓여 다음 확률이 오른다. 높이 오를수록 성공의 빛이 거룩해진다.')+gi('#fff1c2','신','신형 무기','장을 지켜내면 설계도 조각 9개를 맞춰 새 무기를 만든다. 한 번 만든 무기는 모든 장에서 영구히 쓸 수 있다.')},
  {t:'내 손으로 지키기',h:gi('#c8f2ff','거','거울 빛','거울 버튼을 누른 뒤 원하는 곳을 누르면 등대 빛이 8초 동안 그곳에 모인다. 빛 안의 그림자는 느려지고 40% 더 다치며, 빛 안의 타워는 빨라지고 강해진다. 목소리에 붙잡힌 동료도 깨운다.')+gi('#ffc46b','빛','등대 빛줄기','등대는 스스로 빛을 돌린다. 안개는 빛을 삼키러 오고, 빛에 닿은 그림자는 정화된다. 등불이 약하면 빛줄기도 짧아진다.')+gi('#ffe2a0','섬','섬광','오른쪽 아래 버튼. 등대 주변 그림자를 모두 기절시키고 큰 피해를 준다.')+gi('#ff9a4a','▶','파도 부르기','준비 시간에 일찍 부르면 남은 시간만큼 등유를 더 받는다.')+gi('#ece5d4','×','속도와 정지','왼쪽 아래에서 속도를 1·2·3배로 바꾸거나 잠시 멈출 수 있다.')},
  {t:'단서와 추리',h:`<p>안개는 저절로 생긴 게 아니다. 누군가 무언가를 저질렀다. 증거를 모아 범인을 밝혀라.</p>`+gi('#ffd56b','단','기억을 품은 그림자','금빛으로 빛나는 그림자. 등대에 닿기 전에 정화하면 단서를 남긴다. 놓치면 그 밤엔 사라진다.')+gi('#8fe6ff','?','추리','한 사건의 증거 4개가 모이면 추리할 수 있다. 결정적인 증거 2개와 답 하나를 함께 제출해야 한다. 답이 맞아도 증거가 틀리면 실패. 틀리면 그 밤엔 다시 추리할 수 없다.')+gi('#ffc46b','◆','설계도 퍼즐','파도를 막을 때마다 설계도 조각이 모인다. 장을 지켜내면 9조각을 자리와 방향에 맞게 맞춰 신형 무기를 얻는다.')+gi('#c3a8ff','속','바다의 목소리','가끔 마을 사람이 목소리에 붙잡혀 싸우지 못한다. 보라색 안개 줄기와 말풍선이 보이면 거울 빛을 비춰 깨워라.')+gi('#cf9a3e','등','위령등','정예와 보스는 바다에서 잃은 이의 이름을 부르며 온다. 정화하면 그 이름을 등에 적는다.')+gi('#ff9aa8','회','등대 회의','2장부터 장을 시작할 때마다 회의가 열린다. 각자의 변론을 듣고 그 밤 한 사람을 몰래 지켜볼 수 있다. 타워는 그대로 쓴다. 지켜본 밤에 무엇이 달라지는지 보라.')+gi('#ffd890','일','스승의 일지 · 인물 기억','정예와 보스를 쓰러뜨리면 스승의 일지가, 네 사람의 타워를 키울수록 그들의 기억이 열린다. 진실은 그 사이에 숨어 있다.')+gi('#c3a8ff','책','등대지기 수첩','모은 단서와 기억 조각은 수첩에서 언제든 다시 읽을 수 있다. 게임 중에도 열 수 있다.')},
  {t:'선물과 성장',h:gi('#ece5d4','선','빛이 남긴 선물','파도를 막을 때마다 카드 3장 중 하나를 고른다. 일반·희귀·전설 등급이 있다.')+gi('#c3a8ff','합','시너지','젖은 적 + 번개처럼, 조합을 찾을수록 강해진다.')+gi('#8fe6ff','결','빛의 결정','밤이 끝나면 결정을 얻는다. 등대 작업실에서 영구 강화에 쓴다.')+gi('#ffd56b','장','다섯 개의 장','장을 지켜내면 다음 장이 열린다. 마지막 장 「안개의 심장」은 사건 1~4의 진실을 모두 밝혀야 열린다.')},
@@ -615,7 +618,7 @@ const META=[
 const KEY='last-lighthouse-v3';
 function load(){try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){return null}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(meta))}catch(e){}}
-const meta=Object.assign({shards:0,best:0,runs:0,lore:[],muted:false,seen:[],clues:[],solved:[],cleared:[],bestCh:{},weapons:[],hint:{},obs:{},memo:[],jr:[],lan:[]},load()||{});
+const meta=Object.assign({shards:0,best:0,runs:0,lore:[],muted:false,seen:[],clues:[],solved:[],cleared:[],bestCh:{},nights:{},weapons:[],hint:{},obs:{},memo:[],jr:[],lan:[]},load()||{});
 meta.up=Object.assign({gold:0,hp:0,dmg:0,reroll:0,flash:0,hero:0},meta.up||{});
 
 /* ---------- audio ---------- */
@@ -663,65 +666,75 @@ function resetWorld(){towers=[];slotT=new Array(SLOTS.length).fill(null);enemies
 resetWorld();
 let mergeFrom=-1;
 function newRun(ch=CH,excl=null,kept=false,watch=null){
- setMap(ch);drawBG();resetWorld();mods=freshMods();mergeFrom=-1;betrayed=false;
+ setMap(ch);nightWon=false;drawBG();resetWorld();mods=freshMods();mergeFrom=-1;betrayed=false;
  runExcl=excl;haramKept=kept;runWatch=watch;zone=null;mirrorArm=false;mirrorCd=0;$('#mirror').classList.remove('arm');buildAlts();temptT=26;ember=null;lanternPos=null;if(kept)mods.harpoon*=1.5;heroes=makeHeroes();selHero=0;dimT=0;sabCount=0;quietShown=false;$('#bossbar').hidden=true;
- gold=120+CH*60+meta.up.gold*30;maxHp=20+meta.up.hp*4;hp=maxHp;wave=0;spawnT=0;prepT=18;flashCd=0;flashT=0;shake=0;combo=0;comboT=0;bossKills=0;kills=0;
+ gold=120+CH*60+NIGHT*60+meta.up.gold*30;maxHp=20+meta.up.hp*4;hp=maxHp;wave=0;spawnT=0;prepT=18;flashCd=0;flashT=0;shake=0;combo=0;comboT=0;bossKills=0;kills=0;
  aiming=false;beamA=-Math.PI/2;runLocked=new Set();rerolls=1+meta.up.reroll;taken=new Set();won=false;runSeen=new Set();bossRef=null;built=new Set();
  state='prep';paused=false;speed=1;$('#bSpeed').textContent='1×';
  showOnly(null);$('#hud').hidden=false;$('#bar').hidden=false;$('#hint').hidden=meta.runs>0;
- banner(`${CH+1}장 · ${MAPS[CH].name}`,MAPS[CH].sub);showStory(CH_IN[CH]);
+ banner(`${CH+1}장 · ${NN[NIGHT]}`,`${MAPS[CH].name} · ${NLEN()}번의 파도`);if(NIGHT===0)showStory(CH_IN[CH]);
  if(!meta.seen.includes('heroInfo')){meta.seen.push('heroInfo');save();setTimeout(()=>toast('거울 빛 · 아래 거울 버튼을 누르고 원하는 곳을 누르면 8초 동안 등대 빛이 모인다','gold'),2200)}
  if(runWatch){const r=RES.find(x=>x.k===runWatch);setTimeout(()=>toast(`오늘 밤 ${josa(r.n,'을','를')} 몰래 지켜본다`,'syn'),900)}
  if(runExcl){const r=RES.find(x=>x.k===runExcl);setTimeout(()=>toast(`이번 장은 ${josa(r.n,'이','가')} 빠진다 · ${TT[runExcl].name} 타워를 세울 수 없다`,'syn'),900)}
 }
-const hpMul=w=>(1+(w-1)*.3+(w-1)*(w-1)*.02)*CHM[CH];
+const hpMul=w=>(1+(w-1)*.27+(w-1)*(w-1)*.02)*CHM[CH];
+let NIGHT=0,nightWon=false;const NL=[12,15,18],NOFF=[0,12,27],NTOT=45,NN=['첫째 밤','둘째 밤','셋째 밤'];
+const NLEN=()=>NL[NIGHT],EW=w=>w;
+const DAWN=['첫 새벽이 왔다. 안개가 잠시 물러났지만, 해가 지면 다시 올 것이다. 무리들은 지친 몸으로 집에 돌아갔다.','두 번째 새벽. 그림자들이 길의 끝을 점점 더 잘 안다. 내일 밤엔 이 장의 주인이 온다.'];
+function waveKind(w){const Ln=NLEN();if(w>Ln){const k=w-Ln;return k%10===0?'boss':k%5===0?'elite':''}if(w===Ln)return NIGHT===2?'boss':'elite';if(NIGHT>=1&&w===Math.round(Ln/2))return'elite';return''}
+function nextNight(i){return meta.cleared.includes(i)?0:Math.min(2,(meta.nights&&meta.nights[i])||0)}
+function nightClear(){
+ won=true;nightWon=true;state='victory';sfx('win');closePop();const bonus=10+CH*6+NIGHT*6;meta.shards+=bonus;meta.nights[CH]=Math.max(meta.nights[CH]||0,NIGHT+1);save();
+ $('#wObs').hidden=true;$('#wEy').textContent=`${CH+1}장 · ${MAPS[CH].name} · ${NN[NIGHT]}`;$('#wTitle').textContent=`${NN[NIGHT]}을 지켜냈다`;$('#wText').textContent=DAWN[NIGHT];
+ $('#wGain').innerHTML=`밤 보상 · 빛의 결정 <span class="shard">+${bonus}</span>`;
+ const nb=$('#bNextCh');nb.textContent=`${NN[NIGHT+1]}으로`;nb.hidden=false;$('#wNote').textContent=`${NN[NIGHT+1]}이 열렸다. 해가 지면 무리를 새로 세운다.`;
+ setTimeout(()=>showOnly('win'),900)}
 
 /* ---------- waves ---------- */
 function genWave(w){
- const q=[],n=Math.round(8+w*2+CH*3);const pool=[['shade',10]];
- if(w>=2||CH>0)pool.push(['runner',3+w*.4+CH]);if(w>=3||CH>0)pool.push(['weeper',2+w*.25]);if(w>=4||CH>1)pool.push(['brute',1.2+w*.3+(CH===2?3:CH*.5)]);if(w>=6||CH>0)pool.push(['caller',.8+w*.12+CH*.3]);
- const tot=pool.reduce((s,p)=>s+p[1],0);const gap=Math.max(.3,1-w*.035-CH*.05);
+ const wk=waveKind(w),e=EW(w),q=[],n=Math.round(8+e*1.6+CH*3);const pool=[['shade',10]];
+ if(e>=2||CH>0)pool.push(['runner',3+e*.4+CH]);if(e>=3||CH>0)pool.push(['weeper',2+e*.25]);if(e>=4||CH>1)pool.push(['brute',1.2+e*.3+(CH===2?3:CH*.5)]);if(e>=6||CH>0)pool.push(['caller',.8+e*.12+CH*.3]);
+ const tot=pool.reduce((s,p)=>s+p[1],0);const gap=Math.max(.3,1-e*.03-CH*.05);
  for(let i=0;i<n;i++){let r=Math.random()*tot,t='shade';for(const p of pool){r-=p[1];if(r<=0){t=p[0];break}}q.push({t,d:t==='runner'?gap*.45:t==='brute'?gap*1.4:gap})}
- if(w>=2&&w%10&&nextClue())q.splice(Math.floor(n*.6),0,{t:'memory',d:gap});
- if(w%10===5)q.splice(Math.floor(n*.5),0,{t:'elite',d:2});
- if(w%10===0)q.splice(Math.floor(n*.4),0,{t:'boss',d:2.5});
+ if(w>=2&&!wk&&w%3===2&&nextClue())q.splice(Math.floor(n*.6),0,{t:'memory',d:gap});
+ if(wk==='elite')q.splice(Math.floor(n*.5),0,{t:'elite',d:2});
+ if(wk==='boss')q.splice(Math.floor(n*.4),0,{t:'boss',d:2.5});
  return q;
 }
 function startWave(){
  wave++;queue=genWave(wave);spawnT=.6;state='wave';if(wave>=3||meta.seen.includes('hero')||towers.length)$('#hint').hidden=!(towers.length&&!meta.seen.includes('hero')&&wave<3);
- const echo=wave>10?'의 메아리':'';
- if(wave%10===0){banner(CHB[CH].boss+echo,'파도 '+wave+' · 이 장의 주인',true);sfx('boss')}
- else if(wave%10===5){banner(CHB[CH].elite+echo,'파도 '+wave+' · 정예 그림자',true);sfx('boss')}
- else{banner(`${CH+1}장 · 파도 ${wave}`,wave%5===0?'안개가 짙어진다':'그림자가 길을 따라 온다');sfx('wave')}
+ const echo=wave>NLEN()?'의 메아리':'',wk=waveKind(wave);
+ if(wk==='boss'){banner(CHB[CH].boss+echo,'파도 '+wave+' · 이 장의 주인',true);sfx('boss')}
+ else if(wk==='elite'){banner(CHB[CH].elite+echo,'파도 '+wave+' · 정예 그림자',true);sfx('boss')}
+ else{banner(`${NN[NIGHT]} · 파도 ${wave}`,wave%5===0?'안개가 짙어진다':'그림자가 길을 따라 온다');sfx('wave')}
 
- if(wave===1)setTimeout(()=>discover('tide','물때 · 썰물엔 바다와 뭍의 경계가 열려 그림자가 강해지고, 밀물엔 약해진다'),3200);
- if(wave<=10){const li=CH*10+wave-1;showStory(STORY[li]);if(!meta.lore.includes(li)){meta.lore.push(li);save()}}
- if(CH===4&&wave===5&&!betrayed)setTimeout(betray,1800);
- if(CH<4&&wave<=10&&(CH===0?[7]:[3,6,8]).includes(wave)){if(runWatch!=='harpoon')sabotage();else if(!quietShown){quietShown=true;sabotage(true)}}
+ if(wave<=NLEN()){const g=NOFF[NIGHT]+wave,k=Math.floor((g-1)*10/NTOT);if(g===1||Math.floor((g-2)*10/NTOT)!==k){const li=CH*10+k;showStory(STORY[li]);if(!meta.lore.includes(li)){meta.lore.push(li);save()}}}
+ if(CH===4&&NIGHT===2&&wave===5&&!betrayed)setTimeout(betray,1800);
+ if(CH<4&&wave<=NLEN()&&(CH===0?[.6]:[.25,.5,.75]).map(f=>Math.round(NLEN()*f)).includes(wave)){if(runWatch!=='harpoon')sabotage();else if(!quietShown){quietShown=true;sabotage(true)}}
 }
 function spawn(t,dist=0,sea=0){
- const B=ET[t];const m=hpMul(wave)*(B.boss&&wave>10?1+(wave-10)*.12:1);
+ const B=ET[t];const m=hpMul(EW(wave))*(B.boss&&wave>NLEN()?1+(wave-NLEN())*.12:1);
  const e={t,hp:B.hp*m,max:B.hp*m,x:0,y:0,dx:0,dy:1,dist,prog:dist,slow:0,slowAmt:0,wet:0,burn:0,burnDps:0,stun:0,hit:0,lit:0,alive:true,ph:Math.random()*TAU,sum:3.5};
  if(sea&&ALTS.length){e.alt=ALTS[Math.random()<.5?0:1];e.ad=0;const p=altPos(e.alt,0);e.x=p[0];e.y=p[1];e.dx=p[2];e.dy=p[3];e.prog=0}
  else{const p=posAt(dist);e.x=p[0];e.y=p[1];e.dx=p[2];e.dy=p[3]}
  if(B.split)intro('e_weep','울보 · 쓰러지면 작은 그림자 둘로 갈라진다');if(B.call)intro('e_call','부르는 자 · 곁의 그림자들을 재촉해 빠르게 만든다. 먼저 쓰러뜨려라');
  if(B.clue)discover('mem','금빛 그림자 등장 · 정화하면 단서를 남긴다. 빛줄기로 노려라');
- if(B.boss){e.name=(B.elite?CHB[CH].elite:CHB[CH].boss)+(wave>10?'의 메아리':'');if(B.elite)e.sum=6;bossRef=e;$('#bossbar').hidden=false;$('#bossName').textContent=e.name}
+ if(B.boss){e.name=(B.elite?CHB[CH].elite:CHB[CH].boss)+(wave>NLEN()?'의 메아리':'');if(B.elite)e.sum=6;bossRef=e;$('#bossbar').hidden=false;$('#bossName').textContent=e.name}
  enemies.push(e);return e;
 }
 function waveClear(){
  const bonus=15+wave*4;gold+=bonus;let int=0;
  if(mods.interest){int=Math.floor(gold*.1*mods.interest);gold+=int}
- toast(`파도 ${wave} 막아냄 · 등유 +${bonus}${int?` · 이자 +${int}`:''}`,'gold');if(wave<10&&!meta.weapons.includes(CH))setTimeout(()=>toast(`${CH+1}장 설계도 조각 ${wave}/9`),700);
- if(wave>(meta.bestCh[CH]||0)){meta.bestCh[CH]=wave;save()}
- if(wave===10&&!won){if(CH===4&&!ember){startEmber();return}chapterClear();return}
+ toast(`파도 ${wave} 막아냄 · 등유 +${bonus}${int?` · 이자 +${int}`:''}`,'gold');{const pc=w=>Math.min(9,NIGHT*3+Math.floor(w*3/NLEN())),a=pc(wave);if(wave<=NLEN()&&a>pc(wave-1)&&!meta.weapons.includes(CH))setTimeout(()=>toast(`${CH+1}장 설계도 조각 ${a}/9`),700)}
+ if(wave<=NLEN()&&NOFF[NIGHT]+wave>(meta.bestCh[CH]||0)){meta.bestCh[CH]=NOFF[NIGHT]+wave;save()}
+ if(wave===NLEN()&&!won){if(NIGHT<2){nightClear();return}if(CH===4&&!ember){startEmber();return}chapterClear();return}
  afterWave();
 }
 function afterWave(){const ci=CASES.findIndex((_,i)=>caseReady(i));if(ci>=0){state='cards';closePop();openCase(ci,openCards)}else openCards()}
 
 /* ---------- combat ---------- */
 function tstats(t){const b=TT[t.type],L=t.lvl-1,lb=towers?lanternBuff(t):0,zb=t.zone>0?1:0;
- return{dmg:b.dmg*(1+.7*L)*(L>=4?Math.pow(1.22,L-3):1)*mods[t.type]*(1+lb)*(1+.25*zb),range:b.range*(1+.08*Math.min(L,4)+.04*Math.max(0,L-4))*mods.range,rate:b.rate/mods.aspd/(1+.06*L)/(1+lb*.5)/(1+.3*zb),splash:(b.splash||0)*mods.splash*(1+.08*L),chain:(b.chain||0)+mods.chain+(L>=2?1:0),slow:Math.min(.75,(b.slow||0)+mods.slow+L*.05),burn:(b.burn||0)*(1+.5*L)*mods.burnMul}}
+ const rf=t.ref||0;return{dmg:b.dmg*(1+.7*L)*(L>=4?Math.pow(1.22,L-3):1)*mods[t.type]*(1+lb)*(1+.25*zb)*(1+.1*rf),range:b.range*(1+.08*Math.min(L,4)+.04*Math.max(0,L-4)+.012*rf)*mods.range,rate:b.rate/mods.aspd/(1+.06*L)/(1+lb*.5)/(1+.3*zb),splash:(b.splash||0)*mods.splash*(1+.08*L),chain:(b.chain||0)+mods.chain+(L>=2?1:0),slow:Math.min(.75,(b.slow||0)+mods.slow+L*.05),burn:(b.burn||0)*(1+.5*L)*mods.burnMul}}
 function findTarget(x,y,r){let best=null,bp=-1;const r2=r*r;for(const e of enemies){if(!e.alive)continue;const dx=e.x-x,dy=e.y-y;if(dx*dx+dy*dy<=r2&&e.prog>bp){bp=e.prog;best=e}}return best}
 function damage(e,a,src,show){
  if(!e.alive)return;a*=mods.dmgAll;if(ET[e.t].armor&&src!=='burn'&&src!=='beam')a*=1-ET[e.t].armor;
@@ -741,7 +754,7 @@ function kill(e){
  if(e.burn>0&&mods.burnBoom){explode(e.x,e.y,48,e.max*.35+10,false);discover('boom','시너지 · 정화의 불꽃 폭발!')}
  if(B.clue||B.boss)gainClue(e.x,e.y);
  if(B.boss&&wave<=10){unlockJournal(CH*2+(B.elite?0:1));unlockLantern(CH*2+(B.elite?0:1))}
- if(CH===4&&B.boss&&!B.elite&&wave===10)lanternPos={x:e.x,y:e.y,d:e.dist};
+ if(CH===4&&B.boss&&!B.elite&&NIGHT===2&&wave===NLEN())lanternPos={x:e.x,y:e.y,d:e.dist};
  if(B.boss){bossKills++;shake=Math.max(shake,14);flashT=.35;bossRef=null;$('#bossbar').hidden=true;
   toast(`${e.name} 정화 완료`,'who');sfx('win')} else sfx('kill');
 }
@@ -799,7 +812,7 @@ function update(dt){
   if(e.burn>0){e.burn-=dt;damage(e,e.burnDps*dt,'burn');if(Math.random()<dt*14)part(e.x+rnd(-6,6),e.y+rnd(-4,4),rnd(-8,8),rnd(-50,-25),rnd(.3,.6),rnd(2,4),SP.ember,.95,-10)}
   if(B.boss&&e.alive){e.sum-=dt;if(e.sum<=0){e.sum=B.elite?6:4.2;for(let i=0;i<2;i++)spawn('shade',Math.max(0,e.dist-14-i*12))}}
  }
- updateEmber(dt);updateZone(dt);
+ updateEmber(dt);updateZone(dt);updateHoly(dt);
  if(state==='wave'&&CH>=1&&!ember){temptT-=dt;if(temptT<=0){temptT=rnd(24,34);tempt()}}
  // beams
  if(state==='wave'){const dps=9*(1+.13*(wave-1))*(1+CH*.5)*mods.beam*(dimT>0?.35:1);
@@ -921,6 +934,7 @@ function drawTower(c,t){
  if(L>=5){c.save();c.rotate(-tm*.5);c.strokeStyle=`rgba(${rgb},.75)`;c.lineWidth=1.6;c.beginPath();c.arc(0,0,25.5,0,TAU);c.stroke();c.fillStyle='#e8f6ff';for(let i=0;i<L-4;i++){const a=i*TAU/(L-4);c.save();c.translate(Math.cos(a)*25.5,Math.sin(a)*25.5);c.rotate(a);c.fillRect(-2.2,-2.2,4.4,4.4);c.restore()}c.restore();c.scale(1+(L-4)*.07,1+(L-4)*.07)}
  if(L>=3){c.save();c.rotate(tm*.7*(x>200?1:-1));c.strokeStyle=`rgba(${rgb},.6)`;c.lineWidth=1.2;c.setLineDash([2,4]);c.beginPath();c.arc(0,0,19.5,0,TAU);c.stroke();c.setLineDash([]);c.fillStyle=`rgba(${rgb},.9)`;for(let i=0;i<6;i++){const a=i*TAU/6;c.fillRect(Math.cos(a)*19.5-1.2,Math.sin(a)*19.5-1.2,2.4,2.4)}c.restore()}
  if(L>=4){c.strokeStyle='rgba(255,214,140,.8)';c.lineWidth=1.4;c.beginPath();c.arc(0,0,22.5,0,TAU);c.stroke()}
+ if(t.ref)drawHalo(c,t);
  if(TT[t.type].weapon){drawWeapon(c,t,L);c.restore();return}
  if(t.type==='harpoon'){
   const s=11+(L-1)*1.4;c.fillStyle=L>=3?'#3d3c4a':'#3b2a1d';c.beginPath();c.moveTo(0,-s);c.lineTo(s,0);c.lineTo(0,s);c.lineTo(-s,0);c.closePath();c.fill();c.strokeStyle=L>=4?'#e2bd6a':L>=3?'#7f8fb0':'#6b4d33';c.lineWidth=1.2;c.stroke();
@@ -1083,7 +1097,7 @@ function render(){
  }
  for(const e of enemies)enemyGlow(c,e);
  for(let i=0;i<heroes.length;i++)heroGlow(c,heroes[i],i===selHero);
- drawEmberGlow(c);drawZone(c);drawTemptGlow(c);
+ drawEmberGlow(c);drawZone(c);drawTemptGlow(c);drawHoly(c);
  for(const p of projs){if(p.k==='harp'){c.globalAlpha=1;c.strokeStyle=p.cr?'rgba(255,220,140,.95)':'rgba(220,240,255,.95)';c.lineWidth=2;c.beginPath();c.moveTo(p.x-p.vx*14,p.y-p.vy*14);c.lineTo(p.x,p.y);c.stroke();spr(c,p.cr?SP.gold:SP.cyan,p.x,p.y,9,.8)}else{spr(c,SP.ember,p.x,p.y,15,.9);spr(c,SP.white,p.x,p.y,5,.9)}}
  for(const f of fx){const k=f.life/f.max;
   if(f.k==='boom'){spr(c,SP.ember,f.x,f.y,f.r*(1.6-k*.5),k*.9);spr(c,SP.white,f.x,f.y,f.r*.5,k*.7)}
@@ -1121,7 +1135,7 @@ let hudKey='';
 function hud(){
  if(state==='title')return;
  const key=`${Math.ceil(hp)}|${gold}|${wave}|${state}|${selSlot}`;
- if(key!==hudKey){hudKey=key;$('#vHp').textContent=Math.max(0,Math.ceil(hp))+'/'+maxHp;$('#vGold').textContent=gold;$('#vWave').textContent=wave>10?wave:wave+' / 10';$('#wLbl').textContent=`${CH+1}장 · 파도`;refreshPop()}
+ if(key!==hudKey){hudKey=key;$('#vHp').textContent=Math.max(0,Math.ceil(hp))+'/'+maxHp;$('#vGold').textContent=gold;$('#vWave').textContent=wave>NLEN()?wave:wave+' / '+NLEN();$('#wLbl').textContent=`${CH+1}장 · ${NN[NIGHT]}`;refreshPop()}
  {const mi=$('#mirror');mi.style.setProperty('--p',mirrorCd>0?1-mirrorCd/(20*mods.flashCd):1);$('#mirTxt').textContent=mirrorArm?'놓을 곳':mirrorCd>0?Math.ceil(mirrorCd)+'초':'준비';const dc=$('#cDim'),on=dimT>0&&state==='wave';if(dc.hidden===on)dc.hidden=!on;if(on)$('#vDim').textContent=Math.ceil(dimT)+'초'}
  const fl=$('#flash');const ready=flashCd<=0&&state==='wave';fl.style.setProperty('--p',flashCd>0?1-flashCd/(22*mods.flashCd):1);fl.disabled=!ready;fl.classList.toggle('ready',ready);$('#flashTxt').textContent=flashCd>0?Math.ceil(flashCd)+'초':state==='wave'?'준비':'대기';
  const nx=$('#next');if(state==='prep'){nx.hidden=false;const b=Math.ceil(prepT)*2;nx.innerHTML=`파도 ${wave+1} 부르기<small>지금 부르면 등유 +${b} · ${Math.ceil(prepT)}초</small>`}else nx.hidden=true;
@@ -1136,11 +1150,11 @@ function openBuild(i){selSlot=i;
  placePop(...SLOTS[i]);refreshPop()}
 function upCost(t){return Math.round(TT[t.type].cost*(t.lvl<4?.75+.35*t.lvl:.6+.62*t.lvl))}
 function openTower(i){selSlot=i;const t=slotT[i],b=TT[t.type],st=tstats(t);
- if(t.traitor){const dc=40*t.lvl;pop.innerHTML=`<div class="pt" style="color:#d8a8ff">등을 돌린 작살대<small>Lv.${t.lvl}</small></div><div class="stats">주변 120 안의 적이 빨라지고, 덜 다치고, 조금씩 회복한다.${t.supp>0?`<br><em>종소리에 묶여 있다 · ${Math.ceil(t.supp)}초</em>`:''}</div><div class="row"><button class="up" data-down ${gold<dc?'disabled':''}>끌어내리기 · 등유 ${dc}</button></div>`;placePop(t.x,t.y);return}
+ if(t.traitor){const dc=40*t.lvl;pop.innerHTML=`<div class="pt" style="color:#d8a8ff">하람을 따른 어부<small>Lv.${t.lvl}</small></div><div class="stats">주변 120 안의 적이 빨라지고, 덜 다치고, 조금씩 회복한다.${t.supp>0?`<br><em>종소리에 묶여 있다 · ${Math.ceil(t.supp)}초</em>`:''}</div><div class="row"><button class="up" data-down ${gold<dc?'disabled':''}>끌어내리기 · 등유 ${dc}</button></div>`;placePop(t.x,t.y);return}
  const extra=t.type==='fire'?` · 범위 ${Math.round(st.splash)}`:t.type==='tide'?` · 둔화 ${Math.round(st.slow*100)}%`:t.type==='bolt'?` · 연쇄 ${st.chain}`:'';
- pop.innerHTML=`<div class="pt">${FORMS[t.type][t.lvl-1]}<small style="color:var(--lamp);letter-spacing:.1em">${'★'.repeat(Math.min(4,t.lvl))}${'☆'.repeat(Math.max(0,4-t.lvl))}<span style="color:var(--spirit)">${'✦'.repeat(Math.max(0,t.lvl-4))}</span></small></div><div class="stats"><em>${b.who}</em><br>피해 ${Math.round(st.dmg*mods.dmgAll)} · 사거리 ${Math.round(st.range)} · ${(1/st.rate).toFixed(1)}회/초${extra}</div><div class="row">${t.lvl<MAXL?`<button class="up" data-up>▲ ${FORMS[t.type][t.lvl]} · ${upCost(t)}</button>`:`<button disabled>최고 단계</button>`}<button data-sell>판매 +${Math.floor(t.spent*.7)}</button></div>`;
+ pop.innerHTML=`<div class="pt">${FORMS[t.type][t.lvl-1]}${t.ref?`<b class="rf"> +${t.ref}</b>`:''}<small style="color:var(--lamp);letter-spacing:.1em">${'★'.repeat(Math.min(4,t.lvl))}${'☆'.repeat(Math.max(0,4-t.lvl))}<span style="color:var(--spirit)">${'✦'.repeat(Math.max(0,t.lvl-4))}</span></small></div><div class="stats"><em>${b.who}</em><br>피해 ${Math.round(st.dmg*mods.dmgAll)} · 사거리 ${Math.round(st.range)} · ${(1/st.rate).toFixed(1)}회/초${extra}</div><div class="row">${t.lvl<MAXL?`<button class="up" data-up>▲ ${FORMS[t.type][t.lvl]} · ${upCost(t)}</button>`:`<button class="up ref" data-ref>✦ 정련 +${(t.ref||0)+1} · ${refCost(t)}<small>성공 ${Math.round(refChance(t)*100)}%${t.pity?` · 축복 +${Math.round(t.pity*100)}%`:''}</small></button>`}<button data-sell>판매 +${Math.floor(t.spent*.7)}</button></div>`;
  placePop(t.x,t.y);refreshPop()}
-function refreshPop(){if(pop.hidden)return;pop.querySelectorAll('[data-b]').forEach(b=>b.disabled=gold<TT[b.dataset.b].cost||(b.dataset.b==='harpoon'&&betrayed)||b.dataset.b===runExcl);const u=pop.querySelector('[data-up]');if(u&&selSlot>=0&&slotT[selSlot])u.disabled=gold<upCost(slotT[selSlot]);const sm=pop.querySelector('.pt small');if(sm&&!slotT[selSlot])sm.textContent='등유 '+gold}
+function refreshPop(){if(pop.hidden)return;pop.querySelectorAll('[data-b]').forEach(b=>b.disabled=gold<TT[b.dataset.b].cost||(b.dataset.b==='harpoon'&&betrayed)||b.dataset.b===runExcl);const u=pop.querySelector('[data-up]');if(u&&selSlot>=0&&slotT[selSlot])u.disabled=gold<upCost(slotT[selSlot]);const rb=pop.querySelector('[data-ref]');if(rb&&selSlot>=0&&slotT[selSlot])rb.disabled=gold<refCost(slotT[selSlot]);const sm=pop.querySelector('.pt small');if(sm&&!slotT[selSlot])sm.textContent='등유 '+gold}
 pop.addEventListener('click',ev=>{
  const b=ev.target.closest('button');if(!b||b.disabled||selSlot<0)return;const i=selSlot;
  if(b.dataset.b){const k=b.dataset.b,c=TT[k].cost;if(gold<c)return;gold-=c;const[x,y]=SLOTS[i];const t={slot:i,x,y,type:k,lvl:1,cd:.3,ang:-Math.PI/2,spent:c,fl:0};towers.push(t);slotT[i]=t;
@@ -1148,7 +1162,8 @@ pop.addEventListener('click',ev=>{
   fx.push({k:'ring',x,y,r0:6,r1:40,life:.4,max:.4,col:'255,220,160'});sfx('build');if(!meta.seen.includes('hero')){$('#hint').innerHTML='거울 버튼을 누르고 원하는 곳을 누르면<br>등대 빛을 모아 그림자를 약하게 만들어요';$('#hint').hidden=false}else $('#hint').hidden=true;
   if(!built.has(k)){built.add(k);toast(TT[k].quote,'who')}unlockMemo(k,1);closePop()}
  else if(b.hasAttribute('data-up')){const t=slotT[i],c=upCost(t);if(gold<c)return;gold-=c;t.spent+=c;t.lvl++;unlockMemo(t.type,t.lvl);sfx('up');fx.push({k:'ring',x:t.x,y:t.y,r0:6,r1:54,life:.5,max:.5,col:'255,210,140'});fx.push({k:'pillar',x:t.x,y:t.y,life:.9,max:.9});for(let j=0;j<16;j++)part(t.x+rnd(-10,10),t.y+rnd(-4,4),rnd(-16,16),rnd(-130,-50),rnd(.6,1.1),rnd(4,7.5),STAR,.95);num(t.x,t.y-36,FORMS[t.type][t.lvl-1],'u');shake=Math.max(shake,t.lvl>=4?7:3);if(t.lvl===4||t.lvl===8)toast(TT[t.type].who+(t.lvl===8?' 전설 · ':' 각성 · ')+FORMS[t.type][t.lvl-1],'gold');openTower(i)}
- else if(b.hasAttribute('data-down')){const t=slotT[i],dc=40*t.lvl;if(gold<dc)return;gold-=dc;towers=towers.filter(x=>x!==t);slotT[i]=null;fx.push({k:'ring',x:t.x,y:t.y,r0:40,r1:4,life:.5,max:.5,col:'200,140,255'});for(let j=0;j<20;j++)part(t.x,t.y,rnd(-90,90),rnd(-90,90),rnd(.4,.8),rnd(3,5),SP.violet,.9);sfx('hurt');toast('작살대를 끌어내렸다');closePop()}
+ else if(b.hasAttribute('data-ref')){const t=slotT[i],c=refCost(t);if(gold<c)return;gold-=c;t.spent+=c*.5;tryRefine(t);openTower(i)}
+ else if(b.hasAttribute('data-down')){const t=slotT[i],dc=40*t.lvl;if(gold<dc)return;gold-=dc;towers=towers.filter(x=>x!==t);slotT[i]=null;fx.push({k:'ring',x:t.x,y:t.y,r0:40,r1:4,life:.5,max:.5,col:'200,140,255'});for(let j=0;j<20;j++)part(t.x,t.y,rnd(-90,90),rnd(-90,90),rnd(.4,.8),rnd(3,5),SP.violet,.9);sfx('hurt');toast('어부를 작살대에서 끌어내렸다');closePop()}
  else if(b.hasAttribute('data-merge')){mergeFrom=i;const t=slotT[i];closePop();toast(`합칠 ${TT[t.type].name}을 고르세요 · 다른 곳을 누르면 취소`,'syn')}
  else if(b.hasAttribute('data-sell')){const t=slotT[i];gold+=Math.floor(t.spent*.7);towers=towers.filter(x=>x!==t);slotT[i]=null;closePop()}
 });
@@ -1198,7 +1213,7 @@ $('#bQuit').addEventListener('click',()=>{paused=false;gameOver(true)});
 function setMute(){$('#bSound').classList.toggle('off',meta.muted);$('#sw').style.opacity=meta.muted?.15:1;if(master)master.gain.value=meta.muted?0:.5}
 $('#bSound').addEventListener('click',()=>{meta.muted=!meta.muted;save();initAudio();setMute()});
 /* end of run */
-function creditRun(){const cleared=Math.max(0,wave-(state==='wave'?1:0));const sh=cleared*2+bossKills*10+Math.floor(kills/25);const prev=meta.bestCh[CH]||0;meta.shards+=sh;meta.runs++;if(cleared>prev)meta.bestCh[CH]=cleared;save();return{cleared,sh,prev}}
+function creditRun(){const cleared=Math.max(0,wave-(state==='wave'?1:0));const sh=cleared*2+bossKills*10+Math.floor(kills/25);const prev=meta.bestCh[CH]||0;meta.shards+=sh;meta.runs++;if(cleared<=NLEN()&&NOFF[NIGHT]+cleared>prev)meta.bestCh[CH]=NOFF[NIGHT]+cleared;save();return{cleared,sh,prev}}
 function gameOver(quit){
  if(state==='over')return;const{cleared,sh,prev:prevBest}=creditRun();
  state='over';closePop();mergeFrom=-1;$('#bossbar').hidden=true;$('#next').hidden=true;
@@ -1220,7 +1235,7 @@ function chUnlocked(i){return i===0||(meta.cleared.includes(i-1)&&(i<4||[0,1,2,3
 const endingReady=()=>meta.cleared.includes(4)&&meta.solved.includes(4);
 function winGain(bonus){const w=TT[WK[CH]];$('#wGain').innerHTML=`장 보상 · 빛의 결정 <span class="shard">+${bonus}</span>${meta.weapons.includes(CH)?`<br>신형 무기 · <b style="color:${w.css}">${w.name}</b>`:''}`}
 function chapterClear(){
- won=true;state='victory';sfx('win');closePop();const bonus=25+CH*15;meta.shards+=bonus;if(!meta.cleared.includes(CH))meta.cleared.push(CH);save();
+ won=true;nightWon=false;state='victory';sfx('win');closePop();const bonus=25+CH*15;meta.shards+=bonus;meta.nights[CH]=3;if(!meta.cleared.includes(CH))meta.cleared.push(CH);save();
  {const ob=chapterObs();if(ob){meta.obs[CH]=ob;save()}$('#wObs').innerHTML=ob?`<b>관찰 기록</b>${ob}`:'';$('#wObs').hidden=!ob}
  $('#wEy').textContent=`${CH+1}장 · ${MAPS[CH].name}`;$('#wTitle').textContent=`「${MAPS[CH].sub}」을 지켜냈다`;$('#wText').textContent=CH_OUT[CH];winGain(bonus);
  const nb=$('#bNextCh');let note='';
@@ -1234,13 +1249,13 @@ function chapterClear(){
 function openEpi(cb){if(!meta.seen.includes('ending')){meta.seen.push('ending');save()}playTale('end',cb)}
 let epiCb=null;
 $('#bEpiOk').addEventListener('click',()=>{const cb=epiCb;epiCb=null;cb?cb():toTitle()});
-$('#bNextCh').addEventListener('click',()=>{creditRun();if(CH>=4){openEpi(toTitle);return}startChapter(CH+1)});
+$('#bNextCh').addEventListener('click',()=>{creditRun();if(nightWon){nightWon=false;startChapter(CH,NIGHT+1);return}if(CH>=4){openEpi(toTitle);return}startChapter(CH+1)});
 function openChapters(){refreshTitle();
  $('#chList').innerHTML=MAPS.map((M,i)=>{const un=chUnlocked(i),cl=meta.cleared.includes(i),b=meta.bestCh[i]||0,cs=haveCount(i),sv=meta.solved.includes(i);
-  const st=!un?(i===4&&meta.cleared.includes(3)?'사건 1~4를 모두 풀어야 열린다':'앞 장을 지켜내면 열린다'):`${cl?'지켜냄 ★':'최고 파도 '+b+'/10'}<br>단서 ${cs}/4${sv?' · 해결':''}`;
-  return`<button class="chp${un?'':' lock'}" data-ch="${i}" style="--cc:${M.pal.css}" ${un?'':'aria-disabled="true"'}><span class="no">${i+1}</span><b>${M.name}</b><span class="sub">${M.sub}</span><span class="st">${st}</span></button>`}).join('');
+  const st=!un?(i===4&&meta.cleared.includes(3)?'사건 1~4를 모두 풀어야 열린다':'앞 장을 지켜내면 열린다'):`${cl?'지켜냄 ★':'최고 파도 '+b+'/'+NTOT}<br>단서 ${cs}/4${sv?' · 해결':''}`;const nd=cl?3:(meta.nights[i]||0),nights=un?`<span class="nts">${NN.map((nm,n)=>`<i data-n="${n}" class="${n<nd?'ok':n===nd?'cur':'lk'}">${nm}</i>`).join('')}</span>`:'';
+  return`<button class="chp${un?'':' lock'}" data-ch="${i}" style="--cc:${M.pal.css}" ${un?'':'aria-disabled="true"'}><span class="no">${i+1}</span><b>${M.name}</b><span class="sub">${M.sub}</span><span class="st">${st}</span>${nights}</button>`}).join('');
  showOnly('chap')}
-$('#chList').addEventListener('click',ev=>{const b=ev.target.closest('[data-ch]');if(!b)return;const i=+b.dataset.ch;if(!chUnlocked(i)){toast(b.querySelector('.st').textContent,'syn');return}startChapter(i)});
+$('#chList').addEventListener('click',ev=>{const b=ev.target.closest('[data-ch]');if(!b)return;const i=+b.dataset.ch;if(!chUnlocked(i)){toast(b.querySelector('.st').textContent,'syn');return}const nb=ev.target.closest('[data-n]');let n=nextNight(i);if(nb){const k=+nb.dataset.n,nd=meta.cleared.includes(i)?3:(meta.nights[i]||0);if(k>nd){toast('앞의 밤을 먼저 지켜내야 한다','syn');return}n=k}startChapter(i,n)});
 function toTitle(){state='title';mergeFrom=-1;resetWorld();mods=null;bossRef=null;$('#hud').hidden=true;$('#bar').hidden=true;$('#next').hidden=true;$('#hint').hidden=true;refreshTitle();showOnly('title')}
 function refreshTitle(){const n=['첫','두','세','네','다섯','여섯','일곱','여덟','아홉','열'];$('#tNight').textContent=`등대 일지 · ${meta.runs<10?n[meta.runs]:(meta.runs+1)+'번째'}${meta.runs<10?' 번째':''} 밤`;$('#tShard').textContent=meta.shards;$('#tLore').textContent=`${meta.lore.length+meta.jr.length+meta.memo.length}/80${CASES.some((_,i)=>caseReady(i))?' · 추리 가능':''}`;$('#tRec').textContent=meta.cleared.length?`지켜낸 장 ${meta.cleared.length}/5 · 해결한 사건 ${meta.solved.length}/5`:''}
 function start(){initAudio();if(AC&&AC.state==='suspended')AC.resume();setMute();if(!meta.seen.includes('guide'))openGuide(true);else openChapters()}
@@ -1354,12 +1369,12 @@ const LAST=['날 의심해? …마음대로 지켜봐. 대신 후회하지나 �
 let trialCh=-1;
 function unlockMemo(k,l){if(!MEMO[k])return;const r=RES.find(x=>x.k===k);let last=-1;for(let i=0;i<Math.min(l,5);i++){const id=k+'.'+i;if(!meta.memo.includes(id)){meta.memo.push(id);last=i}}if(last>=0){save();setTimeout(()=>toast(`${r.n}의 기억 · "${MEMO[k][last]}"`,'who'),1300)}}
 function unlockJournal(i){if(i<0||i>=JOURNAL.length||meta.jr.includes(i))return;meta.jr.push(i);save();setTimeout(()=>toast(`스승의 일지 ${meta.jr.length}/10 · "${JOURNAL[i]}"`,'gold'),1600)}
-function startChapter(i){const go=()=>{if(TRIALS[i])openTrial(i);else newRun(i)};const seq=[];if(i===0&&!meta.seen.includes('tale_pro'))seq.push('pro');if(!meta.seen.includes('tale_in'+i))seq.push('in'+i);playTales(seq,go)}
-function openTrial(i){trialCh=i;const T=TRIALS[i];$('#trEy').textContent=`${i+1}장 「${MAPS[i].name}」 앞에서`;$('#trTitle').textContent=T.final?'최후 진술':'등대 회의';$('#trSit').textContent=T.sit;
+function startChapter(i,n=nextNight(i)){NIGHT=n;const go=()=>{if(TRIALS[i]&&(!TRIALS[i].final||n===2))openTrial(i);else newRun(i)};const seq=[];if(i===0&&!meta.seen.includes('tale_pro'))seq.push('pro');if(n===0&&!meta.seen.includes('tale_in'+i))seq.push('in'+i);playTales(seq,go)}
+function openTrial(i){trialCh=i;const T=TRIALS[i];$('#trEy').textContent=`${i+1}장 「${MAPS[i].name}」 · ${NN[NIGHT]} 앞에서`;$('#trTitle').textContent=T.final?'최후 진술':'등대 회의';$('#trSit').textContent=T.sit;
  $('#trList').innerHTML=RES.map((r,k)=>`<div class="bpc on${!T.final&&k===T.acc?' acc':''}" style="--c:${r.c}"><i>${r.g}</i><div><b>${r.n} <small>${r.j}${!T.final&&k===T.acc?' · 하람이 지목함':''}</small></b><span>"${T.st[k]}"</span></div></div>`).join('');
  trChoices();showOnly('trial');$('#trial').scrollTop=0}
 function trChoices(){const T=TRIALS[trialCh];$('#trQ').textContent=T.final?'하람을 어떻게 할까?':'오늘 밤 한 사람을 몰래 지켜볼 수 있다. 타워는 모두 그대로 쓴다. 지켜본 밤에 무엇이 달라지는지 보라.';
- $('#trCh').innerHTML=T.final?`<button data-tr="keep">하람과 함께 싸운다 · 작살 피해 +50%</button><button data-tr="out">하람의 작살대를 세우지 않는다</button>`:RES.map((r,k)=>`<button data-tr="${k}">${josa(r.n,'을','를')} 오늘 밤 지켜본다</button>`).join('')+`<button data-tr="none">아무도 의심하지 않는다</button>`}
+ $('#trCh').innerHTML=T.final?`<button data-tr="keep">하람과 함께 싸운다 · 작살 피해 +50%</button><button data-tr="out">하람의 어부들을 작살대에 세우지 않는다</button>`:RES.map((r,k)=>`<button data-tr="${k}">${josa(r.n,'을','를')} 오늘 밤 지켜본다</button>`).join('')+`<button data-tr="none">아무도 의심하지 않는다</button>`}
 $('#trCh').addEventListener('click',ev=>{const b=ev.target.closest('[data-tr]');if(!b)return;const v=b.dataset.tr,i=trialCh;sfx('card');
  if(v==='none'){newRun(i,null,false);return}if(v==='keep'){newRun(i,null,true);return}if(v==='out'){newRun(i,'harpoon',false);return}
  if(v.startsWith('go')){newRun(i,null,false,RES[+v.slice(2)].k);return}if(v==='back'){trChoices();return}
@@ -1527,7 +1542,7 @@ const LOST=[['어부 칠성','만복의 형 만석'],['물결의 어머니 순�
 function unlockLantern(i){const n=LOST[Math.floor(i/2)][i%2];if(meta.lan.includes(i))return;meta.lan.push(i);save();setTimeout(()=>toast(`위령등 ${meta.lan.length}/10 · 「${n}」의 이름을 등에 적었다`,'gold'),2600)}
 let temptT=26,ember=null,lanternPos=null;
 function tempt(){const pool=towers.filter(t=>['harpoon','fire','tide','bolt'].includes(t.type)&&!t.traitor&&!(t.tempt>0));if(!pool.length)return;const t=pool[Math.floor(Math.random()*pool.length)];t.tempt=14;
- toast(`${TT[t.type].who}이(가) 바다의 목소리에 붙잡혔다 · 거울 빛을 비춰 깨워라`,'syn');sfx('tide')}
+ toast(`${TT[t.type].who} 중 한 사람이 바다의 목소리에 붙잡혔다 · 거울 빛을 비춰 깨워라`,'syn');sfx('tide')}
 function startEmber(){const bd=lanternPos&&lanternPos.d!=null?lanternPos.d:PLEN*.45;ember={d:PLEN,td:bd,x:LX,y:LY,hp:280,max:280,down:0,sp:1.2};
  banner('하람이 불씨를 든다','하람을 지켜 검은 등불까지 데려가라',false);sfx('clue');setTimeout(()=>toast('정화된 하람이 등대의 불씨를 들고, 제 손으로 연 검은 등불로 걸어간다 · 그림자로부터 그를 지켜라','syn'),1200)}
 function updateEmber(dt){if(!ember||state!=='wave')return;ember.sp-=dt;if(ember.sp<=0){ember.sp=1.1;const r=Math.random();spawn(r<.3?'runner':r<.45?'weeper':'shade')}
@@ -1579,6 +1594,37 @@ for(const t of towers){if(!(t.tempt>0))continue;c.globalAlpha=.55;c.strokeStyle=
 function drawTide(c){const low=tideLow(),k=state==='wave'?1:.6;c.save();const sh=x=>{const isl=Math.exp(-(((x-200)/70)**2));return 652+Math.sin(x/37)*7+isl*40};
  if(low){c.globalAlpha=.6*k;const g=c.createLinearGradient(0,640,0,700);g.addColorStop(0,'rgba(96,80,56,.95)');g.addColorStop(1,'rgba(60,50,38,.15)');c.fillStyle=g;c.beginPath();for(let x=0;x<=W;x+=10){const y=sh(x);x?c.lineTo(x,y):c.moveTo(x,y)}for(let x=W;x>=0;x-=10)c.lineTo(x,sh(x)+20+Math.sin(tm+x*.05)*2);c.closePath();c.fill()}
  else{c.globalAlpha=.5*k;c.fillStyle='rgba(24,66,110,1)';c.beginPath();for(let x=0;x<=W;x+=10){const y=sh(x)-13+Math.sin(tm*1.5+x*.04)*2;x?c.lineTo(x,y):c.moveTo(x,y)}for(let x=W;x>=0;x-=10)c.lineTo(x,sh(x)+2);c.closePath();c.fill()}c.restore()}
+/* ---------- refining ---------- */
+const refChance=t=>Math.min(.95,Math.max(.06,.9*Math.pow(.84,t.ref||0))+(t.pity||0));
+const refCost=t=>Math.round(TT[t.type].cost*(2.6+(t.ref||0)*.9)*Math.pow(1.22,t.ref||0));
+const REFN=['','빛을 입다','은빛 축복','금빛 축복','성광','후광','천사의 날개','성가','천상의 빛','신의 등불','영원의 등대'];
+let holy=[];
+function tryRefine(t){const ok=Math.random()<refChance(t);
+ if(!ok){t.pity=Math.min(.3,(t.pity||0)+.04);sfx('hurt');fx.push({k:'ring',x:t.x,y:t.y,r0:30,r1:6,life:.5,max:.5,col:'150,150,170'});for(let j=0;j<14;j++)part(t.x+rnd(-8,8),t.y,rnd(-20,20),rnd(-50,-15),rnd(.6,1),rnd(3,6),SP.violet,.5);toast(`정련 실패 · 등유가 연기로 흩어졌다 · 축복 +4% (다음 ${Math.round(refChance(t)*100)}%)`);return}
+ t.ref=(t.ref||0)+1;t.pity=0;const I=t.ref;
+ holy.push({k:'pillar',x:t.x,y:t.y,t:0,life:1.4+I*.12,I});
+ for(let k=0;k<1+Math.min(5,Math.floor(I/2));k++)holy.push({k:'ring',x:t.x,y:t.y,t:-k*.14,life:.9+I*.04,I,r1:50+I*14});
+ const nf=10+Math.min(70,I*7);for(let j=0;j<nf;j++){const a=rnd(0,TAU),v=rnd(20,60+I*8);holy.push({k:'mote',x:t.x+rnd(-6,6),y:t.y+rnd(-6,6),vx:Math.cos(a)*v*.6,vy:-rnd(30,90+I*10)+Math.sin(a)*v*.3,t:0,life:rnd(1,1.8+I*.06),s:rnd(2,4+I*.25),I})}
+ if(I>=4)for(let j=0;j<Math.min(12,I);j++)holy.push({k:'ray',x:t.x,y:t.y,a:j*TAU/Math.min(12,I),t:0,life:1.2+I*.05,I});
+ if(I>=3){flashT=Math.min(.35,.06*I);shake=Math.max(shake,Math.min(12,2+I))}
+ holySfx(I);
+ const nm=REFN[Math.min(I,REFN.length-1)];
+ if(I>=7)banner(`✦ +${I} ${nm}`,`${TT[t.type].who} · 거룩한 빛이 내려왔다`,true);
+ toast(`정련 성공 · +${I} ${nm} · 피해 +${I*10}%`,'gold')}
+function holySfx(I){if(!AC||meta.muted)return;try{const base=[523.25,659.25,783.99,1046.5,1318.5,1567.98];const n=Math.min(6,2+Math.floor(I/2));for(let i=0;i<n;i++)tone(base[i]*(I>=8?1.5:1),.9+I*.06,'sine',.035+Math.min(.03,I*.003),0,i*.07);if(I>=5)tone(base[0]/2,1.6,'triangle',.04,0,.05);if(I>=3)noise(.6+I*.04,.03,6000,'highpass')}catch(e){}}
+function updateHoly(dt){for(const h of holy){h.t+=dt;if(h.k==='mote'){h.x+=h.vx*dt;h.y+=h.vy*dt;h.vx*=.97;h.vy*=.985}}holy=holy.filter(h=>h.t<h.life)}
+function drawHoly(c){if(!holy.length)return;c.save();c.globalCompositeOperation='lighter';
+ for(const h of holy){if(h.t<0)continue;const k=h.t/h.life,f=k<.15?k/.15:1-(k-.15)/.85;
+  if(h.k==='pillar'){const w=14+h.I*3.5;const g=c.createLinearGradient(h.x-w,0,h.x+w,0);g.addColorStop(0,'rgba(255,240,200,0)');g.addColorStop(.5,`rgba(255,248,225,${.75*f})`);g.addColorStop(1,'rgba(255,240,200,0)');c.fillStyle=g;c.fillRect(h.x-w,-20,w*2,h.y+20);spr(c,SP.white,h.x,h.y,30+h.I*5,.9*f);spr(c,SP.amber,h.x,h.y,60+h.I*9,.55*f);
+   if(h.I>=6){c.globalAlpha=.7*f;c.strokeStyle='rgba(255,236,170,1)';c.lineWidth=2;c.beginPath();c.ellipse(h.x,h.y-34-h.I,14+h.I,5+h.I*.3,0,0,TAU);c.stroke();c.globalAlpha=1}}
+  else if(h.k==='ring'){const r=6+(h.r1-6)*Math.min(1,k*1.3);c.globalAlpha=Math.max(0,1-k);c.strokeStyle='rgba(255,232,160,1)';c.lineWidth=2+h.I*.25;c.beginPath();c.arc(h.x,h.y,r,0,TAU);c.stroke();c.globalAlpha=1}
+  else if(h.k==='ray'){const L=(80+h.I*14)*Math.min(1,k*2.5),a=h.a+h.t*.4;c.globalAlpha=.55*f;c.strokeStyle='rgba(255,244,210,1)';c.lineWidth=3;c.beginPath();c.moveTo(h.x,h.y);c.lineTo(h.x+Math.cos(a)*L,h.y+Math.sin(a)*L);c.stroke();c.globalAlpha=1}
+  else{spr(c,h.I>=8&&((h.x|0)%2)?SP.white:SP.amber,h.x,h.y,h.s*2.4,f)}}
+ c.restore()}
+function drawHalo(c,t){const I=t.ref,a=Math.min(1,.35+I*.07);c.save();c.globalAlpha=a;c.strokeStyle='rgba(255,236,170,1)';c.lineWidth=1.2+Math.min(2,I*.15);c.beginPath();c.ellipse(0,-26-Math.min(6,I*.5),8+Math.min(8,I*.8),3+Math.min(2.5,I*.25),0,0,TAU);c.stroke();
+ if(I>=5){c.rotate(tm*.3);c.globalAlpha=a*.5;for(let i=0;i<8;i++){c.rotate(TAU/8);c.beginPath();c.moveTo(0,30);c.lineTo(0,34+Math.min(10,I));c.stroke()}}
+ c.restore();c.save();c.font='800 8px "IBM Plex Sans KR",sans-serif';c.textAlign='center';c.fillStyle='#fff1c2';c.shadowColor='#ffcf6b';c.shadowBlur=6;c.fillText('+'+I,0,30);c.restore()}
+
 /* ---------- weapons, blueprint puzzle, betrayal ---------- */
 const lerp=(a,b,k)=>a+(b-a)*k;
 function lanternBuff(t){if(t.type==='lantern'||t.traitor)return 0;let b=0;for(const o of towers){if(o.type!=='lantern')continue;const r=TT.lantern.range*mods.range*(1+.08*Math.min(o.lvl-1,4));if((o.x-t.x)**2+(o.y-t.y)**2<=r*r)b=Math.max(b,.3+.06*(o.lvl-1))}return b}
@@ -1601,8 +1647,8 @@ function drawWeapon(c,t,L){
 }
 let betrayed=false;
 function betray(){betrayed=true;if(runExcl==='harpoon'){banner('하람이 안개 쪽으로 걸어간다','작살대를 세우지 않았기에 아무도 등을 돌리지 않았다',true);sfx('boss');toast('하람은 안개 속 아이에게로 갔다. 그를 되찾으려면 끝까지 버텨야 한다','syn');return}let n=0;for(const t of towers)if(t.type==='harpoon'){t.traitor=true;t.supp=0;n++}
- banner('하람이 등을 돌렸다','작살대가 안개를 지킨다',true);sfx('boss');shake=Math.max(shake,12);flashT=.3;
- toast(n?`작살대 ${n}기가 적을 강화한다 · 안개 종으로 묶거나 눌러서 끌어내려라`:'하람은 더 이상 작살을 들지 않는다','syn');closePop()}
+ banner('하람이 등을 돌렸다','그의 어부들이 그를 따라 안개를 지킨다',true);sfx('boss');shake=Math.max(shake,12);flashT=.3;
+ toast(n?`하람을 따르던 어부 ${n}명이 적을 강화한다 · 안개 종으로 묶거나 눌러서 끌어내려라`:'하람은 더 이상 작살을 들지 않는다','syn');closePop()}
 /* blueprint art */
 const BPIMG={};
 function drawBlueprint(i){if(BPIMG[i])return BPIMG[i];const N=480,cv2=document.createElement('canvas');cv2.width=cv2.height=N;const c=cv2.getContext('2d');
