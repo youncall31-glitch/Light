@@ -562,8 +562,8 @@ const LX=200,LY=583;
 
 const TT={
   harpoon:{name:'작살',who:'하람의 어부들',role:'단일 · 큰 적 사냥',tip:'장점: 갑옷 무시, 정예·보스 피해 +50%, 부르는 자·덩치·정예를 먼저 노림. 불붙은 적에게 +40%. 단점: 한 번에 하나만 맞힌다.',glyph:'작',cost:50,range:95,dmg:15,rate:.75,css:'#9fd4ff',spr:'cyan',quote:'하람의 어부 · "하람 형님이 가르친 대로 던지지. 작살은 손에 익었어."'},
-  fire:{name:'화염',who:'돌쇠의 대장간 일꾼들',role:'범위 · 화상',tip:'장점: 넓게 터지고 화상은 갑옷을 무시한다. 떼로 오는 작은 그림자, 울보와 눈물에 강하다. 단점: 느리고 사거리가 짧다. 젖은 적에게는 피해 절반, 불도 붙지 않는다(밀물과 상극).',glyph:'화',cost:80,range:80,dmg:11,rate:1.25,splash:42,burn:5,css:'#ff8a4a',spr:'ember',quote:'돌쇠네 일꾼 · "불이라면 우리 대장간이 제일이지. 돌쇠 어른이 그랬어."'},
-  tide:{name:'밀물',who:'물결의 해녀들',role:'젖음 · 약한 둔화',tip:'장점: 주변을 적셔 번개 피해 3배, 부르는 자의 재촉을 씻어 낸다. 앞선 4마리를 조금 느리게 한다. 단점: 피해가 약하고 불을 꺼 버린다(화염과 상극).',glyph:'물',cost:60,range:84,dmg:4,rate:1.6,slow:.1,css:'#5cc8ff',spr:'blue',quote:'물결네 해녀 · "물결 언니 말이 맞아. 바닷물에 젖으면 안개가 무거워져."'},
+  fire:{name:'화염',who:'돌쇠의 대장간 일꾼들',role:'범위 · 화상',tip:'장점: 넓게 터지고 화상은 갑옷을 무시한다. 떼로 오는 작은 그림자, 울보와 눈물에 강하다. 단점: 느리고 사거리가 짧다. 맞은 자리의 하나만 제대로 맞고, 주변은 절반 피해.',glyph:'화',cost:80,range:80,dmg:11,rate:1.25,splash:30,burn:5,css:'#ff8a4a',spr:'ember',quote:'돌쇠네 일꾼 · "불이라면 우리 대장간이 제일이지. 돌쇠 어른이 그랬어."'},
+  tide:{name:'밀물',who:'물결의 해녀들',role:'젖음 · 약한 둔화',tip:'장점: 주변을 적셔 번개 피해 3배, 부르는 자의 재촉을 씻어 낸다. 앞선 4마리를 조금 느리게 한다. 단점: 피해가 약하다.',glyph:'물',cost:60,range:84,dmg:4,rate:1.6,slow:.1,css:'#5cc8ff',spr:'blue',quote:'물결네 해녀 · "물결 언니 말이 맞아. 바닷물에 젖으면 안개가 무거워져."'},
   bolt:{name:'번개',who:'반디의 반딧불 아이들',role:'연쇄 · 젖은 적 3배',tip:'장점: 여럿에게 튀고 젖은 적에게 3배. 빠른 그림자 떼에 강하다. 단점: 비싸고, 튈수록 약해지며, 덩치(갑옷)에게는 피해가 크게 준다.',glyph:'번',cost:100,range:92,dmg:20,rate:1.45,chain:3,css:'#c3a8ff',spr:'violet',quote:'반딧불 아이 · "반디 언니가 가르쳐 줬어! 번쩍! 젖은 녀석들은 훨씬 아파해!"'},
   lens:{name:'렌즈 포대',who:'1장 설계도로 만든 무기',role:'관통 광선',glyph:'렌',cost:140,range:110,dmg:36,rate:2.2,css:'#fff1c2',spr:'white',weapon:1,wi:0,quote:'렌즈 포대 · 한 줄로 늘어선 그림자를 한 번에 꿰뚫는다.'},
   bell:{name:'안개 종',who:'2장 설계도로 만든 무기',role:'기절 · 배신 봉인',glyph:'종',cost:120,range:88,dmg:8,rate:6,css:'#e8c27a',spr:'gold',weapon:1,wi:1,quote:'안개 종 · 종이 울리면 그림자가 멈춰 선다.'},
@@ -588,8 +588,8 @@ const ET={
   caller:{hp:95,spd:26,gold:14,dmg:2,r:13,eye:'violet',call:1},
   drowned:{hp:55,spd:40,gold:8,dmg:1,r:11,eye:'blue',sea:1},
   relicE:{hp:240,spd:30,gold:30,dmg:2,r:13,eye:'cyan',rare:1},
-  elite:{hp:520,spd:20,gold:50,dmg:5,r:20,eye:'red',boss:true,elite:true},
-  boss:{hp:1500,spd:16,gold:120,dmg:10,r:28,eye:'red',boss:true},
+  elite:{hp:900,spd:20,gold:50,dmg:5,r:20,eye:'red',boss:true,elite:true},
+  boss:{hp:3600,spd:16,gold:120,dmg:10,r:28,eye:'red',boss:true},
 };
 const STORY=[
  '안개가 마을을 삼킨 지 사흘째. 스승이 떠난 뒤 열 해 동안 혼자 지켜 온 이 등대만 아직 불이 켜져 있다.',
@@ -668,7 +668,7 @@ const CARDS=[
  {id:'oil',r:0,g:'gold',n:'등유 보급',d:'즉시 등유 +100',a:()=>{gold+=100}},
  {id:'mend',r:0,g:'lamp',n:'등대 수리',d:'등불 최대치 +4, 모두 회복',a:()=>{maxHp+=4;hp=maxHp}},
  {id:'harp',r:0,g:'harpoon',n:'날 세운 작살',d:'작살 피해 +35%',a:()=>{mods.harpoon*=1.35}},
- {id:'fire',r:0,g:'fire',n:'풀무질',d:'화염 피해 +30%, 폭발 범위 +20%',a:()=>{mods.fire*=1.3;mods.splash*=1.2}},
+ {id:'fire',r:0,g:'fire',n:'풀무질',d:'화염 피해 +30%, 폭발 범위 +10%',a:()=>{mods.fire*=1.3;mods.splash*=1.1}},
  {id:'tide',r:0,g:'tide',n:'사리 물때',d:'밀물 둔화 +3%, 젖음 +1초',a:()=>{mods.slow+=.03;mods.wetDur+=1}},
  {id:'bolt',r:0,g:'bolt',n:'정전기',d:'번개 피해 +30%',a:()=>{mods.bolt*=1.3}},
  {id:'lens',r:0,g:'lamp',n:'렌즈 연마',d:'등대 빛줄기 피해 +50%',a:()=>{mods.beam*=1.5}},
@@ -682,7 +682,7 @@ const CARDS=[
  {id:'burn',r:1,g:'fire',n:'꺼지지 않는 숯',d:'화상 피해 +60%, 지속 +1초',a:()=>{mods.burnMul*=1.6;mods.burnDur+=1}},
  {id:'twin',r:2,g:'lamp',n:'쌍둥이 빛줄기',d:'등대 빛줄기가 두 갈래로 갈라진다',once:1,a:()=>{mods.twin=true}},
  {id:'reso',r:2,g:'bolt',n:'공명',d:'젖은 적이 받는 번개 피해 3배 → 5배',once:1,a:()=>{mods.wetMult=5}},
- {id:'boom',r:2,g:'fire',n:'정화의 불꽃',d:'불타는 적이 쓰러지면 폭발한다',once:1,a:()=>{mods.burnBoom=true}},
+ {id:'boom',r:2,g:'fire',n:'정화의 불꽃',d:'불타는 적이 쓰러지면 주변에 작은 폭발',once:1,a:()=>{mods.burnBoom=true}},
  {id:'allp',r:2,g:'all',n:'모두의 등불',d:'모든 피해 +25%',a:()=>{mods.dmgAll*=1.25}},
  {id:'tsun',r:2,g:'tide',n:'해일',d:'밀물이 적을 0.6초 붙잡는다',once:1,a:()=>{mods.tideStun=.6}},
 ];
@@ -712,12 +712,12 @@ const CASES=[
 function gi(c,ch,b,t){return`<div class="gi" style="--c:${c}"><i>${ch}</i><div><b>${b}</b><span>${t}</span></div></div>`}
 const GUIDE=[
  {t:'등대를 지켜라',h:`<p>바다에 잠긴 이의 목소리를 들려주는 안개가 봉인에서 풀려났다. 안개를 마신 사람들은 그림자가 되어, 안개를 막는 마지막 빛인 등대를 끄러 온다. 빛으로 정화해 되찾아라. 다섯 개의 장, 각 장마다 10번째 파도까지 등대를 지키면 다음 장이 열린다.</p>`+gi('#ffc46b','등','등불','등대의 생명이자 빛줄기의 세기. 그림자가 등대에 닿으면 줄고, 0이 되면 패배한다.')+gi('#ff9a4a','유','등유','그림자를 정화하면 얻는다. 마을 사람을 세우고 강화하는 데 쓴다.')+gi('#8fe6ff','파','파도','5번째 파도엔 정예 그림자, 10번째 파도엔 그 장의 주인이 나타난다. 장이 깊어질수록 안개도 짙어진다.')},
- {t:'마을 사람 세우기',h:`<p>빛나는 받침돌을 누르면 정화된 마을 사람을 세울 수 있다.</p>`+gi('#9fd4ff','작','작살 · 하람의 어부들','하람이 이끄는 어부 무리. 한 마리씩 꿰뚫는다. 갑옷을 무시하고 정예·보스에게 +50%, 부르는 자·덩치·정예를 먼저 노린다. 불붙은 적에게 +40%.')+gi('#ff8a4a','화','화염 · 돌쇠의 대장간 일꾼들','돌쇠가 이끄는 대장간 일꾼들. 넓게 터지는 불덩이와 갑옷을 무시하는 화상. 떼와 울보에 강하다. 젖은 적에게는 피해 절반, 불이 붙지 않는다.')+gi('#5cc8ff','물','밀물 · 물결의 해녀들','물결이 이끄는 해녀들. 주변을 적셔 번개 피해 3배, 부르는 자의 재촉을 씻어 낸다. 앞선 넷만 조금 느리게 하고, 불을 꺼 버린다.')+gi('#c3a8ff','번','번개 · 반디의 반딧불 아이들','반디에게 배운 아이들. 여러 적에게 튀는 번개, 젖은 적에게 3배. 튈수록 약해지고 덩치(갑옷)에게는 크게 약하다.')+gi('#ffc46b','★','강화','세운 사람을 다시 눌러 등유로 최고 8단계까지 강화한다. 단계마다 모습이 바뀌고, 4단계는 각성, 5단계부터는 푸른 별이 주위를 돈다.')+gi('#9fe6c8','밤','이어지는 밤','한 장의 세 밤은 이어진다. 새벽이 오면 무리, 갈래, 정련, 선물이 그대로, 남은 등유는 절반이 다음 밤으로 넘어가고, 그림자도 그만큼 강해진다. 다시 하는 밤은 그 밤이 시작된 새벽에서 이어진다.')+gi('#fff0b8','✦','정련','8단계가 되면 정련할 수 있다. 성공하면 피해 +10%, 성공 확률은 단계마다 줄고 비용은 늘어난다. 실패하면 등유만 사라지지만 그 타워에 축복이 쌓여 다음 확률이 오른다. 높이 오를수록 성공의 빛이 거룩해진다.')+gi('#fff1c2','신','신형 무기','장을 지켜내면 설계도 조각 9개를 맞춰 새 무기를 만든다. 한 번 만든 무기는 모든 장에서 영구히 쓸 수 있다.')},
+ {t:'마을 사람 세우기',h:`<p>빛나는 받침돌을 누르면 정화된 마을 사람을 세울 수 있다.</p>`+gi('#9fd4ff','작','작살 · 하람의 어부들','하람이 이끄는 어부 무리. 한 마리씩 꿰뚫는다. 갑옷을 무시하고 정예·보스에게 +50%, 부르는 자·덩치·정예를 먼저 노린다. 불붙은 적에게 +40%.')+gi('#ff8a4a','화','화염 · 돌쇠의 대장간 일꾼들','돌쇠가 이끄는 대장간 일꾼들. 넓게 터지는 불덩이와 갑옷을 무시하는 화상. 떼와 울보에 강하다. 맞은 하나는 제대로, 주변은 절반 피해.')+gi('#5cc8ff','물','밀물 · 물결의 해녀들','물결이 이끄는 해녀들. 주변을 적셔 번개 피해 3배, 부르는 자의 재촉을 씻어 낸다. 앞선 넷만 조금 느리게 한다.')+gi('#c3a8ff','번','번개 · 반디의 반딧불 아이들','반디에게 배운 아이들. 여러 적에게 튀는 번개, 젖은 적에게 3배. 튈수록 약해지고 덩치(갑옷)에게는 크게 약하다.')+gi('#ffc46b','★','강화','세운 사람을 다시 눌러 등유로 최고 8단계까지 강화한다. 단계마다 모습이 바뀌고, 4단계는 각성, 5단계부터는 푸른 별이 주위를 돈다.')+gi('#9fe6c8','밤','이어지는 밤','한 장의 세 밤은 이어진다. 새벽이 오면 무리, 갈래, 정련, 선물이 그대로, 남은 등유는 절반이 다음 밤으로 넘어가고, 그림자도 그만큼 강해진다. 다시 하는 밤은 그 밤이 시작된 새벽에서 이어진다.')+gi('#fff0b8','✦','정련','8단계가 되면 정련할 수 있다. 성공하면 피해 +10%, 성공 확률은 단계마다 줄고 비용은 늘어난다. 실패하면 등유만 사라지지만 그 타워에 축복이 쌓여 다음 확률이 오른다. 높이 오를수록 성공의 빛이 거룩해진다.')+gi('#fff1c2','신','신형 무기','장을 지켜내면 설계도 조각 9개를 맞춰 새 무기를 만든다. 한 번 만든 무기는 모든 장에서 영구히 쓸 수 있다.')},
  {t:'내 손으로 지키기',h:gi('#c8f2ff','거','거울 빛','거울 버튼을 누른 뒤 원하는 곳을 누르면 등대 빛이 8초 동안 그곳에 모인다. 빛 안의 그림자는 느려지고 40% 더 다치며, 빛 안의 타워는 빨라지고 강해진다. 목소리에 붙잡힌 동료도 깨운다.')+gi('#ffc46b','빛','등대 빛줄기','등대는 스스로 빛을 돌린다. 안개는 빛을 삼키러 오고, 빛에 닿은 그림자는 정화된다. 등불이 약하면 빛줄기도 짧아진다.')+gi('#ffe2a0','섬','섬광','오른쪽 아래 버튼. 등대 주변 그림자를 모두 기절시키고 큰 피해를 준다.')+gi('#ff9a4a','▶','파도 부르기','준비 시간에 일찍 부르면 남은 시간만큼 등유를 더 받는다.')+gi('#ece5d4','×','속도와 정지','왼쪽 아래에서 속도를 1·2·3배로 바꾸거나 잠시 멈출 수 있다.')},
  {t:'단서와 추리',h:`<p>안개는 저절로 생긴 게 아니다. 누군가 무언가를 저질렀다. 증거를 모아 범인을 밝혀라.</p>`+gi('#ffd56b','단','기억을 품은 그림자','금빛으로 빛나는 그림자. 등대에 닿기 전에 정화하면 단서를 남긴다. 놓치면 그 밤엔 사라진다.')+gi('#8fe6ff','?','추리','한 사건의 증거 4개가 모이면 추리할 수 있다. 결정적인 증거 2개와 답 하나를 함께 제출해야 한다. 답이 맞아도 증거가 틀리면 실패. 틀리면 그 밤엔 다시 추리할 수 없다.')+gi('#ffc46b','◆','설계도 퍼즐','파도를 막을 때마다 설계도 조각이 모인다. 장을 지켜내면 9조각을 자리와 방향에 맞게 맞춰 신형 무기를 얻는다.')+gi('#c3a8ff','속','바다의 목소리','가끔 마을 사람이 목소리에 붙잡혀 싸우지 못한다. 보라색 안개 줄기와 말풍선이 보이면 거울 빛을 비춰 깨워라.')+gi('#cf9a3e','등','위령등','정예와 보스는 바다에서 잃은 이의 이름을 부르며 온다. 정화하면 그 이름을 등에 적는다.')+gi('#ff9aa8','회','등대 회의','2장부터 장을 시작할 때마다 회의가 열린다. 각자의 변론을 듣고 그 밤 한 사람을 몰래 지켜볼 수 있다. 타워는 그대로 쓴다. 지켜본 밤에 무엇이 달라지는지 보라.')+gi('#ffd890','일','스승의 일지 · 인물 기억','정예와 보스를 쓰러뜨리면 스승의 일지가, 네 사람의 타워를 키울수록 그들의 기억이 열린다. 진실은 그 사이에 숨어 있다.')+gi('#c3a8ff','책','등대지기 수첩','모은 단서와 기억 조각은 수첩에서 언제든 다시 읽을 수 있다. 게임 중에도 열 수 있다.')},
  {t:'선물과 성장',h:gi('#ece5d4','선','빛이 남긴 선물','파도를 막을 때마다 카드 3장 중 하나를 고른다. 일반·희귀·전설 등급이 있다.')+gi('#c3a8ff','합','시너지','젖은 적 + 번개처럼, 조합을 찾을수록 강해진다.')+gi('#8fe6ff','결','빛의 결정','밤이 끝나면 결정을 얻는다. 등대 작업실에서 영구 강화에 쓴다.')+gi('#ffd56b','장','다섯 개의 장','장을 지켜내면 다음 장이 열린다. 마지막 장 「안개의 심장」은 사건 1~4의 진실을 모두 밝혀야 열린다.')},
  {t:'네 무리',h:gi('#ffc46b','무','이름 있는 네 사람은 무리의 우두머리','타워 하나하나는 그 사람을 따르는 마을 사람이다. 작살대는 하람의 어부들, 화로는 돌쇠의 일꾼들, 우물은 물결의 해녀들, 번개는 반디의 반딧불 아이들. 그래서 같은 타워를 여러 개 세울 수 있다. 우두머리가 흔들리면 무리도 함께 흔들린다.')},
- {t:'갈래와 유품',h:gi('#ffc46b','갈','각성 갈래','무리가 4단계로 각성할 때 두 갈래 중 하나를 고른다. 고르는 동안 게임은 멈춘다. 한 번 고르면 바꿀 수 없다.')+gi('#9fd4ff','상','무리의 상성','밀물 + 번개 = 젖은 적에게 번개 3배. 작살 + 화염 = 불붙은 적에게 작살 +40%. 화염 × 밀물 = 상극(젖으면 불이 꺼진다). 덩치(갑옷)는 작살과 화상으로, 떼와 울보는 화염으로, 부르는 자는 작살이나 밀물로.')+gi('#ffd88a','◎','유품 쓰기','온전해진 유품은 「갯바닥」에서 들고 갈 수 있다. 게임 화면 오른쪽 위 유품 버튼을 누르면 그 사람의 유품이 힘을 낸다. 칠성의 호루라기를 불면 개 복실이가 달려 나오고, 해랑의 종이 연은 길을 따라 날아간다. 유품을 5개 온전히 하면 두 개를 들고 갈 수 있다.')+gi('#8fe6ff','유','유품 줍기','빛나는 「유품을 품은 그림자」를 정화하면 유품 표식을 얻는다. 첫 화면 「갯바닥」에서 표식이나 빛의 결정으로 줍는다. 대부분 조약돌이지만 조각을 모두 모으면 바다에 잠든 이의 유품이 온전해져 영구히 돕는다. 열 번 연속 조약돌이면 다음엔 반드시 조각이 나온다.')}
+ {t:'갈래와 유품',h:gi('#ffc46b','갈','각성 갈래','무리가 4단계로 각성할 때 두 갈래 중 하나를 고른다. 고르는 동안 게임은 멈춘다. 한 번 고르면 바꿀 수 없다.')+gi('#9fd4ff','상','무리의 상성','밀물 + 번개 = 젖은 적에게 번개 3배. 작살 + 화염 = 불붙은 적에게 작살 +40%. 덩치(갑옷)는 작살과 화상으로, 떼와 울보는 화염으로, 부르는 자는 작살이나 밀물로.')+gi('#ffd88a','◎','유품 쓰기','온전해진 유품은 「갯바닥」에서 들고 갈 수 있다. 게임 화면 오른쪽 위 유품 버튼을 누르면 그 사람의 유품이 힘을 낸다. 칠성의 호루라기를 불면 개 복실이가 달려 나오고, 해랑의 종이 연은 길을 따라 날아간다. 유품을 5개 온전히 하면 두 개를 들고 갈 수 있다.')+gi('#8fe6ff','유','유품 줍기','빛나는 「유품을 품은 그림자」를 정화하면 유품 표식을 얻는다. 첫 화면 「갯바닥」에서 표식이나 빛의 결정으로 줍는다. 대부분 조약돌이지만 조각을 모두 모으면 바다에 잠든 이의 유품이 온전해져 영구히 돕는다. 열 번 연속 조약돌이면 다음엔 반드시 조각이 나온다.')}
 ];
 const META=[
  {k:'gold',n:'비상 등유',d:'시작 등유 +30',max:5,cost:l=>15+l*15},
@@ -886,7 +886,7 @@ function afterWave(){const gift=wave%2===0||!!waveKind(wave);const next=gift?ope
 const BR={
  harpoon:{a:{n:'고래잡이 작살',g:'고',d:'한 발 한 발이 무겁고 멀리 닿는다. 덩치 큰 그림자와 정예에게 강하다.',e:'피해 ×1.8 · 사거리 +10% · 공격 속도 −23%',m:{dmg:1.8,rate:1.3,range:1.1}},
           b:{n:'그물 작살',g:'그',d:'짧은 작살을 쉬지 않고 던진다. 떼로 몰려오는 작은 그림자에게 강하다.',e:'공격 속도 ×2 · 피해 −30%',m:{dmg:.7,rate:.5}}},
- fire:{a:{n:'용광로 무리',g:'용',d:'불덩이가 더 넓게 터지고 오래 탄다. 무리 지은 그림자를 태운다.',e:'폭발 범위 ×1.5 · 화상 ×1.6 · 피해 −10%',m:{splash:1.5,burn:1.6,dmg:.9}},
+ fire:{a:{n:'용광로 무리',g:'용',d:'불덩이가 더 넓게 터지고 오래 탄다. 무리 지은 그림자를 태운다.',e:'폭발 범위 ×1.3 · 화상 ×1.5 · 피해 −10%',m:{splash:1.3,burn:1.5,dmg:.9}},
        b:{n:'풀무 창',g:'풀',d:'불을 한곳에 모아 창처럼 쏜다. 범위는 좁지만 아주 뜨겁다.',e:'피해 ×1.9 · 사거리 +15% · 폭발 범위 ×0.5',m:{dmg:1.9,splash:.5,range:1.15}}},
  tide:{a:{n:'소용돌이',g:'소',d:'더 넓고 깊게 휘감는다. 그림자들이 오래 머물러 다른 무리가 때릴 시간을 번다.',e:'둔화 +4% · 사거리 +15%',m:{slow:.04,range:1.15}},
        b:{n:'해일',g:'해',d:'물살이 그림자를 직접 때린다. 느리게 하는 힘은 약해진다.',e:'피해 ×3.5 · 둔화 −10%',m:{dmg:3.5,slow:-.1}}},
@@ -903,10 +903,10 @@ $('#icOk').addEventListener('click',()=>{icQ.shift();showOnly(null);paused=icWas
 $('#brCancel').addEventListener('click',()=>{brSlot=-1;showOnly(null);paused=brWasPaused});
 function drawBr(c,t){const B=BR[t.type][t.br];c.save();c.translate(15,12);c.fillStyle='rgba(8,10,20,.9)';c.strokeStyle=TT[t.type].css;c.lineWidth=1.2;c.beginPath();c.arc(0,0,6.5,0,TAU);c.fill();c.stroke();c.fillStyle='#fff';c.font='700 7.5px "Gowun Batang",serif';c.textAlign='center';c.textBaseline='middle';c.fillText(B.g,0,.5);c.restore()}
 function tstats(t){const b=TT[t.type],L=t.lvl-1,lb=towers?lanternBuff(t):0,zb=t.zone>0?1:0;
- const rf=t.ref||0;const o={dmg:b.dmg*(1+.7*L)*(L>=4?Math.pow(1.22,L-3):1)*mods[t.type]*(1+lb)*(1+.25*zb)*(1+.1*rf),range:b.range*(1+.08*Math.min(L,4)+.04*Math.max(0,L-4)+.012*rf)*mods.range,rate:b.rate/mods.aspd/(1+.06*L)/(1+lb*.5)/(1+.3*zb)/(actBell>0?1.4:1),splash:(b.splash||0)*mods.splash*(1+.08*L),chain:(b.chain||0)+mods.chain+(L>=2?1:0),slow:Math.min(.22,(b.slow||0)+mods.slow+L*.01),burn:(b.burn||0)*(1+.5*L)*mods.burnMul};return brApply(t,o)}
+ const rf=t.ref||0;const o={dmg:b.dmg*(1+.7*L)*(L>=4?Math.pow(1.22,L-3):1)*mods[t.type]*(1+lb)*(1+.25*zb)*(1+.1*rf),range:b.range*(1+.08*Math.min(L,4)+.04*Math.max(0,L-4)+.012*rf)*mods.range,rate:b.rate/mods.aspd/(1+.06*L)/(1+lb*.5)/(1+.3*zb)/(actBell>0?1.4:1),splash:(b.splash||0)*mods.splash*(1+.05*L),chain:(b.chain||0)+mods.chain+(L>=2?1:0),slow:Math.min(.22,(b.slow||0)+mods.slow+L*.01),burn:(b.burn||0)*(1+.5*L)*mods.burnMul};return brApply(t,o)}
 function findTarget(x,y,r){let best=null,bp=-1;const r2=r*r;for(const e of enemies){if(!e.alive)continue;const dx=e.x-x,dy=e.y-y;if(dx*dx+dy*dy<=r2&&e.prog>bp){bp=e.prog;best=e}}return best}
 function damage(e,a,src,show){
- if(!e.alive)return;a*=mods.dmgAll;{const B=ET[e.t];if(B.armor&&src!=='burn'&&src!=='beam'&&src!=='harp')a*=1-B.armor*(src==='bolt'?2.5:1);if(src==='harp'){if(B.boss)a*=1.5;if(e.burn>0)a*=1.4}if((src==='fire'||src==='burn')&&e.wet>0)a*=.5}
+ if(!e.alive)return;a*=mods.dmgAll;{const B=ET[e.t];if(B.armor&&src!=='burn'&&src!=='beam'&&src!=='harp')a*=1-B.armor*(src==='bolt'?2.5:1);if(src==='harp'){if(B.boss)a*=1.5;if(e.burn>0)a*=1.4}}
  if(e.buffT>0)a*=.8;if(e.mark>0)a*=1.4;e.hp-=a;if(src!=='burn'&&src!=='beam')e.hit=.09;
  if(show)num(e.x,e.y-ET[e.t].r-4,Math.round(a),show);
  if(e.hp<=0)kill(e);
@@ -922,7 +922,7 @@ function kill(e){
  for(let i=0;i<(B.boss?60:10);i++){const a=rnd(0,TAU),v=rnd(30,B.boss?220:110);part(e.x,e.y,Math.cos(a)*v,Math.sin(a)*v,rnd(.4,.9),rnd(2,4),Math.random()<.5?SP.cyan:SP.gold,.9,-20)}
  combo++;comboT=1.8;
  if(combo>=10&&combo%10===0){const b=combo;gold+=b;toast(`연속 정화 ×${combo} · 보너스 등유 +${b}`,'gold')}
- if(e.burn>0&&mods.burnBoom){explode(e.x,e.y,48,e.max*.35+10,false);discover('boom','시너지 · 정화의 불꽃 폭발!')}
+ if(e.burn>0&&mods.burnBoom&&!e.noBoom){explode(e.x,e.y,34,Math.min(e.max*.12,60)+6,false);discover('boom','시너지 · 정화의 불꽃 폭발!')}
  if(B.clue||B.boss)gainClue(e.x,e.y);
  if(B.boss&&wave<=10){unlockJournal(CH*2+(B.elite?0:1));unlockLantern(CH*2+(B.elite?0:1))}
  if(CH===4&&B.boss&&!B.elite&&NIGHT===2&&wave===NLEN())lanternPos={x:e.x,y:e.y,d:e.dist};
@@ -932,7 +932,7 @@ function kill(e){
 function explode(x,y,r,d,src='fire'){
  fx.push({k:'boom',x,y,r,life:.45,max:.45});
  for(let i=0;i<16;i++){const a=rnd(0,TAU),v=rnd(40,140);part(x,y,Math.cos(a)*v,Math.sin(a)*v,rnd(.3,.7),rnd(3,6),SP.ember,.88,40)}
- for(const e of enemies){if(!e.alive)continue;if((e.x-x)**2+(e.y-y)**2<=(r+ET[e.t].r)**2)damage(e,d,'fire')}
+ for(const e of enemies){if(!e.alive)continue;if((e.x-x)**2+(e.y-y)**2<=(r+ET[e.t].r)**2){e.noBoom=true;damage(e,d,'fire');e.noBoom=false}}
 }
 function hurtLighthouse(n){hp-=n;num(LX,LY-22,'-'+n+' 등불','h');if(!runSeen.has('hurt')){runSeen.add('hurt');toast('그림자가 등대에 닿아 등불이 줄었다. 등불이 약할수록 빛줄기도 짧아진다','gold')}shake=Math.max(shake,n>3?16:8);flashT=Math.max(flashT,.12);sfx('hurt');
  const c=$('#cHp');c.classList.remove('hurt');void c.offsetWidth;c.classList.add('hurt');
@@ -1005,7 +1005,7 @@ function update(dt){
   if(t.type==='harpoon'){const cr=Math.random()<mods.crit;projs.push({k:'harp',x:t.x,y:t.y,e:tg,tx:tg.x,ty:tg.y,dmg:st.dmg*(cr?3:1),cr});sfx('harp')}
   else if(t.type==='fire'){projs.push({k:'fire',x0:t.x,y0:t.y-8,x:t.x,y:t.y,tx:tg.x+tg.dx*ET[tg.t].spd*.3,ty:tg.y+tg.dy*ET[tg.t].spd*.3,t:0,dur:.45,dmg:st.dmg,sp:st.splash,burn:st.burn});sfx('fire')}
   else if(t.type==='tide'){fx.push({k:'ring',x:t.x,y:t.y,r0:8,r1:st.range,life:.55,max:.55,c:SP.blue,col:'120,210,255'});sfx('tide');
-   let nS=0;const inR=enemies.filter(e=>e.alive&&(e.x-t.x)**2+(e.y-t.y)**2<=st.range*st.range).sort((a,b)=>b.prog-a.prog);for(const e of inR){if(nS++<4){const sa=ET[e.t].boss?st.slow*.5:st.slow;const had=e.slow>0;e.slowAmt=had?Math.max(e.slowAmt,sa):sa;e.slow=Math.max(e.slow,.6)}e.wet=2.6+mods.wetDur;e.burn=0;if(mods.tideStun)e.stun=Math.max(e.stun,mods.tideStun);damage(e,st.dmg,'tide')}}
+   let nS=0;const inR=enemies.filter(e=>e.alive&&(e.x-t.x)**2+(e.y-t.y)**2<=st.range*st.range).sort((a,b)=>b.prog-a.prog);for(const e of inR){if(nS++<4){const sa=ET[e.t].boss?st.slow*.5:st.slow;const had=e.slow>0;e.slowAmt=had?Math.max(e.slowAmt,sa):sa;e.slow=Math.max(e.slow,.6)}e.wet=2.6+mods.wetDur;if(mods.tideStun)e.stun=Math.max(e.stun,mods.tideStun);damage(e,st.dmg,'tide')}}
   else if(t.type==='bolt'){let cur=tg;const hit=[];const pts=[[t.x,t.y-14]];
    for(let i=0;i<st.chain&&cur;i++){hit.push(cur);pts.push([cur.x,cur.y]);let m=st.dmg*Math.pow(.85,i);let tag=false;
     if(cur.wet>0){m*=mods.wetMult;tag='w';discover('wetbolt',`젖음 + 번개 = ${mods.wetMult}배 피해!`)}
@@ -1024,7 +1024,7 @@ function update(dt){
    if(Math.random()<.7)part(p.x,p.y,rnd(-10,10),rnd(-10,10),.35,rnd(2,4),SP.ember,.9);
    if(p.t>=1){p.dead=true;fx.push({k:'boom',x:p.tx,y:p.ty,r:p.sp,life:.4,max:.4});shake=Math.max(shake,2);
     for(let i=0;i<12;i++){const a=rnd(0,TAU),v=rnd(30,110);part(p.tx,p.ty,Math.cos(a)*v,Math.sin(a)*v,rnd(.3,.6),rnd(3,5),SP.ember,.88,30)}
-    for(const e of enemies){if(!e.alive)continue;if((e.x-p.tx)**2+(e.y-p.ty)**2<=(p.sp+ET[e.t].r)**2){if(!(e.wet>0)){e.burn=3+mods.burnDur;e.burnDps=Math.max(e.burnDps*(e.burn>0?1:0),p.burn)}damage(e,p.dmg,'fire')}}}}
+    {let main=null,md=1e9;const hitL=[];for(const e of enemies){if(!e.alive)continue;const d=(e.x-p.tx)**2+(e.y-p.ty)**2;if(d<=(p.sp+ET[e.t].r)**2){hitL.push(e);if(d<md){md=d;main=e}}}for(const e of hitL){const m=e===main;e.burn=3+mods.burnDur;e.burnDps=Math.max(e.burnDps*(e.burn>0?1:0),p.burn*(m?1:.5));damage(e,p.dmg*(m?1:.45),'fire')}}}}
  }
  projs=projs.filter(p=>!p.dead);
  enemies=enemies.filter(e=>e.alive);
