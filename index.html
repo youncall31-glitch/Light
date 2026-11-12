@@ -1988,8 +1988,8 @@ const TSTEP=[
  {t:'세운 무리를 눌러 「▲」로 강화하자. 단계가 오를수록 강해지고, 4단계가 되면 갈래를 고른다. (연습이라 등유를 채워 두었다)',tg:'tower',on:()=>{const c=Math.min(...towers.map(upCost));if(gold<c+20)gold=c+20},done:()=>towers.some(t=>t.lvl>=2)},
  {t:'다시 「파도 부르기」. 파도를 두 번 막을 때마다 선물을 하나 고를 수 있다.',hi:'#next',done:()=>state==='wave'&&wave>=2},
  {t:'파도를 막아 내자. 끝나면 선물 카드가 나온다.',done:()=>state==='prep'&&wave>=2},
- {t:'세 번째 파도를 부르자. 이번엔 바다의 목소리가 들려올 것이다.',hi:'#next',done:()=>state==='wave'&&wave>=3,on:()=>{}},
- {t:'보랏빛 사슬에 묶이고 ♪가 떠오른 무리는 바다의 목소리에 홀려 싸우지 않는다. 거울 버튼을 누른 뒤, 그 무리를 눌러 빛을 비춰 깨우자.',hi:'#mirror',tg:'tempt',on:()=>{tutTower=towers[0];if(tutTower){tutTower.tempt=40;sfx('tide')}},done:()=>tutTower&&!(tutTower.tempt>0)},
+ {t:'⚠ 유혹 · 바다의 그림자는 노래로 마을 사람을 홀린다. 유혹당한 무리는 회색으로 빠지고, 보라 사슬에 묶이고, 머리 위에 ♪✕가 뜨며 싸움을 멈춘다. 세 번째 파도를 불러 보자.',hi:'#next',done:()=>state==='wave'&&wave>=3},
+ {t:'유혹당했다! 화살표의 무리가 노래에 홀려 멈췄다. 오른쪽 아래 「거울」을 누른 뒤, 그 무리를 눌러 등대 빛을 비춰 깨우자.',hi:'#mirror',tg:'tempt',on:()=>{tutTower=towers.find(t=>['harpoon','fire','tide','bolt'].includes(t.type))||towers[0];if(tutTower){tutTower.tempt=40;sfx('tide');shake=Math.max(shake,6);fx.push({k:'ring',x:tutTower.x,y:tutTower.y,r0:60,r1:8,life:.7,max:.7,col:'190,140,255'});notice('⚠ 유혹','bn boss',2)}},done:()=>tutTower&&!(tutTower.tempt>0)},
  {t:'잘했다. 그림자가 등대 가까이 몰리면 「섬광」을 눌러 보자. 주변 그림자를 한꺼번에 묶고 태운다.',hi:'#flash',done:()=>flashCd>0},
  {t:'마지막 파도에는 정예 그림자가 온다. 정예를 잡으면 「바다의 상자」를 남기고, 상자는 밤이 끝나면 연다.',hi:'#next',done:()=>false}];
 function startTutorial(){TUT=true;TS=-1;NIGHT=0;CH=0;newRun(0);gold=210;prepT=14;$('#hint').hidden=true;closeTutHi();tutNext();sfx('bell')}
@@ -1997,9 +1997,9 @@ function closeTutHi(){if(tutHi){const e=$(tutHi);if(e)e.classList.remove('coachH
 function tutNext(){TS++;closeTutHi();const st=TSTEP[TS];if(!st){$('#coach').hidden=true;return}$('#coS').textContent=`연습 밤 · ${TS+1} / ${TSTEP.length}`;$('#coT').textContent=st.t;$('#coach').hidden=false;if(st.hi){tutHi=st.hi;const e=$(st.hi);if(e)e.classList.add('coachHi')}if(st.on)st.on();sfx('card')}
 function tutTick(){if(!TUT)return;const st=TSTEP[TS];if(!st)return;if(state==='prep')prepT=Math.max(prepT,14);$('#hint').hidden=true;{const nx=$('#next'),hide=[0,1,4].includes(TS);if(nx.style.visibility!==(hide?'hidden':''))nx.style.visibility=hide?'hidden':''}if(st.done())tutNext();
  tutTgt=null;if(st&&st.tg==='slot'){const fr=SLOTS.map((p,i)=>[p,i]).filter(([p,i])=>!slotT[i]).sort((a,b)=>Math.abs(a[0][1]-330)-Math.abs(b[0][1]-330))[0];if(fr)tutTgt={x:fr[0][0],y:fr[0][1]}}
- else if(st&&st.tg==='tower'&&towers[0])tutTgt={x:towers[0].x,y:towers[0].y};else if(st&&st.tg==='tempt'&&tutTower&&tutTower.tempt>0&&mirrorArm)tutTgt={x:tutTower.x,y:tutTower.y};
+ else if(st&&st.tg==='tower'&&towers[0])tutTgt={x:towers[0].x,y:towers[0].y};else if(st&&st.tg==='tempt'&&tutTower&&tutTower.tempt>0)tutTgt={x:tutTower.x,y:tutTower.y,o:30};
  if(st&&st.tg==='tempt'){const want=mirrorArm?null:'#mirror';if(tutHi!==want){closeTutHi();if(want){tutHi=want;$(want).classList.add('coachHi')}}}}
-function drawTutHi(c){if(!TUT||!tutTgt)return;const{x,y}=tutTgt,k=(tm*1.2)%1;c.globalAlpha=1-k;c.strokeStyle='rgba(255,214,140,1)';c.lineWidth=3;c.beginPath();c.arc(x,y,20+k*22,0,TAU);c.stroke();c.globalAlpha=1;const by=y-34-Math.abs(Math.sin(tm*4))*8;c.fillStyle='#ffd68c';c.beginPath();c.moveTo(x,by+12);c.lineTo(x-8,by);c.lineTo(x-3,by);c.lineTo(x-3,by-10);c.lineTo(x+3,by-10);c.lineTo(x+3,by);c.lineTo(x+8,by);c.closePath();c.fill()}
+function drawTutHi(c){if(!TUT||!tutTgt)return;const{x,y}=tutTgt,k=(tm*1.2)%1;c.globalAlpha=1-k;c.strokeStyle='rgba(255,214,140,1)';c.lineWidth=3;c.beginPath();c.arc(x,y,20+k*22,0,TAU);c.stroke();c.globalAlpha=1;const by=y-34-(tutTgt.o||0)-Math.abs(Math.sin(tm*4))*8;c.fillStyle='#ffd68c';c.beginPath();c.moveTo(x,by+12);c.lineTo(x-8,by);c.lineTo(x-3,by);c.lineTo(x-3,by-10);c.lineTo(x+3,by-10);c.lineTo(x+3,by);c.lineTo(x+8,by);c.closePath();c.fill()}
 function tutEnd(){TUT=false;closeTutHi();$('#next').style.visibility='';$('#bEndless').hidden=true;$('#coach').hidden=true;if(!meta.seen.includes('tut')){meta.seen.push('tut');meta.seen.push('guide');save()}state='victory';closePop();
  $('#wObs').hidden=true;$('#wEy').textContent='연습 밤';$('#wTitle').textContent='등대를 지킬 준비가 됐다';$('#wText').textContent='무리를 세우고, 강화하고, 홀린 무리를 거울로 깨우고, 섬광으로 버텼다. 이제 진짜 밤이 온다. 장마다 세 밤이 이어지고, 회의에서 누군가를 지켜볼 수 있다.';$('#wGain').innerHTML='';$('#wNote').textContent='막히면 첫 화면의 「안내서 보기」를 펼쳐 보자.';
  const nb=$('#bNextCh');nb.textContent='첫 밤으로';nb.hidden=false;nightWon=false;tutDone=true;setTimeout(()=>showOnly('win'),700)}
