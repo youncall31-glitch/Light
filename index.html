@@ -205,6 +205,9 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--f-ui);ov
 .clue small{display:block;font-family:var(--f-ui);font-size:.68em;letter-spacing:.14em;color:var(--spirit);margin-bottom:.15em}
 .clue.pick{display:block;width:100%;text-align:left;padding:.55em .75em;border-radius:.6em;border:1px solid var(--line);border-left:3px solid rgba(143,230,255,.45);background:rgba(255,255,255,.02);font-family:var(--f-disp);font-size:.82em;line-height:1.55;color:#ddd6c4}
 .clue.pick.on{border-color:var(--spirit);background:rgba(143,230,255,.12);box-shadow:0 0 .9em rgba(143,230,255,.25)}
+#gSkip{position:absolute;top:.75em;right:.75em;min-width:0;padding:.5em .95em;border-radius:999px;border:1px solid rgba(255,196,107,.45)!important;color:var(--lamp)!important;background:rgba(12,14,26,.85)!important;font-size:.9em;z-index:5}
+.hintbox{display:block;margin-top:.6em;padding:.6em .8em;border-radius:.6em;background:rgba(143,230,255,.08);border:1px dashed rgba(143,230,255,.45);color:#d6f2ff;font-family:var(--f-disp);font-size:.92em;line-height:1.6;text-align:left}
+.hintbox b{display:block;font-family:var(--f-ui);font-size:.72em;letter-spacing:.16em;color:var(--spirit);margin-bottom:.15em}
 .choices button.on{background:rgba(255,196,107,.28);border-color:var(--lamp);color:#fff4dc!important}
 #cvSubmit:disabled{opacity:.45;box-shadow:none}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
@@ -303,6 +306,7 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--f-ui);ov
         <div id="gTrack"></div>
         <div class="dots" id="gDots"></div>
         <div class="gnav"><button class="btn" id="gPrev">이전</button><button class="btn pri" id="gNext">다음</button></div>
+        <button class="btn ghost" id="gSkip">설명 건너뛰기</button>
       </div>
 
       <div class="ov" id="book" hidden>
@@ -334,7 +338,7 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--f-ui);ov
       <div class="ov" id="bp" hidden>
         <div class="eyebrow" id="bpEy"></div>
         <h2 id="bpTitle"></h2>
-        <p id="bpHelp">조각을 눌러 고른 뒤 다른 조각을 누르면 자리가 바뀐다.<br>고른 조각을 한 번 더 누르면 90도 돌아간다.</p>
+        <p id="bpHelp">조각을 눌러 고른 뒤 다른 조각을 누르면 자리가 바뀐다.<br>고른 조각을 한 번 더 누르면 90도 돌아간다. 바깥을 누르면 선택이 풀린다.</p>
         <div id="bpGrid"></div>
         <div id="bpMoves" class="pzcap"></div>
         <div id="bpDone" hidden></div>
@@ -512,23 +516,23 @@ const CARDS=[
 const CASES=[
  {t:'안개의 시작점',q:'안개는 처음 어디서 피어올랐을까?',
   clues:['첫날 밤 바람은 바다에서 육지로 불었다. 안개는 그 바람을 타고 왔고, 내륙의 늪과 폐광 쪽 하늘은 맑았다.','늪 근처에 사는 아이가 그날 밤 이상한 냄새를 맡았다고 했다. 늪에서는 원래 그런 냄새가 난다.','등대 지하실 문틈의 거미줄이 끊어지지 않은 채 그대로였다. 그날 밤 아무도 드나들지 않았다.','첫 그림자들은 해안 쪽 길에서 나타났다.'],
-  ch:['갈대 늪','폐광','등대 지하실','난파선 무덤'],a:3,ev:[[0,2]],
+  ch:['갈대 늪','폐광','등대 지하실','난파선 무덤'],a:3,ev:[[0,2]],no:['늪과 폐광은 내륙이다. 그날 밤의 바람과 하늘을 말하는 증거를 다시 보라.','폐광도 내륙이다. 바람은 어느 쪽에서 불었나?','누군가 지하실을 드나들었다면 무엇이 남았어야 할까?',null],evh:'남은 보기 셋을 지우는 증거를 찾아라. 하나는 내륙 두 곳을 한꺼번에, 하나는 지하실을 지운다. 냄새와 첫 그림자의 위치는 아무것도 지우지 못한다.',
   rev:'바닷바람이 내륙을 지웠고, 끊기지 않은 거미줄이 지하실을 지웠다. 남은 곳은 바다 쪽, 난파선 무덤뿐이다.',reward:'정화할 때 얻는 등유 +10% (영구)'},
  {t:'사라진 물건',q:'무엇이 안개를 불렀을까?',
   clues:['사당 유리함이 비어 있었다. 받침대에 등불 모양의 그을음이 남아 있다.','사당 기록. "바다에서 건진 검은 등불. 불을 붙이면 물에 잠긴 이의 목소리가 들린다."','안개 속으로 걸어간 사람들은 모두 죽은 가족의 목소리를 들었다고 말했다.','마을 사람들은 은방울호의 종이 울리면 불길하다고들 한다.'],
-  ch:['은방울호의 종','폐광의 검은 돌','사당의 검은 등불','늪의 독초'],a:2,ev:[[1,2]],
+  ch:['은방울호의 종','폐광의 검은 돌','사당의 검은 등불','늪의 독초'],a:2,ev:[[1,2]],no:['종이 불길하다는 건 소문일 뿐이다. 사람들이 실제로 겪은 일과 맞는 물건은?','폐광의 돌을 가리키는 증거는 하나도 없다. 사람들이 안개 속에서 무엇을 들었나?',null,'독초를 가리키는 증거는 하나도 없다. 사람들이 안개 속에서 무엇을 들었나?'],evh:'물건이 사라졌다는 사실만으로는 원인이라 할 수 없다. 그 물건이 하는 일과 사람들이 실제로 겪은 일을 이어 보라.',
   rev:'등불의 힘(죽은 이의 목소리)과 마을 사람들이 겪은 일이 꼭 맞아떨어진다. 안개를 부른 것은 사당의 검은 등불이다.',reward:'빛줄기 피해 +25% (영구)'},
  {t:'불이 켜진 시각',q:'검은 등불은 그날 밤 몇 시에 켜졌을까?',
   clues:['사당 기록. "검은 등불은 물이 빠진 갯바닥 위에서만 불이 붙는다."','폐광 물때표. 그날 밤 썰물은 자정에 시작해 새벽 세 시에 끝났다.','내 등대 일지. "새벽, 바다 쪽에서 종소리. 그 뒤로 안개."','반디는 자정에 깨어 있었는데, 그때는 바다가 아주 조용했다.'],
-  ch:['해 질 녘','자정','새벽 두 시','새벽 네 시'],a:2,ev:[[1,3]],
+  ch:['해 질 녘','자정','새벽 두 시','새벽 네 시'],a:2,ev:[[1,3]],no:['등불은 썰물 때만 켜진다. 해 질 녘은 썰물이었나?','자정에 깨어 있던 사람이 있다. 그때 바다는 어땠나?',null,'썰물이 언제 끝났는지 보라. 물이 차오른 뒤에도 불이 붙을까?'],evh:'「새벽」이라는 일지만으로는 시각을 하나로 정할 수 없다. 썰물 시간표가 지우는 시각들과, 깨어 있던 사람이 지우는 시각을 찾아라.',
   rev:'등불은 썰물에만 켜지니 해 질 녘과 새벽 네 시는 아니다. 자정엔 아무 일도 없었다. 남는 시각은 새벽 두 시.',reward:'모든 공격 속도 +8% (영구)'},
  {t:'장화 자국',q:'새벽 두 시, 난파선 무덤에서 검은 등불을 켠 사람은 누구일까?',
   clues:['새벽 두 시, 돌쇠는 대장간에서 종을 고치고 있었다. 망치 소리를 이웃 셋이 들었다.','반디는 그 시각 등대에서 나와 함께 잠들어 있었다.','갯벌의 장화 자국은 그물 무늬 장화다. 이 마을에서 그 장화를 신고 배를 모는 사람은 하람과 물결 둘뿐이다.','장화 자국은 물결의 발보다 손가락 두 마디나 크다.'],
-  ch:['대장장이 돌쇠','해녀 물결','꼬마 반디','어부 하람'],a:3,ev:[[2,3]],
+  ch:['대장장이 돌쇠','해녀 물결','꼬마 반디','어부 하람'],a:3,ev:[[2,3]],no:['새벽 두 시, 대장간에서 누군가 무엇을 들었다.','장화 자국의 크기를 다시 보라.','그 시각 반디는 누구와 함께 있었나?',null],evh:'알리바이는 한 사람씩만 지운다. 장화를 신을 수 있는 사람을 둘로 좁히는 증거와, 그 둘 중 하나를 지우는 증거를 찾아라.',
   rev:'그물 장화를 신는 사람은 하람과 물결뿐이고, 발 크기가 물결을 지운다. 검은 등불을 켠 사람은 어부 하람이다. 처음 정화된, 가장 먼저 우리를 도운 그 사람.',reward:'섬광 대기시간 -15% (영구)'},
  {t:'하람의 이유',q:'하람은 왜 검은 등불을 켰을까?',
   clues:['열 해 전 폭풍 밤, 하람의 배가 뒤집혔다. 아들 해랑도 함께 타고 있었다.','스승의 일지. "하람의 배가 뒤집혔다. 아이를 건지러 불을 두고 내려간다."','검은 등불은 물에 잠긴 이의 목소리를 부른다.','하람의 작업장 구석에서 작은 아이 신발 한 짝이 발견됐다. 아직 젖어 있었다.'],
-  ch:['은방울호에 묻어 둔 보물','바다에서 잃은 아들 해랑','스승에게 복수하려고','마을을 차지하려고'],a:1,ev:[[0,2],[0,3],[2,3]],
+  ch:['은방울호에 묻어 둔 보물','바다에서 잃은 아들 해랑','스승에게 복수하려고','마을을 차지하려고'],a:1,ev:[[0,2],[0,3],[2,3]],no:['보물을 가리키는 증거는 하나도 없다. 하람이 바다에서 잃은 것은?',null,'스승은 하람의 아이를 구하려다 불을 놓쳤다. 하람이 바란 것이 정말 복수였을까?','마을을 차지하려 했다면 사람들을 안개로 데려갈 까닭이 없다. 검은 등불은 무엇을 부르나?'],evh:'하람이 잃은 것, 그리고 검은 등불이 할 수 있는 일. 이 둘을 잇는 증거를 골라라.',
   rev:'하람은 바다에서 잃은 아들의 목소리라도 듣고 싶었다. 그 그리움이 등불을 켰고, 안개가 그리움을 먹고 마을을 삼켰다.',reward:'모든 피해 +10% (영구)'},
 ];
 function gi(c,ch,b,t){return`<div class="gi" style="--c:${c}"><i>${ch}</i><div><b>${b}</b><span>${t}</span></div></div>`}
@@ -551,7 +555,7 @@ const META=[
 const KEY='last-lighthouse-v3';
 function load(){try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){return null}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(meta))}catch(e){}}
-const meta=Object.assign({shards:0,best:0,runs:0,lore:[],muted:false,seen:[],clues:[],solved:[],cleared:[],bestCh:{},weapons:[]},load()||{});
+const meta=Object.assign({shards:0,best:0,runs:0,lore:[],muted:false,seen:[],clues:[],solved:[],cleared:[],bestCh:{},weapons:[],hint:{}},load()||{});
 meta.up=Object.assign({gold:0,hp:0,dmg:0,reroll:0,flash:0},meta.up||{});
 
 /* ---------- audio ---------- */
@@ -881,7 +885,24 @@ function drawTower(c,t){
  c.restore();
 }
 
+function cloakPath(c,e,s,lift){const B=ET[e.t],r=B.r,bob=Math.sin(tm*2+e.ph)*3,x=e.x,y=e.y+bob,top=y-r*1.8,hem=y+r*.95,w=r*1.05;c.beginPath();c.moveTo(x,top+lift);c.bezierCurveTo(x+w*.95*s,top+r*.15,x+w*.7*s,y-r*.45,x+w*1.2*s,hem);for(let k=7;k>=0;k--){c.lineTo(x-w*1.2*s+2.4*w*s*k/7,hem+Math.sin(tm*5+k*1.7+e.ph)*r*.16+(k%2?r*.22:0))}c.bezierCurveTo(x-w*.7*s,y-r*.45,x-w*.95*s,top+r*.15,x,top+lift);c.closePath()}
+function drawBoss(c,e){const B=ET[e.t],r=B.r,bob=Math.sin(tm*2+e.ph)*3,x=e.x,y=e.y+bob,fin=CH===4&&!B.elite;
+ c.globalAlpha=.5;c.fillStyle='#000';c.beginPath();c.ellipse(e.x,e.y+r*.95,r*1.25,r*.35,0,0,TAU);c.fill();
+ for(let i=1;i<6;i++){const off=i*r*.42;spr(c,SMOKE,x-e.dx*off+Math.sin(tm*3+i)*r*.25,y-e.dy*off+r*.35,r*(1.5-i*.13),.75-i*.12)}
+ c.globalAlpha=1;const top=y-r*1.8,hem=y+r*.95,w=r*1.05;
+ for(let L=0;L<2;L++){const s=1-L*.2;const g=c.createLinearGradient(0,top,0,hem+r*.2);g.addColorStop(0,L?(B.elite?'#2a1c48':'#2a1030'):'#0b0514');g.addColorStop(.7,L?(B.elite?'rgba(42,28,72,.8)':'rgba(42,16,48,.85)'):'rgba(11,5,20,.95)');g.addColorStop(1,'rgba(11,5,20,0)');c.fillStyle=g;
+  c.beginPath();c.moveTo(x,top+L*r*.18);c.bezierCurveTo(x+w*.95*s,top+r*.15,x+w*.7*s,y-r*.45,x+w*1.2*s,hem);
+  for(let k=7;k>=0;k--){c.lineTo(x-w*1.2*s+2.4*w*s*k/7,hem+Math.sin(tm*5+k*1.7+e.ph)*r*.16+(k%2?r*.22:0))}
+  c.bezierCurveTo(x-w*.7*s,y-r*.45,x-w*.95*s,top+r*.15,x,top+L*r*.18);c.closePath();c.fill()}
+ if(!B.elite){c.fillStyle='#0b0514';for(let i=0;i<5;i++){const a=-Math.PI/2+(i-2)*.32,b0=top+r*.25;const fx=x+Math.cos(a)*r*.45,fy=b0+Math.sin(a)*r*.3;c.beginPath();c.moveTo(fx-r*.09,fy+r*.1);c.lineTo(fx+Math.sin(tm*6+i)*r*.08,fy-r*.42-Math.abs(Math.sin(tm*4+i))*r*.15);c.lineTo(fx+r*.09,fy+r*.1);c.closePath();c.fill()}}
+ c.fillStyle='#000';c.beginPath();c.ellipse(x,y-r*1.05,r*.4,r*.5,0,0,TAU);c.fill();
+ c.strokeStyle='#0b0514';c.lineCap='round';
+ for(const sd of[-1,1]){const sx=x+sd*r*.55,sy=y-r*.62,hx=x+sd*r*1.5,hy=y+r*.05+Math.sin(tm*2.4+sd)*r*.22;c.lineWidth=r*.17;c.beginPath();c.moveTo(sx,sy);c.quadraticCurveTo(x+sd*r*1.2,y-r*.75,hx,hy);c.stroke();
+  if(fin&&sd===1){c.lineWidth=1.5;c.beginPath();c.moveTo(hx,hy);c.lineTo(hx,hy+6);c.stroke();c.fillStyle='#120a18';c.fillRect(hx-6,hy+6,12,14);c.beginPath();c.moveTo(hx-8,hy+6);c.lineTo(hx,hy);c.lineTo(hx+8,hy+6);c.fill()}
+  else{c.lineWidth=r*.06;for(const a of[-.5,0,.5]){const ca=Math.atan2(hy-sy,hx-sx)+a;c.beginPath();c.moveTo(hx,hy);c.lineTo(hx+Math.cos(ca)*r*.32,hy+Math.sin(ca)*r*.32);c.stroke()}}}
+}
 function drawEnemy(c,e){
+ if(ET[e.t].boss){drawBoss(c,e);return}
  const B=ET[e.t],r=B.r,px=-e.dy,py=e.dx;const bob=Math.sin(tm*3+e.ph)*1.5;
  c.globalAlpha=.5;c.fillStyle='#000';c.beginPath();c.ellipse(e.x,e.y+r*.7,r*.9,r*.35,0,0,TAU);c.fill();
  for(let i=3;i>=0;i--){const off=i*r*.55,w=Math.sin(tm*5+e.ph+i*1.3)*r*.18*i;const x=e.x-e.dx*off+px*w,y=e.y-e.dy*off+py*w+bob;const s=r*(2-i*.3);spr(c,SMOKE,x,y,s,.95-i*.18)}
@@ -890,7 +911,20 @@ function drawEnemy(c,e){
  if(e.t==='brute'){c.fillStyle='#08060e';c.beginPath();c.arc(e.x+px*r*.7,e.y+py*r*.7+bob,r*.45,0,TAU);c.arc(e.x-px*r*.7,e.y-py*r*.7+bob,r*.45,0,TAU);c.fill()}
  if(B.boss){c.fillStyle='#07050c';for(let i=0;i<5;i++){const a=-Math.PI/2+(i-2)*.38;c.beginPath();c.moveTo(e.x+Math.cos(a)*r*.5,e.y+bob+Math.sin(a)*r*.5);c.lineTo(e.x+Math.cos(a)*r*1.25,e.y+bob+Math.sin(a)*r*1.25-4);c.lineTo(e.x+Math.cos(a+.15)*r*.55,e.y+bob+Math.sin(a+.15)*r*.55);c.fill()}}
 }
+function bossGlow(c,e){const B=ET[e.t],r=B.r,bob=Math.sin(tm*2+e.ph)*3,x=e.x,y=e.y+bob,hy=y-r*1.05,fin=CH===4&&!B.elite,ec=B.elite?SP.violet:SP.red;
+ spr(c,ec,x,y-r*.5,r*3.3,.2+Math.sin(tm*3)*.05);
+ c.globalAlpha=.55+Math.sin(tm*4)*.15;c.strokeStyle=B.elite?'rgba(200,160,255,1)':'rgba(255,110,130,1)';c.lineWidth=2;cloakPath(c,e,1,0);c.stroke();c.globalAlpha=.18;c.fillStyle=B.elite?'rgba(170,120,255,1)':'rgba(220,60,90,1)';cloakPath(c,e,.8,r*.18);c.fill();c.globalAlpha=.35;c.lineWidth=6;cloakPath(c,e,1.05,0);c.stroke();
+ c.globalAlpha=.4;c.strokeStyle=B.elite?'rgba(190,150,255,1)':'rgba(255,90,110,1)';c.lineWidth=1.4;c.setLineDash([5,7]);c.lineDashOffset=-tm*20;c.beginPath();c.ellipse(e.x,e.y+r*.95,r*1.75,r*.55,0,0,TAU);c.stroke();c.setLineDash([]);
+ if(e.hit>0)spr(c,SP.white,x,y-r*.5,r*2,.55);if(e.lit>0)spr(c,SP.amber,x,y-r*.5,r*2.4,.3);
+ if(e.wet>0)spr(c,SP.blue,x,y,r*1.6,.22);if(e.burn>0)spr(c,SP.ember,x,y,r*1.8,.3);if(e.buffT>0)spr(c,SP.red,x,y,r*2.6,.3);if(e.stun>0)spr(c,SP.gold,x,hy-r*.9,r*.7,.6);
+ const blink=Math.sin(tm*1.1+e.ph*3)>.96?.15:1;
+ for(const sd of[-1,1]){spr(c,ec,x+sd*r*.18,hy-r*.05,r*.55,.95*blink);spr(c,SP.white,x+sd*r*.18,hy-r*.05,r*.13,blink)}
+ spr(c,ec,x,hy+r*.28,r*.32,.45+Math.sin(tm*7)*.2);
+ for(let i=0;i<7;i++){const a=tm*1.1+i*TAU/7;spr(c,ec,x+Math.cos(a)*r*1.7,y-r*.4+Math.sin(a)*r*.55,4.5,.75)}
+ if(fin){const lx=x+r*1.5,ly=y+r*.05+Math.sin(tm*2.4+1)*r*.22+13;spr(c,SP.violet,lx,ly,r*1.3,.85+Math.sin(tm*9)*.1);spr(c,SP.white,lx,ly,4,.9);for(let i=0;i<3;i++){const k=(tm*.8+i/3)%1;spr(c,SP.violet,lx+Math.sin(tm*3+i)*6,ly-k*40,6*(1-k),.6*(1-k))}}
+}
 function enemyGlow(c,e){
+ if(ET[e.t].boss){bossGlow(c,e);return}
  const B=ET[e.t],r=B.r,bob=Math.sin(tm*3+e.ph)*1.5;
  spr(c,SP.violet,e.x,e.y+bob,r*2.1,.22);if(B.clue){spr(c,SP.gold,e.x,e.y+bob,r*3.4,.38+Math.sin(tm*6)*.12);spr(c,STAR,e.x,e.y+bob-r-8,6,.7+Math.sin(tm*5)*.3)}
  if(e.lit>0)spr(c,SP.amber,e.x,e.y+bob,r*2,.35);
@@ -1130,12 +1164,12 @@ let caseCb=null,caseIdx=-1,pickEv=[],pickCh=-1,justSolved=-1;
 function openCase(ci,cb){
  caseCb=cb;caseIdx=ci;pickEv=[];pickCh=-1;justSolved=-1;const C=CASES[ci],solved=meta.solved.includes(ci),can=caseReady(ci);
  $('#cvEy').textContent=`사건 ${ci+1} · 단서 ${haveCount(ci)}/4`;$('#cvTitle').textContent=C.t;$('#cvQ').textContent=C.q;
- $('#cvHelp').textContent=can?'결정적인 증거 2개와 답 하나를 골라 제출하세요. 틀리면 오늘 밤은 다시 추리할 수 없습니다.':'';$('#cvHelp').hidden=!can;
+ $('#cvHelp').innerHTML=can?'결정적인 증거 2개와 답 하나를 골라 제출하세요. 틀리면 오늘 밤은 다시 추리할 수 없습니다.'+(meta.hint[ci]?`<span class="hintbox"><b>지난번 힌트</b>${meta.hint[ci]}</span>`:''):'';$('#cvHelp').hidden=!can;
  $('#cvClues').innerHTML=can?C.clues.map((t,k)=>`<button class="clue pick" data-ev="${k}"><small>증거 ${'ㄱㄴㄷㄹ'[k]}</small>${t}</button>`).join(''):clueList(ci);
  $('#cvChoices').innerHTML=can?C.ch.map((t,i)=>`<button data-ch="${i}">${t}</button>`).join(''):'';
  const v=$('#cvVerdict');
  if(solved){v.innerHTML=`<b style="color:var(--lamp)">해결</b><br>${C.rev}<br><small style="color:var(--mute)">보상 · ${C.reward}</small>`;v.hidden=false}
- else if(!can){v.textContent=runLocked.has(ci)?'오늘 밤은 생각이 엉켰다. 다음 밤에 다시 추리하자.':'증거를 모두 모으면 추리할 수 있다. 금빛 그림자를 정화하라.';v.hidden=false}
+ else if(!can){v.innerHTML=runLocked.has(ci)?`오늘 밤은 생각이 엉켰다. 다음 밤에 다시 추리하자.${meta.hint[ci]?`<span class="hintbox"><b>힌트</b>${meta.hint[ci]}</span>`:''}`:'증거를 모두 모으면 추리할 수 있다. 금빛 그림자를 정화하라.';v.hidden=false}
  else v.hidden=true;
  $('#cvSubmit').hidden=!can;syncPick();
  const d=$('#cvDone');d.hidden=can;d.textContent='닫기';
@@ -1151,7 +1185,7 @@ $('#cvSubmit').addEventListener('click',()=>{
  if(aOk&&eOk){meta.solved.push(ci);meta.shards+=30;save();if(mods)applySolved(mods,ci);sfx('win');justSolved=ci;
   v.innerHTML=`<b style="color:var(--lamp)">추리 성공</b><br>${C.rev}<br><small style="color:var(--mute)">보상 · ${C.reward} · 빛의 결정 +30</small>`;
   if(ci===3)setTimeout(()=>toast('범인은 처음부터 우리 곁에 있었다','syn'),400)}
- else{runLocked.add(ci);sfx('hurt');v.innerHTML=aOk?`<b style="color:#ff8a96">증명 실패</b><br>답은 맞을지도 모른다. 하지만 고른 두 증거로는 증명되지 않는다. 다음 밤에 다시.`:`<b style="color:#ff8a96">단서와 어긋난다</b><br>그 답은 증거와 맞지 않는다. 어떤 증거가 무엇을 지우는지 다시 읽어 보자.`}
+ else{runLocked.add(ci);sfx('hurt');const h=aOk?C.evh:C.no[pickCh];meta.hint[ci]=h;save();const L='ㄱㄴㄷㄹ';v.innerHTML=(aOk?`<b style="color:#ff8a96">증명 실패</b><br>답은 맞을지도 모른다. 하지만 증거 ${L[pickEv[0]]}·${L[pickEv[1]]}만으로는 다른 보기가 다 지워지지 않는다.`:`<b style="color:#ff8a96">단서와 어긋난다</b><br>「${C.ch[pickCh]}」은(는) 증거와 맞지 않는다.`)+`<span class="hintbox"><b>힌트</b>${h}</span><small style="color:var(--mute)">오늘 밤은 더 추리할 수 없다. 다음 밤에 다시.</small>`}
  v.hidden=false;const d=$('#cvDone');d.hidden=false;d.textContent='계속';
 });
 $('#cvDone').addEventListener('click',()=>{const cb=caseCb;caseCb=null;const go=()=>{if(cb)cb();else{refreshTitle();showOnly('title')}};if(justSolved===4&&endingReady()&&!meta.seen.includes('ending')){justSolved=-1;openEpi(go)}else go()});
@@ -1175,11 +1209,12 @@ let gIdx=0,gStart=false;const gTrack=$('#gTrack');
 function openGuide(fromStart){gStart=fromStart;gIdx=0;
  gTrack.innerHTML=GUIDE.map((g,i)=>`<section class="gslide"><h2>${g.t}</h2>${g.h}${i===0?'<div class="gswipe">옆으로 밀어서 넘기기 ›</div>':''}</section>`).join('');
  showOnly('guide');gTrack.style.scrollBehavior='auto';gTrack.scrollLeft=0;gTrack.style.scrollBehavior='';syncGuide()}
-function syncGuide(){$('#gEy').textContent=`등대지기 안내서 · ${gIdx+1}/${GUIDE.length}`;$('#gDots').innerHTML=GUIDE.map((_,i)=>`<i class="${i===gIdx?'on':''}"></i>`).join('');$('#gPrev').style.visibility=gIdx?'visible':'hidden';$('#gNext').textContent=gIdx<GUIDE.length-1?'다음':gStart?'불 밝히기':'닫기'}
+function syncGuide(){$('#gEy').textContent=`등대지기 안내서 · ${gIdx+1}/${GUIDE.length}`;$('#gDots').innerHTML=GUIDE.map((_,i)=>`<i class="${i===gIdx?'on':''}"></i>`).join('');$('#gPrev').style.visibility=gIdx?'visible':'hidden';$('#gNext').textContent=gIdx<GUIDE.length-1?'다음':gStart?'불 밝히기':'닫기';$('#gSkip').textContent=gStart?'설명 건너뛰고 시작':'설명 닫기';$('#gSkip').hidden=gIdx===GUIDE.length-1}
 function goGuide(i){gIdx=clamp(i,0,GUIDE.length-1);gTrack.scrollTo({left:gIdx*gTrack.clientWidth,behavior:'smooth'});syncGuide()}
 gTrack.addEventListener('scroll',()=>{const i=Math.round(gTrack.scrollLeft/Math.max(1,gTrack.clientWidth));if(i!==gIdx){gIdx=clamp(i,0,GUIDE.length-1);syncGuide()}},{passive:true});
 function finishGuide(){if(!meta.seen.includes('guide')){meta.seen.push('guide');save()}if(gStart)openChapters();else showOnly('title')}
 $('#gPrev').addEventListener('click',()=>goGuide(gIdx-1));
+$('#gSkip').addEventListener('click',finishGuide);
 $('#gNext').addEventListener('click',()=>{if(gIdx<GUIDE.length-1)goGuide(gIdx+1);else finishGuide()});
 $('#bGuide').addEventListener('click',()=>openGuide(false));
 $('#back').addEventListener('click',()=>{
@@ -1242,6 +1277,7 @@ function openBlueprint(i,cb){bpIdx=i;bpCb=cb;bpSel=-1;bpMoves=0;bpSolved=false;c
  $('#bpEy').textContent=`${i+1}장 · 설계도 조각 9/9`;$('#bpTitle').textContent='설계도를 맞춰라';$('#bpDone').hidden=true;$('#bpGrid').hidden=false;$('#bpHelp').hidden=false;
  $('#bpGrid').innerHTML=bpPos.map((_,j)=>`<button class="bpt" data-s="${j}" style="background-image:url(${img})"></button>`).join('');syncBp();showOnly('bp');sfx('clue')}
 function syncBp(){document.querySelectorAll('#bpGrid .bpt').forEach(b=>{const j=+b.dataset.s,p=bpPos[j];b.style.backgroundPosition=`${(p%3)*50}% ${Math.floor(p/3)*50}%`;b.style.transform=`rotate(${bpRot[j]*90}deg)`;b.classList.toggle('sel',j===bpSel);b.classList.toggle('ok',p===j&&bpRot[j]===0)});$('#bpMoves').textContent=`이동 ${bpMoves} · 맞은 조각 ${bpPos.filter((p,j)=>p===j&&bpRot[j]===0).length}/9`}
+$('#bp').addEventListener('click',ev=>{if(bpSel<0||bpSolved||ev.target.closest('#bpGrid,#bpDone,#back'))return;bpSel=-1;syncBp()});
 $('#bpGrid').addEventListener('click',ev=>{const b=ev.target.closest('.bpt');if(!b||bpSolved)return;const j=+b.dataset.s;
  if(bpSel<0)bpSel=j;else if(bpSel===j){bpRot[j]=(bpRot[j]+1)%4;bpMoves++}else{[bpPos[bpSel],bpPos[j]]=[bpPos[j],bpPos[bpSel]];[bpRot[bpSel],bpRot[j]]=[bpRot[j],bpRot[bpSel]];bpSel=-1;bpMoves++}
  sfx('card');syncBp();
