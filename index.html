@@ -80,7 +80,8 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--f-ui);ov
 #story.on{opacity:1}
 #notice{position:absolute;left:.5em;right:.5em;top:.45em;min-height:2.5em;display:flex;align-items:center;justify-content:center;padding:.3em .9em;background:none;border:none;text-shadow:0 0 .35em #000,0 0 .7em #000,0 .1em .2em #000;z-index:9;pointer-events:none;text-align:center;font-weight:700;font-size:.86em;line-height:1.3;color:#efe6cf;animation:ntIn .25s ease-out}
 #notice[hidden]{display:none}
-#coach{position:absolute;left:.6em;right:.6em;top:.45em;z-index:40;pointer-events:none;padding:.55em .9em;border-radius:.9em;background:rgba(10,13,25,.94);border:1px solid rgba(255,196,107,.65);box-shadow:0 0 1.2em rgba(255,196,107,.25);color:#f3ead6;font-size:.86em;line-height:1.5;text-align:center}#coach[hidden]{display:none}#coach small{display:block;color:var(--lamp);font-size:.78em;letter-spacing:.12em;margin-bottom:.15em}
+#coach{position:absolute;left:.6em;right:.6em;top:.45em;z-index:40;pointer-events:none;padding:.55em .9em;border-radius:.9em;background:rgba(10,13,25,.94);border:1px solid rgba(255,196,107,.65);box-shadow:0 0 1.2em rgba(255,196,107,.25);color:#f3ead6;font-size:.86em;line-height:1.5;text-align:center}#coach[hidden]{display:none}#coach .coH{display:flex;align-items:center;justify-content:center;gap:.6em;margin-bottom:.1em}#coach .coH small{margin:0}#coSkip{pointer-events:auto;padding:.12em .7em;border-radius:2em;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);color:#cfc6b0;font-size:.82em}
+#coach small{display:block;color:var(--lamp);font-size:.78em;letter-spacing:.12em;margin-bottom:.15em}
 .coachHi{animation:coachHi 1s ease-in-out infinite!important;position:relative;z-index:30}@keyframes coachHi{50%{box-shadow:0 0 0 .35em rgba(255,214,140,.85),0 0 1.6em rgba(255,214,140,.9)}}
 #purse,#purse2{position:absolute;bottom:4.75em;display:flex;gap:.35em;z-index:5;pointer-events:none}#purse{left:.65em}#purse2{right:.65em}#purse2[hidden]{display:none}#purse2 .chip{font-size:.86em;background:rgba(7,9,18,.88)}#purse .pe{pointer-events:auto}#purse .brk{flex-basis:100%;height:0}#purse .chip{font-size:.86em}#purse[hidden]{display:none}#purse .chip{background:rgba(7,9,18,.88)}#purse .bump{animation:bump .4s ease-out}@keyframes bump{40%{transform:scale(1.18)}}#notice.gold{color:#ffe2ac;border-color:rgba(255,196,107,.6)}#notice.syn{color:#e6dcff;border-color:rgba(195,168,255,.6)}#notice.bn{font-family:var(--f-disp);font-size:1em;color:#fff1cf;border-color:rgba(255,196,107,.7)}#notice.boss{color:#ffb0b0}
 #notice span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -320,7 +321,7 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--f-ui);ov
       <div id="banner"><b></b><span></span></div>
       <div id="toast"></div>
       <div id="notice" hidden><span></span></div>
-      <div id="coach" hidden><small id="coS"></small><span id="coT"></span></div>
+      <div id="coach" hidden><div class="coH"><small id="coS"></small><button id="coSkip">건너뛰기 ›</button></div><span id="coT"></span></div>
       <div id="purse" hidden><button class="chip pe" id="cHp" style="--c:#ffc46b" aria-label="등불 설명"><i></i><small>등불</small><span id="vHp">20</span></button><div class="chip" style="--c:#ff9a4a"><i></i><small>등유</small><span id="vGold">0</span></div></div>
       <div id="purse2" hidden><div class="chip" id="cChest" style="--c:#e6c36a" hidden><i></i><small>상자</small><span id="vChest">0</span></div><div class="chip" style="--c:#8fe6ff"><i></i><small id="wLbl">파도</small><span id="vWave">0</span></div></div>
       <div id="hint" hidden>빛나는 받침돌을 눌러<br>마을 사람을 세우세요</div>
@@ -1981,10 +1982,10 @@ function drawActGlow(c){for(const a of acts){if(a.t<0)continue;const k=a.t/a.lif
 var TUT=false,TS=0,tutHi=null,tutTgt=null,tutTower=null;
 const TSTEP=[
  {t:'빛나는 받침돌(점선 동그라미)을 눌러 마을 사람을 세우자. 무리마다 공격 방식이 다르다.',tg:'slot',done:()=>towers.length>=1},
- {t:'등유가 남았다. 다른 받침돌에 하나 더 세우자. 길 가까이가 좋다.',tg:'slot',done:()=>towers.length>=2||gold<50},
+ {t:'등유가 남았다. 다른 받침돌에 하나 더 세우자. 길 가까이가 좋다.',tg:'slot',on:()=>{if(gold<60)gold=60},done:()=>towers.length>=2||gold<50},
  {t:'아래 「파도 부르기」를 누르면 그림자가 길을 따라 온다. 등대에 닿으면 등불(왼쪽 아래)이 줄어든다.',hi:'#next',done:()=>state==='wave'},
  {t:'무리가 스스로 싸운다. 그림자를 정화하면 등유를 얻는다. 이 파도를 지켜보자.',done:()=>state!=='wave'&&wave>=1},
- {t:'세운 무리를 눌러 「▲」로 강화하자. 단계가 오를수록 강해지고, 4단계가 되면 갈래를 고른다.',tg:'tower',done:()=>towers.some(t=>t.lvl>=2)},
+ {t:'세운 무리를 눌러 「▲」로 강화하자. 단계가 오를수록 강해지고, 4단계가 되면 갈래를 고른다. (연습이라 등유를 채워 두었다)',tg:'tower',on:()=>{const c=Math.min(...towers.map(upCost));if(gold<c+20)gold=c+20},done:()=>towers.some(t=>t.lvl>=2)},
  {t:'다시 「파도 부르기」. 파도를 두 번 막을 때마다 선물을 하나 고를 수 있다.',hi:'#next',done:()=>state==='wave'&&wave>=2},
  {t:'파도를 막아 내자. 끝나면 선물 카드가 나온다.',done:()=>state==='prep'&&wave>=2},
  {t:'세 번째 파도를 부르자. 이번엔 바다의 목소리가 들려올 것이다.',hi:'#next',done:()=>state==='wave'&&wave>=3,on:()=>{}},
@@ -2003,6 +2004,7 @@ function tutEnd(){TUT=false;closeTutHi();$('#next').style.visibility='';$('#bEnd
  $('#wObs').hidden=true;$('#wEy').textContent='연습 밤';$('#wTitle').textContent='등대를 지킬 준비가 됐다';$('#wText').textContent='무리를 세우고, 강화하고, 홀린 무리를 거울로 깨우고, 섬광으로 버텼다. 이제 진짜 밤이 온다. 장마다 세 밤이 이어지고, 회의에서 누군가를 지켜볼 수 있다.';$('#wGain').innerHTML='';$('#wNote').textContent='막히면 첫 화면의 「안내서 보기」를 펼쳐 보자.';
  const nb=$('#bNextCh');nb.textContent='첫 밤으로';nb.hidden=false;nightWon=false;tutDone=true;setTimeout(()=>showOnly('win'),700)}
 var tutDone=false;
+$('#coSkip').addEventListener('click',()=>{if(!meta.seen.includes('tut')){meta.seen.push('tut');meta.seen.push('guide');save()}toTitle();openChapters();toast('연습 밤을 건너뛰었다 · 첫 화면 「연습 밤 다시 하기」로 언제든 다시 할 수 있다','gold')});
 
 /* ---------- refining ---------- */
 const refChance=t=>Math.min(.95,Math.max(.06,.9*Math.pow(.84,t.ref||0))+(t.pity||0));
