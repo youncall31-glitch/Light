@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>마지막 등대</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -80,6 +81,11 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--f-ui);ov
 #story.on{opacity:1}
 #notice{position:absolute;left:.5em;right:.5em;top:.45em;min-height:2.5em;display:flex;align-items:center;justify-content:center;padding:.3em .9em;background:none;border:none;text-shadow:0 0 .35em #000,0 0 .7em #000,0 .1em .2em #000;z-index:9;pointer-events:none;text-align:center;font-weight:700;font-size:.86em;line-height:1.3;color:#efe6cf;animation:ntIn .25s ease-out}
 #notice[hidden]{display:none}
+#saveOv{justify-content:flex-start;padding-top:4em}#saveOv .howto,#updOv .howto{text-align:left;max-width:23em;font-size:.84em;line-height:1.65;color:#ddd5c2;padding-left:1.3em;margin:0}#saveOv .howto b,#updOv .howto b{color:#ffe2ac}
+#sCode{width:100%;max-width:23em;box-sizing:border-box;font:500 .7em/1.4 ui-monospace,monospace;color:#e9e2cf;background:#0a0d18;border:1px solid rgba(236,229,212,.25);border-radius:.6em;padding:.6em;resize:vertical;-webkit-user-select:text;user-select:text}
+.sbtns{display:flex;gap:.5em;flex-wrap:wrap;justify-content:center}.smsg{min-height:1.4em;font-size:.82em;color:#ffe2ac;max-width:23em;margin:0}.smsg.err{color:#ff9aa8}
+#updOv{justify-content:center}.pdiff{display:flex;flex-direction:column;align-items:center;gap:.4em}.psave{font-size:.8em;color:var(--mute);max-width:22em;margin:0}
+#bCont small{display:block;font-size:.7em;font-weight:500;opacity:.85}
 #coach{position:absolute;left:.6em;right:.6em;top:.45em;z-index:40;pointer-events:none;padding:.55em .9em;border-radius:.9em;background:rgba(10,13,25,.94);border:1px solid rgba(255,196,107,.65);box-shadow:0 0 1.2em rgba(255,196,107,.25);color:#f3ead6;font-size:.86em;line-height:1.5;text-align:center}#coach[hidden]{display:none}#coach .coH{display:flex;align-items:center;justify-content:center;gap:.6em;margin-bottom:.1em}#coach .coH small{margin:0}#coSkip{pointer-events:auto;padding:.12em .7em;border-radius:2em;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);color:#cfc6b0;font-size:.82em}
 #coach small{display:block;color:var(--lamp);font-size:.78em;letter-spacing:.12em;margin-bottom:.15em}
 .coachHi{animation:coachHi 1s ease-in-out infinite!important;position:relative;z-index:30}@keyframes coachHi{50%{box-shadow:0 0 0 .35em rgba(255,214,140,.85),0 0 1.6em rgba(255,214,140,.9)}}
@@ -348,10 +354,12 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--f-ui);ov
         <h1>마지막 등대</h1>
         <div class="tag">안개에 삼켜진 마을 사람들을, 빛으로 되찾아라</div>
         <div class="btns">
+          <button class="btn pri" id="bCont" hidden>이어하기 <small id="tCont"></small></button>
           <button class="btn pri" id="bStart">불 밝히기</button>
           <button class="btn" id="bRelic">갯바닥 · 유품 줍기 <span id="tTicket"></span></button>
           <button class="btn" id="bShop">등대 작업실 · <span class="shard" id="tShard">0</span></button>
           <button class="btn" id="bLore">등대지기 수첩 · 이야기 <span id="tLore">0/80</span></button>
+          <button class="btn" id="bSave">저장 코드 · 다른 기기로 옮기기</button>
           <button class="btn ghost" id="bGuide">안내서 보기</button>
           <button class="btn ghost" id="bTut">연습 밤 다시 하기</button>
           <button class="btn ghost" id="bReset" style="font-size:.78em;opacity:.7">기록 처음부터</button>
@@ -482,8 +490,30 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--f-ui);ov
       <div class="ov" id="icard" hidden>
         <div class="icd"><div class="eyebrow">처음 보는 것 · 게임이 멈춰 있다</div><h2 id="icT"></h2><p id="icB"></p><button class="btn pri" id="icOk">알겠다</button></div>
       </div>
+      <div class="ov" id="saveOv" hidden>
+        <div class="eyebrow">저장 · 불러오기</div>
+        <h2>다른 기기에서 이어 하기</h2>
+        <ol class="howto">
+          <li>게임은 <b>파도가 시작되기 직전마다 자동 저장</b>된다. 첫 화면 「이어하기」로 그 자리에서 다시 시작한다.</li>
+          <li>다른 기기로 옮기려면 아래 <b>「저장 코드 만들기」</b> → <b>「복사」</b>를 눌러 메모나 카톡으로 보낸다.</li>
+          <li>새 기기에서 이 게임을 열고 첫 화면 <b>「저장 코드 · 다른 기기로 옮기기」</b> → 아래 칸에 코드를 붙여 넣고 <b>「코드로 불러오기」</b>를 누른다.</li>
+        </ol>
+        <div class="sbtns"><button class="btn pri" id="sMake">저장 코드 만들기</button><button class="btn" id="sCopy" disabled>복사</button></div>
+        <textarea id="sCode" rows="4" placeholder="여기에 저장 코드가 나온다. 다른 기기에서 받은 코드를 붙여 넣어도 된다." spellcheck="false"></textarea>
+        <div class="sbtns"><button class="btn" id="sLoad">코드로 불러오기</button></div>
+        <p class="smsg" id="sMsg"></p>
+        <button class="btn ghost" id="sClose">닫기</button>
+      </div>
+      <div class="ov" id="updOv" hidden>
+        <div class="eyebrow" id="updEy"></div>
+        <h2>새로워진 점 · 꼭 읽어 주세요</h2>
+        <ol class="howto" id="updList"></ol>
+        <button class="btn pri" id="updOk">알겠다</button>
+      </div>
       <div class="ov" id="pause" hidden>
         <h2>잠시 숨 고르기</h2>
+        <div class="pdiff"><div class="eyebrow">난이도 · 파도 사이에만 바꿀 수 있다</div><div class="diff" id="pDiff"><button data-d="0">보통</button><button data-d="1">어려움</button><button data-d="2">악몽</button></div><div class="dnote" id="pDiffNote"></div></div>
+        <p class="psave" id="pSave"></p>
         <div class="btns">
           <button class="btn pri" id="bResume">계속하기</button>
           <button class="btn" id="bQuit">등대를 떠나기</button>
@@ -735,7 +765,8 @@ const META=[
 const KEY='last-lighthouse-v3';
 function load(){try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){return null}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(meta))}catch(e){}}
-const meta=Object.assign({shards:0,best:0,runs:0,lore:[],muted:false,seen:[],clues:[],solved:[],cleared:[],bestCh:{},nights:{},equip:[],rstar:{},rdup:{},diff:0,carry:{},relic:{},tickets:0,pityR:0,weapons:[],hint:{},obs:{},memo:[],jr:[],lan:[]},load()||{});
+const DEFAULT_META={shards:0,best:0,runs:0,lore:[],muted:false,seen:[],clues:[],solved:[],cleared:[],bestCh:{},nights:{},equip:[],rstar:{},rdup:{},diff:0,carry:{},relic:{},tickets:0,pityR:0,weapons:[],hint:{},obs:{},memo:[],jr:[],lan:[]};
+const meta=Object.assign(JSON.parse(JSON.stringify(DEFAULT_META)),load()||{});
 meta.up=Object.assign({gold:0,hp:0,dmg:0,reroll:0,flash:0,hero:0},meta.up||{});
 
 /* ---------- audio ---------- */
@@ -809,7 +840,7 @@ function newRun(ch=CH,excl=null,kept=false,watch=null){
  setMap(ch);nightWon=false;drawBG();resetWorld();mods=freshMods();mergeFrom=-1;betrayed=false;
  runExcl=excl;haramKept=kept;runWatch=watch;zone=null;mirrorArm=false;mirrorCd=0;$('#mirror').classList.remove('arm');buildAlts();temptT=26;ember=null;lanternPos=null;if(kept)mods.harpoon*=1.5;heroes=makeHeroes();selHero=0;dimT=0;sabCount=0;quietShown=false;$('#bossbar').hidden=true;
  gold=120+CH*60+NIGHT*60+meta.up.gold*30+(mods.startGold||0);maxHp=20+meta.up.hp*4+(mods.hpBonus||0);hp=maxHp;wave=0;spawnT=0;prepT=18;flashCd=0;flashT=0;shake=0;combo=0;comboT=0;bossKills=0;kills=0;
- aiming=false;beamA=-Math.PI/2;runLocked=new Set();rerolls=1+meta.up.reroll;taken=new Set();runPicks=[];carryOn=false;chests=0;won=false;runSeen=new Set();bossRef=null;built=new Set();
+ aiming=false;beamA=-Math.PI/2;runLocked=new Set();rerolls=1+meta.up.reroll;taken=new Set();runPicks=[];carryOn=false;runBase={w:0,k:0,b:0};lastSaveState='';chests=0;won=false;runSeen=new Set();bossRef=null;built=new Set();
  state='prep';paused=false;speed=1;$('#bSpeed').textContent='1×';
  showOnly(null);$('#hud').hidden=false;$('#bar').hidden=false;$('#purse').hidden=false;$('#purse2').hidden=false;ntQ=[];$('#notice').hidden=true;runMem=0;$('#hint').hidden=meta.runs>0;
  banner(`${CH+1}장 · ${NN[NIGHT]}`,`${MAPS[CH].name} · ${NLEN()}번의 파도${meta.diff?' · '+DF().n:''}`);if(NIGHT===0)showStory(CH_IN[CH]);
@@ -827,12 +858,12 @@ const DAWN=['첫 새벽이 왔다. 안개가 잠시 물러났지만, 해가 지�
 function waveKind(w){const Ln=NLEN();if(w>Ln){const k=w-Ln;return k%10===0?'boss':k%5===0?'elite':''}if(w===Ln)return NIGHT===2?'boss':'elite';if(NIGHT>=1&&w===Math.round(Ln/2))return'elite';return''}
 function nextNight(i){return meta.cleared.includes(i)?0:Math.min(2,(meta.nights&&meta.nights[i])||0)}
 function snapCarry(){meta.carry=meta.carry||{};meta.carry[CH+'-'+(NIGHT+1)]={towers:towers.filter(t=>!t.traitor).map(t=>({slot:t.slot,type:t.type,lvl:t.lvl,br:t.br||null,ref:t.ref||0,pity:t.pity||0,spent:t.spent})),picks:runPicks.slice(),gold,rerolls,maxHp};save()}
-function restoreCarry(){const sn=NIGHT>0&&meta.carry&&meta.carry[CH+'-'+NIGHT];if(!sn)return;carryOn=true;
+function restoreCarry(){if(resuming)return;const sn=NIGHT>0&&meta.carry&&meta.carry[CH+'-'+NIGHT];if(!sn)return;carryOn=true;
  for(const id of sn.picks){const c=CARDS.find(x=>x.id===id);if(!c||id==='oil'||id==='mend')continue;c.a();taken.add(id)}runPicks=sn.picks.slice();
  maxHp=Math.max(maxHp,sn.maxHp||maxHp);hp=maxHp;gold=Math.round(sn.gold*.5)+60+meta.up.gold*10;rerolls=sn.rerolls;
  for(const o of sn.towers){if(!SLOTS[o.slot]||slotT[o.slot]||o.type===runExcl)continue;const[x,y]=SLOTS[o.slot];const t={slot:o.slot,x,y,type:o.type,lvl:o.lvl,cd:.3,ang:-Math.PI/2,spent:o.spent,fl:0,br:o.br||undefined,ref:o.ref||0,pity:o.pity||0};towers.push(t);slotT[o.slot]=t}
  setTimeout(()=>toast(`해가 지자 지난밤의 무리 ${sn.towers.length}곳이 다시 자리를 지킨다 · 선물 ${sn.picks.length}개도 그대로다`,'gold',5),1400)}
-function nightClear(){snapCarry();$('#bEndless').hidden=false;
+function nightClear(){snapCarry();clearRun();$('#bEndless').hidden=false;
  won=true;nightWon=true;state='victory';sfx('win');closePop();const bonus=Math.round((10+CH*6+NIGHT*6)*DF().sh);meta.shards+=bonus;meta.nights[CH]=Math.max(meta.nights[CH]||0,NIGHT+1);save();
  $('#wObs').hidden=true;$('#wEy').textContent=`${CH+1}장 · ${MAPS[CH].name} · ${NN[NIGHT]}`;$('#wTitle').textContent=`${NN[NIGHT]}을 지켜냈다`;$('#wText').textContent=DAWN[NIGHT]+(runMem?` · 새로 모은 기억 ${runMem}조각은 등대지기 수첩에 적혔다.`:'');
  $('#wGain').innerHTML=`밤 보상 · 빛의 결정 <span class="shard">+${bonus}</span>`;
@@ -1318,8 +1349,8 @@ function render(){
 }
 
 /* ---------- UI ---------- */
-const OVS=['icard','chest','branch','relic','title','cards','over','win','shop','guide','book','caseOv','pause','chap','bp','epi','trial','tale'];
-function showOnly(id){OVS.forEach(o=>$('#'+o).hidden=o!==id);$('#toast').classList.toggle('low',!!id);$('#back').hidden=!['guide','book','caseOv','shop','pause','chap','bp','epi','trial','tale','relic','branch'].includes(id)}
+const OVS=['saveOv','updOv','icard','chest','branch','relic','title','cards','over','win','shop','guide','book','caseOv','pause','chap','bp','epi','trial','tale'];
+function showOnly(id){OVS.forEach(o=>$('#'+o).hidden=o!==id);$('#toast').classList.toggle('low',!!id);$('#back').hidden=!['guide','book','caseOv','shop','pause','chap','bp','epi','trial','tale','relic','branch','saveOv'].includes(id)}
 let bTimer,sTimer;
 function banner(main,sub,boss){if(!$('#hud').hidden){notice(boss?'⚠ '+main:main,boss?'bn boss':'bn',boss?2.4:1.6);return}const b=$('#banner');b.querySelector('b').textContent=main;b.querySelector('span').textContent=sub||'';b.className=boss?'on boss':'on';clearTimeout(bTimer);bTimer=setTimeout(()=>b.className=boss?'boss':'',1800)}
 let runMem=0;function showStory(txt){if(!$('#hud').hidden){runMem++;return}toast(txt,'who',Math.min(8,Math.max(5,2+txt.length*.09)))}
@@ -1335,7 +1366,7 @@ function hud(){
  if(state==='title')return;
  const key=`${Math.ceil(hp)}|${gold}|${wave}|${state}|${selSlot}|${CH}|${NIGHT}`;
  if(key!==hudKey){hudKey=key;$('#vHp').textContent=Math.max(0,Math.ceil(hp))+'/'+maxHp;$('#vGold').textContent=gold;$('#vWave').textContent=wave>NLEN()?wave:wave+' / '+NLEN();$('#wLbl').textContent=`${CH+1}장 · ${NN[NIGHT]}`;refreshPop()}
- hudActs();tutTick();{const cc=$('#cChest');if(cc.hidden!==(chests<=0))cc.hidden=chests<=0;const vc=$('#vChest');if(vc.textContent!=String(chests)){vc.textContent=chests;cc.classList.remove('bump');void cc.offsetWidth;cc.classList.add('bump')}}{const mi=$('#mirror');mi.style.setProperty('--p',mirrorCd>0?1-mirrorCd/(20*mods.flashCd):1);$('#mirTxt').textContent=mirrorArm?'놓을 곳':mirrorCd>0?Math.ceil(mirrorCd)+'초':'준비';const dc=$('#cDim'),on=dimT>0&&state==='wave';if(dc.hidden===on)dc.hidden=!on;if(on)$('#vDim').textContent=Math.ceil(dimT)+'초'}
+ hudActs();tutTick();saveTick();{const cc=$('#cChest');if(cc.hidden!==(chests<=0))cc.hidden=chests<=0;const vc=$('#vChest');if(vc.textContent!=String(chests)){vc.textContent=chests;cc.classList.remove('bump');void cc.offsetWidth;cc.classList.add('bump')}}{const mi=$('#mirror');mi.style.setProperty('--p',mirrorCd>0?1-mirrorCd/(20*mods.flashCd):1);$('#mirTxt').textContent=mirrorArm?'놓을 곳':mirrorCd>0?Math.ceil(mirrorCd)+'초':'준비';const dc=$('#cDim'),on=dimT>0&&state==='wave';if(dc.hidden===on)dc.hidden=!on;if(on)$('#vDim').textContent=Math.ceil(dimT)+'초'}
  const fl=$('#flash');const ready=flashCd<=0&&state==='wave';fl.style.setProperty('--p',flashCd>0?1-flashCd/(22*mods.flashCd):1);fl.disabled=!ready;fl.classList.toggle('ready',ready);$('#flashTxt').textContent=flashCd>0?Math.ceil(flashCd)+'초':state==='wave'?'준비':'대기';
  const nx=$('#next');if(state==='prep'){nx.hidden=false;const b=Math.ceil(prepT)*2;nx.innerHTML=`파도 ${wave+1} 부르기<small>지금 부르면 등유 +${b} · ${Math.ceil(prepT)}초</small>`}else nx.hidden=true;
  const cb=$('#combo');if(combo>=5){cb.textContent='정화 ×'+combo;cb.classList.add('on')}else cb.classList.remove('on');
@@ -1409,14 +1440,15 @@ $('#next').addEventListener('click',()=>{if(state!=='prep')return;const b=Math.c
 $('#flash').addEventListener('click',useFlash);
 $('#bSpeed').addEventListener('click',()=>{speed=speed===1?2:speed===2?3:1;$('#bSpeed').textContent=speed+'×'});
 $('#bPause').addEventListener('click',()=>{if(state!=='wave'&&state!=='prep')return;paused=true;closePop();showOnly('pause')});
+$('#bPause').addEventListener('click',()=>setTimeout(syncPDiff,0));
 $('#bResume').addEventListener('click',()=>{paused=false;showOnly(null)});
-$('#bQuit').addEventListener('click',()=>{paused=false;gameOver(true)});
+$('#bQuit').addEventListener('click',()=>{paused=false;gameOver(true);const r=readRun();if(r)setTimeout(()=>toast(`자동 저장이 남아 있다 · 첫 화면 「이어하기」로 ${r.ch+1}장 ${NN[r.night]} 파도 ${r.wave+1}부터 계속할 수 있다`,'gold',6),300)});
 function setMute(){$('#bSound').classList.toggle('off',meta.muted);$('#sw').style.opacity=meta.muted?.15:1;if(master)master.gain.value=meta.muted?0:.6}
 $('#bSound').addEventListener('click',()=>{meta.muted=!meta.muted;save();initAudio();setMute()});
 /* end of run */
-function creditRun(){const cleared=Math.max(0,wave-(state==='wave'?1:0));const sh=cleared*2+bossKills*10+Math.floor(kills/25);const prev=meta.bestCh[CH]||0;meta.shards+=sh;meta.runs++;if(cleared<=NLEN()&&NOFF[NIGHT]+cleared>prev)meta.bestCh[CH]=NOFF[NIGHT]+cleared;save();return{cleared,sh,prev}}
+function creditRun(){const cleared=Math.max(0,wave-(state==='wave'?1:0));const sh=Math.max(0,cleared-runBase.w)*2+Math.max(0,bossKills-runBase.b)*10+Math.floor(Math.max(0,kills-runBase.k)/25);{const r=readRun();if(r){r.base={w:Math.max(cleared,r.wave),k:kills,b:bossKills};try{localStorage.setItem(RUNKEY,JSON.stringify(r))}catch(e){}}}runBase={w:cleared,k:kills,b:bossKills};const prev=meta.bestCh[CH]||0;meta.shards+=sh;meta.runs++;if(cleared<=NLEN()&&NOFF[NIGHT]+cleared>prev)meta.bestCh[CH]=NOFF[NIGHT]+cleared;save();return{cleared,sh,prev}}
 function gameOver(quit){if(TUT&&!quit){hp=maxHp;notice('연습에서는 등불이 꺼지지 않는다','gold',2);return}if(chests>0&&!quit&&state!=='over'&&state!=='cards'){openChest(()=>gameOver(quit));return}
- if(state==='over')return;const{cleared,sh,prev:prevBest}=creditRun();
+ if(state==='over')return;if(!quit)clearRun();const{cleared,sh,prev:prevBest}=creditRun();
  state='over';closePop();mergeFrom=-1;$('#bossbar').hidden=true;$('#next').hidden=true;
  $('#oTitle').textContent=quit?'등대를 떠났다':won?'끝없는 밤이 저물었다':'등불이 꺼졌다';
  $('#oEy').textContent=`${CH+1}장 ${MAPS[CH].name} · ${meta.runs}번째 밤`;
@@ -1435,7 +1467,7 @@ $('#bRetire').addEventListener('click',()=>gameOver(false));
 function chUnlocked(i){return i===0||(meta.cleared.includes(i-1)&&(i<4||[0,1,2,3].every(c=>meta.solved.includes(c))))}
 const endingReady=()=>meta.cleared.includes(4)&&meta.solved.includes(4);
 function winGain(bonus){const w=TT[WK[CH]];$('#wGain').innerHTML=`장 보상 · 빛의 결정 <span class="shard">+${bonus}</span>${meta.weapons.includes(CH)?`<br>신형 무기 · <b style="color:${w.css}">${w.name}</b>`:''}`}
-function chapterClear(){
+function chapterClear(){clearRun();
 $('#bEndless').hidden=false; won=true;nightWon=false;state='victory';sfx('win');closePop();const bonus=Math.round((25+CH*15)*DF().sh);meta.shards+=bonus;meta.nights[CH]=3;if(!meta.cleared.includes(CH))meta.cleared.push(CH);save();
  {const ob=chapterObs();if(ob){meta.obs[CH]=ob;save()}$('#wObs').innerHTML=ob?`<b>관찰 기록</b>${ob}`:'';$('#wObs').hidden=!ob}
  $('#wEy').textContent=`${CH+1}장 · ${MAPS[CH].name}`;$('#wTitle').textContent=`「${MAPS[CH].sub}」을 지켜냈다`;$('#wText').textContent=CH_OUT[CH];winGain(bonus);
@@ -1460,7 +1492,7 @@ function openChapters(){refreshTitle();syncDiff();
  showOnly('chap')}
 $('#chList').addEventListener('click',ev=>{const b=ev.target.closest('[data-ch]');if(!b)return;const i=+b.dataset.ch;if(!chUnlocked(i)){toast(b.querySelector('.st').textContent,'syn');return}const nb=ev.target.closest('[data-n]');let n=nextNight(i);if(nb){const k=+nb.dataset.n,nd=meta.cleared.includes(i)?3:(meta.nights[i]||0);if(k>nd){toast('앞의 밤을 먼저 지켜내야 한다','syn');return}n=k}startChapter(i,n)});
 function toTitle(){state='title';$('#next').style.visibility='';if(TUT){TUT=false;closeTutHi();$('#coach').hidden=true}$('#purse').hidden=true;$('#purse2').hidden=true;ntQ=[];$('#notice').hidden=true;mergeFrom=-1;resetWorld();mods=null;bossRef=null;$('#hud').hidden=true;$('#bar').hidden=true;$('#next').hidden=true;$('#hint').hidden=true;refreshTitle();showOnly('title')}
-function refreshTitle(){const n=['첫','두','세','네','다섯','여섯','일곱','여덟','아홉','열'];$('#tNight').textContent=`등대 일지 · ${meta.runs<10?n[meta.runs]:(meta.runs+1)+'번째'}${meta.runs<10?' 번째':''} 밤`;$('#tShard').textContent=meta.shards;$('#tTicket').textContent=meta.tickets?`· 표식 ${meta.tickets}`:'';$('#tLore').textContent=`${meta.lore.length+meta.jr.length+meta.memo.length}/80${CASES.some((_,i)=>caseReady(i))?' · 추리 가능':''}`;$('#tRec').textContent=meta.cleared.length?`지켜낸 장 ${meta.cleared.length}/5 · 해결한 사건 ${meta.solved.length}/5`:''}
+function refreshTitle(){refreshCont();const n=['첫','두','세','네','다섯','여섯','일곱','여덟','아홉','열'];$('#tNight').textContent=`등대 일지 · ${meta.runs<10?n[meta.runs]:(meta.runs+1)+'번째'}${meta.runs<10?' 번째':''} 밤`;$('#tShard').textContent=meta.shards;$('#tTicket').textContent=meta.tickets?`· 표식 ${meta.tickets}`:'';$('#tLore').textContent=`${meta.lore.length+meta.jr.length+meta.memo.length}/80${CASES.some((_,i)=>caseReady(i))?' · 추리 가능':''}`;$('#tRec').textContent=meta.cleared.length?`지켜낸 장 ${meta.cleared.length}/5 · 해결한 사건 ${meta.solved.length}/5`:''}
 function start(){initAudio();if(AC&&AC.state==='suspended')AC.resume();setMute();if(!meta.seen.includes('tut')){startTutorial();return}if(!meta.seen.includes('guide'))openGuide(true);else openChapters()}
 $('#bStart').addEventListener('click',start);$('#bAgain').addEventListener('click',()=>{initAudio();startChapter(CH)});$('#bHome').addEventListener('click',toTitle);
 let shopBack='title';
@@ -1555,6 +1587,7 @@ $('#back').addEventListener('click',()=>{
  else if(vis('book'))$('#bBookClose').click();
  else if(vis('shop'))$('#bShopClose').click();
  else if(vis('pause'))$('#bResume').click();
+ else if(vis('saveOv'))$('#sClose').click();
  else if(vis('branch'))$('#brCancel').click();
  else if(vis('relic'))$('#bRelicClose').click();
 });
@@ -2013,6 +2046,53 @@ function tutEnd(){TUT=false;closeTutHi();$('#next').style.visibility='';$('#bEnd
 var tutDone=false;
 $('#coSkip').addEventListener('click',()=>{if(!meta.seen.includes('tut')){meta.seen.push('tut');meta.seen.push('guide');save()}toTitle();openChapters();toast('연습 밤을 건너뛰었다 · 첫 화면 「연습 밤 다시 하기」로 언제든 다시 할 수 있다','gold')});
 
+/* ---------- run save (auto before each wave) · save code · update notice ---------- */
+const RUNKEY='last-lighthouse-run1',GAME_VER=41;
+let resuming=false,runBase={w:0,k:0,b:0},lastSaveState='';
+function readRun(){try{const r=JSON.parse(localStorage.getItem(RUNKEY)||'null');return r&&r.v===1?r:null}catch(e){return null}}
+function clearRun(){try{localStorage.removeItem(RUNKEY)}catch(e){}refreshCont()}
+function snapRun(){if(TUT||state!=='prep'||won)return;const r={v:1,at:Date.now(),ch:CH,night:NIGHT,wave,gold:Math.round(gold),hp,maxHp,rerolls,chests,carryOn,runExcl,runWatch,haramKept,betrayed,sabCount,kills,bossKills,picks:runPicks.slice(),base:runBase,
+  towers:towers.map(t=>({slot:t.slot,type:t.type,lvl:t.lvl,br:t.br||null,ref:t.ref||0,pity:t.pity||0,spent:t.spent,traitor:!!t.traitor}))};
+ try{localStorage.setItem(RUNKEY,JSON.stringify(r))}catch(e){}}
+function refreshCont(){const r=readRun(),b=$('#bCont');if(!b)return;b.hidden=!r;if(r)$('#tCont').textContent=`${r.ch+1}장 ${NN[r.night]} · 파도 ${r.wave+1}부터`}
+function resumeRun(){const r=readRun();if(!r){refreshCont();return}initAudio();resuming=true;NIGHT=r.night;try{newRun(r.ch,r.runExcl,r.haramKept,r.runWatch)}finally{resuming=false}
+ carryOn=!!r.carryOn;for(const id of r.picks){const c=CARDS.find(x=>x.id===id);if(!c||id==='oil'||id==='mend')continue;c.a();taken.add(id)}runPicks=r.picks.slice();
+ towers.length=0;slotT.fill(null);for(const o of r.towers){if(!SLOTS[o.slot]||slotT[o.slot])continue;const[x,y]=SLOTS[o.slot];const t={slot:o.slot,x,y,type:o.type,lvl:o.lvl,cd:.3,ang:-Math.PI/2,spent:o.spent,fl:0,br:o.br||undefined,ref:o.ref||0,pity:o.pity||0};if(o.traitor)t.traitor=true;towers.push(t);slotT[o.slot]=t}
+ wave=r.wave;gold=r.gold;maxHp=r.maxHp;hp=r.hp;rerolls=r.rerolls;chests=r.chests||0;betrayed=!!r.betrayed;sabCount=r.sabCount||0;kills=r.kills||0;bossKills=r.bossKills||0;runBase=r.base||{w:0,k:0,b:0};
+ state='prep';prepT=20;lastSaveState='prep';closePop();notice(`이어하기 · ${CH+1}장 ${NN[NIGHT]} · 파도 ${wave+1}부터`,'gold',2.6)}
+function saveTick(){if(state==='prep'&&lastSaveState!=='prep')snapRun();lastSaveState=state}
+/* save code: LH1. + base64(deflate(json)) or LH0. + base64(json) */
+const b64=u8=>{let s='';for(let i=0;i<u8.length;i+=0x8000)s+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000));return btoa(s)};
+const unb64=t=>{const s=atob(t);const u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u};
+async function zip(u8,mode){const cs=new (mode?CompressionStream:DecompressionStream)('deflate-raw');const w=cs.writable.getWriter();w.write(u8);w.close();return new Uint8Array(await new Response(cs.readable).arrayBuffer())}
+async function makeCode(){const data={g:'lighthouse',ver:GAME_VER,m:meta,r:readRun()};const u8=new TextEncoder().encode(JSON.stringify(data));
+ if(window.CompressionStream){try{return'LH1.'+b64(await zip(u8,true))}catch(e){}}return'LH0.'+b64(u8)}
+async function readCode(txt){const t=(txt||'').replace(/\s+/g,'');const m=/^LH([01])\.([A-Za-z0-9+/=]+)$/.exec(t);if(!m)throw new Error('형식');let u8=unb64(m[2]);if(m[1]==='1'){if(!window.DecompressionStream)throw new Error('이 브라우저는 압축 코드를 못 읽는다');u8=await zip(u8,false)}
+ const d=JSON.parse(new TextDecoder().decode(u8));if(!d||d.g!=='lighthouse'||!d.m||typeof d.m!=='object')throw new Error('내용');return d}
+let sArm=false,sArmT=null;
+function openSave(){$('#sCode').value='';$('#sCopy').disabled=true;$('#sMsg').textContent='';$('#sMsg').className='smsg';sArm=false;$('#sLoad').textContent='코드로 불러오기';showOnly('saveOv')}
+$('#bSave').addEventListener('click',openSave);
+$('#sClose').addEventListener('click',()=>{refreshTitle();showOnly('title')});
+$('#sMake').addEventListener('click',async()=>{try{const c=await makeCode();$('#sCode').value=c;$('#sCopy').disabled=false;$('#sMsg').className='smsg';$('#sMsg').textContent=`저장 코드를 만들었다 (${c.length.toLocaleString()}자) · 「복사」를 눌러 옮기자`}catch(e){$('#sMsg').className='smsg err';$('#sMsg').textContent='코드를 만들지 못했다'}});
+$('#sCopy').addEventListener('click',async()=>{const ta=$('#sCode');try{await navigator.clipboard.writeText(ta.value);$('#sMsg').textContent='복사했다 · 메모나 메신저에 붙여 넣어 보내자'}catch(e){ta.focus();ta.select();$('#sMsg').textContent='자동 복사가 막혔다 · 칸을 길게 눌러 전체 선택 → 복사'}});
+$('#sLoad').addEventListener('click',async()=>{const msg=$('#sMsg');let d;try{d=await readCode($('#sCode').value)}catch(e){msg.className='smsg err';msg.textContent='저장 코드가 올바르지 않다 · 처음부터 끝까지 빠짐없이 붙여 넣었는지 확인하자';return}
+ if(!sArm){sArm=true;$('#sLoad').textContent='한 번 더 누르면 이 기기의 기록을 덮어쓴다';msg.className='smsg';msg.textContent=`불러올 기록 · 지켜낸 장 ${d.m.cleared?d.m.cleared.length:0}개 · 결정 ${d.m.shards||0}${d.r?` · 이어하기 ${d.r.ch+1}장 ${NN[d.r.night]} 파도 ${d.r.wave+1}`:''}`;clearTimeout(sArmT);sArmT=setTimeout(()=>{sArm=false;$('#sLoad').textContent='코드로 불러오기'},8000);return}
+ sArm=false;$('#sLoad').textContent='코드로 불러오기';const keepMute=meta.muted;for(const k of Object.keys(meta))delete meta[k];Object.assign(meta,JSON.parse(JSON.stringify(DEFAULT_META)),d.m);meta.muted=keepMute;meta.up=Object.assign({gold:0,hp:0,dmg:0,reroll:0,flash:0,hero:0},meta.up||{});if(!meta.seen.includes('tut'))meta.seen.push('tut');save();
+ try{if(d.r)localStorage.setItem(RUNKEY,JSON.stringify(d.r));else localStorage.removeItem(RUNKEY)}catch(e){}
+ refreshTitle();msg.className='smsg';msg.textContent='불러왔다 · 첫 화면에서 「이어하기」나 「불 밝히기」로 계속하자'});
+$('#bCont').addEventListener('click',resumeRun);
+/* difficulty from the pause menu, only between waves */
+function syncPDiff(){const can=state==='prep';document.querySelectorAll('#pDiff [data-d]').forEach(b=>{b.classList.toggle('on',+b.dataset.d===(meta.diff||0));b.disabled=!can&&+b.dataset.d!==(meta.diff||0)});$('#pDiffNote').textContent=(can?'':'지금은 파도 중 · 파도가 끝나면 바꿀 수 있다 · ')+DF().d;
+ const r=readRun();$('#pSave').textContent=TUT?'연습 밤은 저장되지 않는다':r?`자동 저장됨 · ${r.ch+1}장 ${NN[r.night]} · 파도 ${r.wave+1} 시작 직전`:'파도가 시작되기 직전마다 자동 저장된다'}
+$('#pDiff').addEventListener('click',ev=>{const b=ev.target.closest('[data-d]');if(!b||b.disabled||state!=='prep')return;meta.diff=+b.dataset.d;save();syncPDiff();sfx('card');notice(`난이도 · ${DF().n} · 다음 파도부터`,'gold',2)});
+/* update notice */
+const UPD=['<b>자동 저장</b> · 파도가 시작되기 직전마다 저장된다. 게임을 닫았다가 다시 열면 첫 화면 <b>「이어하기」</b>로 그 자리에서 계속한다. (파도 도중에 닫으면 그 파도의 처음부터)',
+ '<b>다른 기기로 옮기기</b> · 첫 화면 <b>「저장 코드 · 다른 기기로 옮기기」</b> → 「저장 코드 만들기」 → 「복사」 → 메모나 카톡으로 보낸다. 새 기기에서 같은 화면에 붙여 넣고 「코드로 불러오기」를 두 번 누른다.',
+ '<b>난이도 바꾸기</b> · 파도 사이(준비 시간)에 일시정지(Ⅱ)를 누르면 보통 · 어려움 · 악몽을 바꿀 수 있다. 다음 파도부터 적용된다.',
+ '지금까지의 장 · 유품 · 결정 기록은 그대로 남아 있다.'];
+function checkUpdate(){if((meta.verSeen||0)>=GAME_VER)return false;$('#updEy').textContent=`업데이트 · v${GAME_VER}`;$('#updList').innerHTML=UPD.map(t=>`<li>${t}</li>`).join('');showOnly('updOv');return true}
+$('#updOk').addEventListener('click',()=>{meta.verSeen=GAME_VER;save();refreshTitle();showOnly('title')});
+
 /* ---------- refining ---------- */
 const refChance=t=>Math.min(.95,Math.max(.06,.9*Math.pow(.84,t.ref||0))+(t.pity||0));
 const refCost=t=>Math.round(TT[t.type].cost*(2.6+(t.ref||0)*.9)*Math.pow(1.22,t.ref||0));
@@ -2111,7 +2191,7 @@ function resize(){
  drawBG();if(!pop.hidden)closePop();
 }
 window.addEventListener('resize',resize);
-resize();refreshTitle();setMute();
+resize();refreshTitle();setMute();checkUpdate();
 let last=performance.now();
 function loop(now){const raw=Math.min(.05,(now-last)/1000);last=now;
  const sp=(state==='wave'||state==='prep')?speed:1;const steps=sp;for(let i=0;i<steps;i++)update(raw);
