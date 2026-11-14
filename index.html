@@ -1,9 +1,12 @@
+<!DOCTYPE html>
+<html lang="ko"><head>
 <meta charset="utf-8">
 <title>마지막 등대</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+</head><body>
 <style>
 html,body{touch-action:manipulation;-webkit-text-size-adjust:100%;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 button,canvas,#game{touch-action:manipulation}
@@ -381,7 +384,8 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--f-ui);ov
         <div class="stat" id="oStat"></div>
         <p class="gain">빛의 결정 <span class="shard" id="oShard">+0</span> 획득</p>
         <div class="btns">
-          <button class="btn pri" id="bAgain">다시 불 밝히기</button>
+          <button class="btn pri" id="bCkpt" hidden>체크포인트에서 다시 <small id="oCkpt"></small></button>
+          <button class="btn" id="bAgain">다시 불 밝히기</button>
           <button class="btn" id="bShop2">등대 작업실</button>
           <button class="btn ghost" id="bHome">처음으로</button>
         </div>
@@ -717,7 +721,7 @@ const CARDS=[
  {id:'reso',r:2,g:'bolt',n:'공명',d:'젖은 적이 받는 번개 피해 3배 → 5배',once:1,a:()=>{mods.wetMult=5}},
  {id:'boom',r:2,g:'fire',n:'정화의 불꽃',d:'불타는 적이 쓰러지면 주변에 작은 폭발',once:1,a:()=>{mods.burnBoom=true}},
  {id:'allp',r:2,g:'all',n:'모두의 등불',d:'모든 피해 +25%',a:()=>{mods.dmgAll*=1.25}},
- {id:'tsun',r:2,g:'tide',n:'해일',d:'밀물이 적을 0.6초 붙잡는다',once:1,a:()=>{mods.tideStun=.6}},
+ {id:'tsun',r:2,g:'tide',n:'해일',d:'밀물 피해 +60%, 젖음 +1초',once:1,a:()=>{mods.tide*=1.6;mods.wetDur+=1}},
 ];
 /* each case: answer a, and ev = accepted sets of two decisive clue indices */
 const CASES=[
@@ -753,12 +757,14 @@ const GUIDE=[
  {t:'갈래와 유품',h:gi('#ffc46b','갈','각성 갈래','무리가 4단계로 각성할 때 두 갈래 중 하나를 고른다. 고르는 동안 게임은 멈춘다. 한 번 고르면 바꿀 수 없다.')+gi('#9fd4ff','상','무리의 상성','밀물 + 번개 = 젖은 적에게 번개 3배. 작살 + 화염 = 불붙은 적에게 작살 +40%. 덩치(갑옷)는 작살과 화상으로, 떼와 울보는 화염으로, 부르는 자는 작살이나 밀물로.')+gi('#ffd88a','◎','유품 쓰기','온전해진 유품은 「갯바닥」에서 들고 갈 수 있다. 게임 화면 오른쪽 위 유품 버튼을 누르면 그 사람의 유품이 힘을 낸다. 칠성의 호루라기를 불면 개 복실이가 달려 나오고, 해랑의 종이 연은 길을 따라 날아간다. 유품을 5개 온전히 하면 두 개를 들고 갈 수 있다.')+gi('#8fe6ff','유','유품 줍기','빛나는 「유품을 품은 그림자」를 정화하면 유품 표식을 얻는다. 첫 화면 「갯바닥」에서 표식이나 빛의 결정으로 줍는다. 대부분 조약돌이지만 조각을 모두 모으면 바다에 잠든 이의 유품이 온전해져 영구히 돕는다. 열 번 연속 조약돌이면 다음엔 반드시 조각이 나온다.')}
 ];
 const META=[
- {k:'gold',n:'비상 등유',d:'시작 등유 +30',max:5,cost:l=>15+l*15},
- {k:'hp',n:'두꺼운 등대벽',d:'등불 최대치 +4',max:5,cost:l=>20+l*20},
- {k:'dmg',n:'스승의 가르침',d:'모든 피해 +6%',max:8,cost:l=>25+l*25},
- {k:'reroll',n:'행운의 조개',d:'판마다 다시 뽑기 +1',max:3,cost:l=>30+l*30},
- {k:'flash',n:'큰 렌즈',d:'섬광 피해 +25%',max:5,cost:l=>20+l*20},
- {k:'hero',n:'거울 닦기',d:'거울 빛 범위 +8%, 지속 +0.6초',max:5,cost:l=>20+l*20},
+ {k:'dmg',n:'스승의 가르침',d:'모든 피해 +10%',max:15,cost:l=>20+l*16},
+ {k:'rate',n:'손에 익은 일',d:'모든 무리 공격 속도 +5%',max:10,cost:l=>20+l*16},
+ {k:'range',n:'높은 망루',d:'모든 무리 사거리 +3%',max:8,cost:l=>20+l*14},
+ {k:'gold',n:'비상 등유',d:'시작 등유 +40',max:10,cost:l=>15+l*12},
+ {k:'hp',n:'두꺼운 등대벽',d:'등불 최대치 +5',max:8,cost:l=>20+l*16},
+ {k:'reroll',n:'행운의 조개',d:'판마다 다시 뽑기 +1',max:5,cost:l=>25+l*20},
+ {k:'flash',n:'큰 렌즈',d:'섬광 피해 +25%',max:8,cost:l=>18+l*14},
+ {k:'hero',n:'거울 닦기',d:'거울 빛 범위 +8%, 지속 +0.6초',max:8,cost:l=>18+l*14},
 ];
 
 /* ---------- save ---------- */
@@ -767,7 +773,7 @@ function load(){try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch(e
 function save(){try{localStorage.setItem(KEY,JSON.stringify(meta))}catch(e){}}
 const DEFAULT_META={shards:0,best:0,runs:0,lore:[],muted:false,seen:[],clues:[],solved:[],cleared:[],bestCh:{},nights:{},equip:[],rstar:{},rdup:{},diff:0,carry:{},relic:{},tickets:0,pityR:0,weapons:[],hint:{},obs:{},memo:[],jr:[],lan:[]};
 const meta=Object.assign(JSON.parse(JSON.stringify(DEFAULT_META)),load()||{});
-meta.up=Object.assign({gold:0,hp:0,dmg:0,reroll:0,flash:0,hero:0},meta.up||{});
+meta.up=Object.assign({gold:0,hp:0,dmg:0,reroll:0,flash:0,hero:0,rate:0,range:0},meta.up||{});
 
 /* ---------- audio ---------- */
 let AC=null,master=null,NOISE=null,sfxBus=null,musBus=null,revIn=null,amb=null;const lastS={};
@@ -832,14 +838,14 @@ const fogs=Array.from({length:18},(_,i)=>({x:rnd(-60,W+60),y:i<7?rnd(-30,90):rnd
 
 let runLocked=new Set();
 function applySolved(m,ci){if(ci===0)m.gold*=1.1;else if(ci===1)m.beam*=1.25;else if(ci===2)m.aspd*=1.08;else if(ci===3)m.flashCd*=.85;else if(ci===4)m.dmgAll*=1.1}
-function freshMods(){const m={harpoon:1,fire:1,tide:1,bolt:1,lens:1,bell:1,lantern:1,anchor:1,mirror:1,range:1,aspd:1,splash:1,chain:0,slow:0,wetDur:0,burnMul:1,burnDur:0,beam:1,twin:false,flashCd:1,gold:1,interest:0,wetMult:3,crit:0,burnBoom:false,tideStun:0,dmgAll:1+meta.up.dmg*.06};meta.solved.forEach(ci=>applySolved(m,ci));applyRelics(m);return m}
+function freshMods(){const m={harpoon:1,fire:1,tide:1,bolt:1,lens:1,bell:1,lantern:1,anchor:1,mirror:1,range:1+(meta.up.range||0)*.03,aspd:1+(meta.up.rate||0)*.05,splash:1,chain:0,slow:0,wetDur:0,burnMul:1,burnDur:0,beam:1,twin:false,flashCd:1,gold:1,interest:0,wetMult:3,crit:0,burnBoom:false,tideStun:0,dmgAll:1+meta.up.dmg*.1};meta.solved.forEach(ci=>applySolved(m,ci));applyRelics(m);return m}
 function resetWorld(){towers=[];slotT=new Array(SLOTS.length).fill(null);enemies=[];projs=[];fx=[];parts=[];nums=[];spirits=[];queue=[];}
 resetWorld();
 let mergeFrom=-1;
 function newRun(ch=CH,excl=null,kept=false,watch=null){
  setMap(ch);nightWon=false;drawBG();resetWorld();mods=freshMods();mergeFrom=-1;betrayed=false;
  runExcl=excl;haramKept=kept;runWatch=watch;zone=null;mirrorArm=false;mirrorCd=0;$('#mirror').classList.remove('arm');buildAlts();temptT=26;ember=null;lanternPos=null;if(kept)mods.harpoon*=1.5;heroes=makeHeroes();selHero=0;dimT=0;sabCount=0;quietShown=false;$('#bossbar').hidden=true;
- gold=120+CH*60+NIGHT*60+meta.up.gold*30+(mods.startGold||0);maxHp=20+meta.up.hp*4+(mods.hpBonus||0);hp=maxHp;wave=0;spawnT=0;prepT=18;flashCd=0;flashT=0;shake=0;combo=0;comboT=0;bossKills=0;kills=0;
+ gold=120+CH*60+NIGHT*60+meta.up.gold*40+(mods.startGold||0);maxHp=20+meta.up.hp*5+(mods.hpBonus||0);hp=maxHp;wave=0;spawnT=0;prepT=18;flashCd=0;flashT=0;shake=0;combo=0;comboT=0;bossKills=0;kills=0;
  aiming=false;beamA=-Math.PI/2;runLocked=new Set();rerolls=1+meta.up.reroll;taken=new Set();runPicks=[];carryOn=false;runBase={w:0,k:0,b:0};lastSaveState='';chests=0;won=false;runSeen=new Set();bossRef=null;built=new Set();
  state='prep';paused=false;speed=1;$('#bSpeed').textContent='1×';
  showOnly(null);$('#hud').hidden=false;$('#bar').hidden=false;$('#purse').hidden=false;$('#purse2').hidden=false;ntQ=[];$('#notice').hidden=true;runMem=0;$('#hint').hidden=meta.runs>0;
@@ -1039,7 +1045,7 @@ function update(dt){
   if(t.type==='harpoon'){const cr=Math.random()<mods.crit;projs.push({k:'harp',x:t.x,y:t.y,e:tg,tx:tg.x,ty:tg.y,dmg:st.dmg*(cr?3:1),cr});sfx('harp')}
   else if(t.type==='fire'){projs.push({k:'fire',x0:t.x,y0:t.y-8,x:t.x,y:t.y,tx:tg.x+tg.dx*ET[tg.t].spd*.3,ty:tg.y+tg.dy*ET[tg.t].spd*.3,t:0,dur:.45,dmg:st.dmg,sp:st.splash,burn:st.burn});sfx('fire')}
   else if(t.type==='tide'){fx.push({k:'ring',x:t.x,y:t.y,r0:8,r1:st.range,life:.55,max:.55,c:SP.blue,col:'120,210,255'});sfx('tide');
-   let nS=0;const inR=enemies.filter(e=>e.alive&&(e.x-t.x)**2+(e.y-t.y)**2<=st.range*st.range).sort((a,b)=>b.prog-a.prog);for(const e of inR){if(nS++<4){const sa=ET[e.t].boss?st.slow*.5:st.slow;const had=e.slow>0;e.slowAmt=had?Math.max(e.slowAmt,sa):sa;e.slow=Math.max(e.slow,.6)}e.wet=2.6+mods.wetDur;if(mods.tideStun)e.stun=Math.max(e.stun,mods.tideStun);damage(e,st.dmg,'tide')}}
+   let nS=0;const inR=enemies.filter(e=>e.alive&&(e.x-t.x)**2+(e.y-t.y)**2<=st.range*st.range).sort((a,b)=>b.prog-a.prog);for(const e of inR){if(nS++<4){const sa=ET[e.t].boss?st.slow*.5:st.slow;const had=e.slow>0;e.slowAmt=had?Math.max(e.slowAmt,sa):sa;e.slow=Math.max(e.slow,.6)}e.wet=2.6+mods.wetDur;damage(e,st.dmg,'tide')}}
   else if(t.type==='bolt'){let cur=tg;const hit=[];const pts=[[t.x,t.y-14]];
    for(let i=0;i<st.chain&&cur;i++){hit.push(cur);pts.push([cur.x,cur.y]);let m=st.dmg*Math.pow(.85,i);let tag=false;
     if(cur.wet>0){m*=mods.wetMult;tag='w';discover('wetbolt',`젖음 + 번개 = ${mods.wetMult}배 피해!`)}
@@ -1442,13 +1448,13 @@ $('#bSpeed').addEventListener('click',()=>{speed=speed===1?2:speed===2?3:1;$('#b
 $('#bPause').addEventListener('click',()=>{if(state!=='wave'&&state!=='prep')return;paused=true;closePop();showOnly('pause')});
 $('#bPause').addEventListener('click',()=>setTimeout(syncPDiff,0));
 $('#bResume').addEventListener('click',()=>{paused=false;showOnly(null)});
-$('#bQuit').addEventListener('click',()=>{paused=false;gameOver(true);const r=readRun();if(r)setTimeout(()=>toast(`자동 저장이 남아 있다 · 첫 화면 「이어하기」로 ${r.ch+1}장 ${NN[r.night]} 파도 ${r.wave+1}부터 계속할 수 있다`,'gold',6),300)});
+$('#bQuit').addEventListener('click',()=>{paused=false;gameOver(true);$('#bCkpt').hidden=true;const r=readRun();if(r)setTimeout(()=>toast(`자동 저장이 남아 있다 · 첫 화면 「이어하기」로 ${r.ch+1}장 ${NN[r.night]} 파도 ${r.wave+1}부터 계속할 수 있다`,'gold',6),300)});
 function setMute(){$('#bSound').classList.toggle('off',meta.muted);$('#sw').style.opacity=meta.muted?.15:1;if(master)master.gain.value=meta.muted?0:.6}
 $('#bSound').addEventListener('click',()=>{meta.muted=!meta.muted;save();initAudio();setMute()});
 /* end of run */
 function creditRun(){const cleared=Math.max(0,wave-(state==='wave'?1:0));const sh=Math.max(0,cleared-runBase.w)*2+Math.max(0,bossKills-runBase.b)*10+Math.floor(Math.max(0,kills-runBase.k)/25);{const r=readRun();if(r){r.base={w:Math.max(cleared,r.wave),k:kills,b:bossKills};try{localStorage.setItem(RUNKEY,JSON.stringify(r))}catch(e){}}}runBase={w:cleared,k:kills,b:bossKills};const prev=meta.bestCh[CH]||0;meta.shards+=sh;meta.runs++;if(cleared<=NLEN()&&NOFF[NIGHT]+cleared>prev)meta.bestCh[CH]=NOFF[NIGHT]+cleared;save();return{cleared,sh,prev}}
 function gameOver(quit){if(TUT&&!quit){hp=maxHp;notice('연습에서는 등불이 꺼지지 않는다','gold',2);return}if(chests>0&&!quit&&state!=='over'&&state!=='cards'){openChest(()=>gameOver(quit));return}
- if(state==='over')return;if(!quit)clearRun();const{cleared,sh,prev:prevBest}=creditRun();
+ if(state==='over')return;const ck=quit?null:rollbackToCkpt();const{cleared,sh,prev:prevBest}=creditRun();{const b=$('#bCkpt');b.hidden=!ck;if(ck)$('#oCkpt').textContent=`${ck.ch+1}장 ${NN[ck.night]} · 파도 ${ck.wave+1}부터`}
  state='over';closePop();mergeFrom=-1;$('#bossbar').hidden=true;$('#next').hidden=true;
  $('#oTitle').textContent=quit?'등대를 떠났다':won?'끝없는 밤이 저물었다':'등불이 꺼졌다';
  $('#oEy').textContent=`${CH+1}장 ${MAPS[CH].name} · ${meta.runs}번째 밤`;
@@ -2047,13 +2053,15 @@ var tutDone=false;
 $('#coSkip').addEventListener('click',()=>{if(!meta.seen.includes('tut')){meta.seen.push('tut');meta.seen.push('guide');save()}toTitle();openChapters();toast('연습 밤을 건너뛰었다 · 첫 화면 「연습 밤 다시 하기」로 언제든 다시 할 수 있다','gold')});
 
 /* ---------- run save (auto before each wave) · save code · update notice ---------- */
-const RUNKEY='last-lighthouse-run1',GAME_VER=41;
+const RUNKEY='last-lighthouse-run1',CKKEY='last-lighthouse-ckpt1',CKW=[0,4,8,12,16],GAME_VER=42;
 let resuming=false,runBase={w:0,k:0,b:0},lastSaveState='';
 function readRun(){try{const r=JSON.parse(localStorage.getItem(RUNKEY)||'null');return r&&r.v===1?r:null}catch(e){return null}}
-function clearRun(){try{localStorage.removeItem(RUNKEY)}catch(e){}refreshCont()}
+function readCkpt(){try{const r=JSON.parse(localStorage.getItem(CKKEY)||'null');return r&&r.v===1?r:null}catch(e){return null}}
+function clearRun(){try{localStorage.removeItem(RUNKEY);localStorage.removeItem(CKKEY)}catch(e){}refreshCont()}
+function rollbackToCkpt(){const c=readCkpt();if(!c){clearRun();return null}try{localStorage.setItem(RUNKEY,JSON.stringify(c))}catch(e){}refreshCont();return c}
 function snapRun(){if(TUT||state!=='prep'||won)return;const r={v:1,at:Date.now(),ch:CH,night:NIGHT,wave,gold:Math.round(gold),hp,maxHp,rerolls,chests,carryOn,runExcl,runWatch,haramKept,betrayed,sabCount,kills,bossKills,picks:runPicks.slice(),base:runBase,
   towers:towers.map(t=>({slot:t.slot,type:t.type,lvl:t.lvl,br:t.br||null,ref:t.ref||0,pity:t.pity||0,spent:t.spent,traitor:!!t.traitor}))};
- try{localStorage.setItem(RUNKEY,JSON.stringify(r))}catch(e){}}
+ try{localStorage.setItem(RUNKEY,JSON.stringify(r));if(CKW.includes(wave))localStorage.setItem(CKKEY,JSON.stringify(r))}catch(e){}}
 function refreshCont(){const r=readRun(),b=$('#bCont');if(!b)return;b.hidden=!r;if(r)$('#tCont').textContent=`${r.ch+1}장 ${NN[r.night]} · 파도 ${r.wave+1}부터`}
 function resumeRun(){const r=readRun();if(!r){refreshCont();return}initAudio();resuming=true;NIGHT=r.night;try{newRun(r.ch,r.runExcl,r.haramKept,r.runWatch)}finally{resuming=false}
  carryOn=!!r.carryOn;for(const id of r.picks){const c=CARDS.find(x=>x.id===id);if(!c||id==='oil'||id==='mend')continue;c.a();taken.add(id)}runPicks=r.picks.slice();
@@ -2065,7 +2073,7 @@ function saveTick(){if(state==='prep'&&lastSaveState!=='prep')snapRun();lastSave
 const b64=u8=>{let s='';for(let i=0;i<u8.length;i+=0x8000)s+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000));return btoa(s)};
 const unb64=t=>{const s=atob(t);const u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u};
 async function zip(u8,mode){const cs=new (mode?CompressionStream:DecompressionStream)('deflate-raw');const w=cs.writable.getWriter();w.write(u8);w.close();return new Uint8Array(await new Response(cs.readable).arrayBuffer())}
-async function makeCode(){const data={g:'lighthouse',ver:GAME_VER,m:meta,r:readRun()};const u8=new TextEncoder().encode(JSON.stringify(data));
+async function makeCode(){const data={g:'lighthouse',ver:GAME_VER,m:meta,r:readRun(),c:readCkpt()};const u8=new TextEncoder().encode(JSON.stringify(data));
  if(window.CompressionStream){try{return'LH1.'+b64(await zip(u8,true))}catch(e){}}return'LH0.'+b64(u8)}
 async function readCode(txt){const t=(txt||'').replace(/\s+/g,'');const m=/^LH([01])\.([A-Za-z0-9+/=]+)$/.exec(t);if(!m)throw new Error('형식');let u8=unb64(m[2]);if(m[1]==='1'){if(!window.DecompressionStream)throw new Error('이 브라우저는 압축 코드를 못 읽는다');u8=await zip(u8,false)}
  const d=JSON.parse(new TextDecoder().decode(u8));if(!d||d.g!=='lighthouse'||!d.m||typeof d.m!=='object')throw new Error('내용');return d}
@@ -2077,16 +2085,20 @@ $('#sMake').addEventListener('click',async()=>{try{const c=await makeCode();$('#
 $('#sCopy').addEventListener('click',async()=>{const ta=$('#sCode');try{await navigator.clipboard.writeText(ta.value);$('#sMsg').textContent='복사했다 · 메모나 메신저에 붙여 넣어 보내자'}catch(e){ta.focus();ta.select();$('#sMsg').textContent='자동 복사가 막혔다 · 칸을 길게 눌러 전체 선택 → 복사'}});
 $('#sLoad').addEventListener('click',async()=>{const msg=$('#sMsg');let d;try{d=await readCode($('#sCode').value)}catch(e){msg.className='smsg err';msg.textContent='저장 코드가 올바르지 않다 · 처음부터 끝까지 빠짐없이 붙여 넣었는지 확인하자';return}
  if(!sArm){sArm=true;$('#sLoad').textContent='한 번 더 누르면 이 기기의 기록을 덮어쓴다';msg.className='smsg';msg.textContent=`불러올 기록 · 지켜낸 장 ${d.m.cleared?d.m.cleared.length:0}개 · 결정 ${d.m.shards||0}${d.r?` · 이어하기 ${d.r.ch+1}장 ${NN[d.r.night]} 파도 ${d.r.wave+1}`:''}`;clearTimeout(sArmT);sArmT=setTimeout(()=>{sArm=false;$('#sLoad').textContent='코드로 불러오기'},8000);return}
- sArm=false;$('#sLoad').textContent='코드로 불러오기';const keepMute=meta.muted;for(const k of Object.keys(meta))delete meta[k];Object.assign(meta,JSON.parse(JSON.stringify(DEFAULT_META)),d.m);meta.muted=keepMute;meta.up=Object.assign({gold:0,hp:0,dmg:0,reroll:0,flash:0,hero:0},meta.up||{});if(!meta.seen.includes('tut'))meta.seen.push('tut');save();
- try{if(d.r)localStorage.setItem(RUNKEY,JSON.stringify(d.r));else localStorage.removeItem(RUNKEY)}catch(e){}
+ sArm=false;$('#sLoad').textContent='코드로 불러오기';const keepMute=meta.muted;for(const k of Object.keys(meta))delete meta[k];Object.assign(meta,JSON.parse(JSON.stringify(DEFAULT_META)),d.m);meta.muted=keepMute;meta.up=Object.assign({gold:0,hp:0,dmg:0,reroll:0,flash:0,hero:0,rate:0,range:0},meta.up||{});if(!meta.seen.includes('tut'))meta.seen.push('tut');save();
+ try{if(d.r)localStorage.setItem(RUNKEY,JSON.stringify(d.r));else localStorage.removeItem(RUNKEY);if(d.c)localStorage.setItem(CKKEY,JSON.stringify(d.c));else localStorage.removeItem(CKKEY)}catch(e){}
  refreshTitle();msg.className='smsg';msg.textContent='불러왔다 · 첫 화면에서 「이어하기」나 「불 밝히기」로 계속하자'});
 $('#bCont').addEventListener('click',resumeRun);
+$('#bCkpt').addEventListener('click',()=>{$('#bCkpt').hidden=true;showOnly(null);resumeRun()});
 /* difficulty from the pause menu, only between waves */
 function syncPDiff(){const can=state==='prep';document.querySelectorAll('#pDiff [data-d]').forEach(b=>{b.classList.toggle('on',+b.dataset.d===(meta.diff||0));b.disabled=!can&&+b.dataset.d!==(meta.diff||0)});$('#pDiffNote').textContent=(can?'':'지금은 파도 중 · 파도가 끝나면 바꿀 수 있다 · ')+DF().d;
  const r=readRun();$('#pSave').textContent=TUT?'연습 밤은 저장되지 않는다':r?`자동 저장됨 · ${r.ch+1}장 ${NN[r.night]} · 파도 ${r.wave+1} 시작 직전`:'파도가 시작되기 직전마다 자동 저장된다'}
 $('#pDiff').addEventListener('click',ev=>{const b=ev.target.closest('[data-d]');if(!b||b.disabled||state!=='prep')return;meta.diff=+b.dataset.d;save();syncPDiff();sfx('card');notice(`난이도 · ${DF().n} · 다음 파도부터`,'gold',2)});
 /* update notice */
-const UPD=['<b>자동 저장</b> · 파도가 시작되기 직전마다 저장된다. 게임을 닫았다가 다시 열면 첫 화면 <b>「이어하기」</b>로 그 자리에서 계속한다. (파도 도중에 닫으면 그 파도의 처음부터)',
+const UPD=['<b>체크포인트</b> · 파도 1 · 5 · 9 · 13 · 17이 시작되기 직전이 체크포인트로 남는다. 등불이 꺼지면 「체크포인트에서 다시」로 가장 가까운 체크포인트부터 다시 한다. 첫 화면 「이어하기」도 그 지점부터다.',
+ '<b>등대 작업실 강화</b> · 피해 +10%(최대 15단계), 공격 속도 · 사거리 강화가 새로 생겼고, 등유 · 등불 강화도 더 오래 키울 수 있다. 막히면 결정을 모아 작업실에서 키우고 다시 도전하자.',
+ '<b>해일</b> 선물은 이제 적을 붙잡지 않고, 밀물 피해 +60%와 젖음 +1초를 준다.',
+ '<b>자동 저장</b> · 파도가 시작되기 직전마다 저장된다. 게임을 닫았다가 다시 열면 첫 화면 <b>「이어하기」</b>로 그 자리에서 계속한다. (파도 도중에 닫으면 그 파도의 처음부터)',
  '<b>다른 기기로 옮기기</b> · 첫 화면 <b>「저장 코드 · 다른 기기로 옮기기」</b> → 「저장 코드 만들기」 → 「복사」 → 메모나 카톡으로 보낸다. 새 기기에서 같은 화면에 붙여 넣고 「코드로 불러오기」를 두 번 누른다.',
  '<b>난이도 바꾸기</b> · 파도 사이(준비 시간)에 일시정지(Ⅱ)를 누르면 보통 · 어려움 · 악몽을 바꿀 수 있다. 다음 파도부터 적용된다.',
  '지금까지의 장 · 유품 · 결정 기록은 그대로 남아 있다.'];
@@ -2199,3 +2211,5 @@ function loop(now){const raw=Math.min(.05,(now-last)/1000);last=now;
 requestAnimationFrame(loop);
 })();
 </script>
+
+</body></html>
