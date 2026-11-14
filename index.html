@@ -315,6 +315,12 @@ body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--f-ui);ov
 #trial .bpc.acc{border-color:rgba(255,120,140,.55);box-shadow:0 0 1em rgba(255,90,110,.18)}
 #trial .bpc.acc b small{color:#ff9aa8}
 #trQ{max-width:22em}
+.fitov{gap:.5em;padding-top:3.1em;padding-bottom:.9em}
+#caseOv .choices,#trial .choices{grid-template-columns:1fr 1fr;gap:.35em}
+#caseOv .choices button,#trial .choices button{padding:.5em .6em;font-size:.88em;line-height:1.3;text-align:center}
+#caseOv p,#trial p{margin:0;line-height:1.45}
+#cvClues>*,#trList>*{padding-top:.4em!important;padding-bottom:.4em!important}
+#guide .gi{padding:.42em .6em;gap:.55em;line-height:1.38}#guide .gpage{gap:.35em}#guide .gi p,#guide .gi span{line-height:1.38}
 .choices button.on{background:rgba(255,196,107,.28);border-color:var(--lamp);color:#fff4dc!important}
 #cvSubmit:disabled{opacity:.45;box-shadow:none}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
@@ -1356,7 +1362,10 @@ function render(){
 
 /* ---------- UI ---------- */
 const OVS=['saveOv','updOv','icard','chest','branch','relic','title','cards','over','win','shop','guide','book','caseOv','pause','chap','bp','epi','trial','tale'];
-function showOnly(id){OVS.forEach(o=>$('#'+o).hidden=o!==id);$('#toast').classList.toggle('low',!!id);$('#back').hidden=!['guide','book','caseOv','shop','pause','chap','bp','epi','trial','tale','relic','branch','saveOv'].includes(id)}
+const FIT=['caseOv','trial','guide','updOv','saveOv','cards','win','over','branch','chest','icard','shop'];
+function fitOv(){for(const id of FIT){const o=$('#'+id);if(!o||o.hidden)continue;o.classList.add('fitov');o.style.fontSize='';let f=1;while(o.scrollHeight>o.clientHeight+1&&f>.72){f-=.02;o.style.fontSize=f+'em'}}}
+let fitQ=0;function fitSoon(){if(fitQ)return;fitQ=requestAnimationFrame(()=>{fitQ=0;fitOv()})}
+function showOnly(id){fitSoon();OVS.forEach(o=>$('#'+o).hidden=o!==id);$('#toast').classList.toggle('low',!!id);$('#back').hidden=!['guide','book','caseOv','shop','pause','chap','bp','epi','trial','tale','relic','branch','saveOv'].includes(id)}
 let bTimer,sTimer;
 function banner(main,sub,boss){if(!$('#hud').hidden){notice(boss?'⚠ '+main:main,boss?'bn boss':'bn',boss?2.4:1.6);return}const b=$('#banner');b.querySelector('b').textContent=main;b.querySelector('span').textContent=sub||'';b.className=boss?'on boss':'on';clearTimeout(bTimer);bTimer=setTimeout(()=>b.className=boss?'boss':'',1800)}
 let runMem=0;function showStory(txt){if(!$('#hud').hidden){runMem++;return}toast(txt,'who',Math.min(8,Math.max(5,2+txt.length*.09)))}
@@ -1566,16 +1575,18 @@ $('#bLore').addEventListener('click',()=>openBook(false));
 $('#bBook').addEventListener('click',()=>{if(state!=='wave'&&state!=='prep')return;paused=true;closePop();openBook(true)});
 /* guide */
 let gIdx=0,gStart=false;const gTrack=$('#gTrack');
-function openGuide(fromStart){gStart=fromStart;gIdx=0;
- gTrack.innerHTML=GUIDE.map((g,i)=>`<section class="gslide"><h2>${g.t}</h2>${g.h}${i===0?'<div class="gswipe">옆으로 밀어서 넘기기 ›</div>':''}</section>`).join('');
+let GSL=[];
+function buildGSL(){GSL=[];for(const g of GUIDE){const parts=g.h.split('<div class="gi"');const head=parts.shift();const items=parts.map(x=>'<div class="gi"'+x);if(items.length<=5){GSL.push(g);continue}const n=Math.ceil(items.length/5),per=Math.ceil(items.length/n);for(let k=0;k<n;k++)GSL.push({t:g.t+` (${k+1}/${n})`,h:(k===0?head:'')+items.slice(k*per,(k+1)*per).join('')})}}
+function openGuide(fromStart){gStart=fromStart;gIdx=0;buildGSL();
+ gTrack.innerHTML=GSL.map((g,i)=>`<section class="gslide"><h2>${g.t}</h2>${g.h}${i===0?'<div class="gswipe">옆으로 밀어서 넘기기 ›</div>':''}</section>`).join('');
  showOnly('guide');gTrack.style.scrollBehavior='auto';gTrack.scrollLeft=0;gTrack.style.scrollBehavior='';syncGuide()}
-function syncGuide(){$('#gEy').textContent=`등대지기 안내서 · ${gIdx+1}/${GUIDE.length}`;$('#gDots').innerHTML=GUIDE.map((_,i)=>`<i class="${i===gIdx?'on':''}"></i>`).join('');$('#gPrev').style.visibility=gIdx?'visible':'hidden';$('#gNext').textContent=gIdx<GUIDE.length-1?'다음':gStart?'불 밝히기':'닫기';$('#gSkip').textContent=gStart?'설명 건너뛰고 시작':'설명 닫기';$('#gSkip').hidden=gIdx===GUIDE.length-1}
-function goGuide(i){gIdx=clamp(i,0,GUIDE.length-1);gTrack.scrollTo({left:gIdx*gTrack.clientWidth,behavior:'smooth'});syncGuide()}
-gTrack.addEventListener('scroll',()=>{const i=Math.round(gTrack.scrollLeft/Math.max(1,gTrack.clientWidth));if(i!==gIdx){gIdx=clamp(i,0,GUIDE.length-1);syncGuide()}},{passive:true});
+function syncGuide(){$('#gEy').textContent=`등대지기 안내서 · ${gIdx+1}/${GSL.length}`;$('#gDots').innerHTML=GSL.map((_,i)=>`<i class="${i===gIdx?'on':''}"></i>`).join('');$('#gPrev').style.visibility=gIdx?'visible':'hidden';$('#gNext').textContent=gIdx<GSL.length-1?'다음':gStart?'불 밝히기':'닫기';$('#gSkip').textContent=gStart?'설명 건너뛰고 시작':'설명 닫기';$('#gSkip').hidden=gIdx===GSL.length-1}
+function goGuide(i){gIdx=clamp(i,0,GSL.length-1);gTrack.scrollTo({left:gIdx*gTrack.clientWidth,behavior:'smooth'});syncGuide()}
+gTrack.addEventListener('scroll',()=>{const i=Math.round(gTrack.scrollLeft/Math.max(1,gTrack.clientWidth));if(i!==gIdx){gIdx=clamp(i,0,GSL.length-1);syncGuide()}},{passive:true});
 function finishGuide(){if(!meta.seen.includes('guide')){meta.seen.push('guide');save()}if(gStart)openChapters();else showOnly('title')}
 $('#gPrev').addEventListener('click',()=>goGuide(gIdx-1));
 $('#gSkip').addEventListener('click',finishGuide);
-$('#gNext').addEventListener('click',()=>{if(gIdx<GUIDE.length-1)goGuide(gIdx+1);else finishGuide()});
+$('#gNext').addEventListener('click',()=>{if(gIdx<GSL.length-1)goGuide(gIdx+1);else finishGuide()});
 $('#bGuide').addEventListener('click',()=>openGuide(false));
 $('#bTut').addEventListener('click',()=>{initAudio();startTutorial()});
 let rsT=null;$('#bReset').addEventListener('click',()=>{const b=$('#bReset');if(!b.classList.contains('arm')){b.classList.add('arm');b.style.opacity=1;b.style.color='#ff9aa8';b.textContent='정말 지울까? 장·단서·유품·결정이 모두 사라진다 · 한 번 더 누르기';clearTimeout(rsT);rsT=setTimeout(()=>{b.classList.remove('arm');b.style.opacity=.7;b.style.color='';b.textContent='기록 처음부터'},5000);return}
@@ -2053,7 +2064,7 @@ var tutDone=false;
 $('#coSkip').addEventListener('click',()=>{if(!meta.seen.includes('tut')){meta.seen.push('tut');meta.seen.push('guide');save()}toTitle();openChapters();toast('연습 밤을 건너뛰었다 · 첫 화면 「연습 밤 다시 하기」로 언제든 다시 할 수 있다','gold')});
 
 /* ---------- run save (auto before each wave) · save code · update notice ---------- */
-const RUNKEY='last-lighthouse-run1',CKKEY='last-lighthouse-ckpt1',CKW=[0,4,8,12,16],GAME_VER=42;
+const RUNKEY='last-lighthouse-run1',CKKEY='last-lighthouse-ckpt1',CKW=[0,4,8,12,16],GAME_VER=43;
 let resuming=false,runBase={w:0,k:0,b:0},lastSaveState='';
 function readRun(){try{const r=JSON.parse(localStorage.getItem(RUNKEY)||'null');return r&&r.v===1?r:null}catch(e){return null}}
 function readCkpt(){try{const r=JSON.parse(localStorage.getItem(CKKEY)||'null');return r&&r.v===1?r:null}catch(e){return null}}
@@ -2095,7 +2106,7 @@ function syncPDiff(){const can=state==='prep';document.querySelectorAll('#pDiff 
  const r=readRun();$('#pSave').textContent=TUT?'연습 밤은 저장되지 않는다':r?`자동 저장됨 · ${r.ch+1}장 ${NN[r.night]} · 파도 ${r.wave+1} 시작 직전`:'파도가 시작되기 직전마다 자동 저장된다'}
 $('#pDiff').addEventListener('click',ev=>{const b=ev.target.closest('[data-d]');if(!b||b.disabled||state!=='prep')return;meta.diff=+b.dataset.d;save();syncPDiff();sfx('card');notice(`난이도 · ${DF().n} · 다음 파도부터`,'gold',2)});
 /* update notice */
-const UPD=['<b>체크포인트</b> · 파도 1 · 5 · 9 · 13 · 17이 시작되기 직전이 체크포인트로 남는다. 등불이 꺼지면 「체크포인트에서 다시」로 가장 가까운 체크포인트부터 다시 한다. 첫 화면 「이어하기」도 그 지점부터다.',
+const UPD=['<b>한 화면 설명</b> · 설명·추리·재판 화면을 스크롤 없이 한 화면에 모두 보이게 정리했다. 항목이 많은 안내서 장은 두 장으로 나눴다.','<b>체크포인트</b> · 파도 1 · 5 · 9 · 13 · 17이 시작되기 직전이 체크포인트로 남는다. 등불이 꺼지면 「체크포인트에서 다시」로 가장 가까운 체크포인트부터 다시 한다. 첫 화면 「이어하기」도 그 지점부터다.',
  '<b>등대 작업실 강화</b> · 피해 +10%(최대 15단계), 공격 속도 · 사거리 강화가 새로 생겼고, 등유 · 등불 강화도 더 오래 키울 수 있다. 막히면 결정을 모아 작업실에서 키우고 다시 도전하자.',
  '<b>해일</b> 선물은 이제 적을 붙잡지 않고, 밀물 피해 +60%와 젖음 +1초를 준다.',
  '<b>자동 저장</b> · 파도가 시작되기 직전마다 저장된다. 게임을 닫았다가 다시 열면 첫 화면 <b>「이어하기」</b>로 그 자리에서 계속한다. (파도 도중에 닫으면 그 파도의 처음부터)',
@@ -2202,7 +2213,9 @@ function resize(){
  for(const c of[cv,lcv,bgcv]){c.width=Math.round(W*K);c.height=Math.round(H*K)}
  drawBG();if(!pop.hidden)closePop();
 }
-window.addEventListener('resize',resize);
+window.addEventListener('resize',resize);window.addEventListener('resize',fitSoon);
+try{const mo=new MutationObserver(fitSoon);for(const id of FIT){const o=$('#'+id);if(o)mo.observe(o,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['hidden']})}}catch(e){}
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitSoon);
 resize();refreshTitle();setMute();checkUpdate();
 let last=performance.now();
 function loop(now){const raw=Math.min(.05,(now-last)/1000);last=now;
